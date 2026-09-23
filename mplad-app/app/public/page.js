@@ -20,13 +20,29 @@ async function handleUploadPublicEvidence(formData) {
   const media_type = formData.get('media_type')?.toString() || 'PHOTO';
   const lat = parseFloat(formData.get('latitude') || '28.6139');
   const lng = parseFloat(formData.get('longitude') || '77.2090');
+  const file = formData.get('evidence_photo');
   
   if (!work_id) return;
+  
+  let image_path = null;
+  if (file && file.size > 0) {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const crypto = require('crypto');
+    const fs = require('fs');
+    const path = require('path');
+    
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', work_id);
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    const filename = crypto.randomBytes(4).toString('hex') + '.jpg';
+    const filePath = path.join(uploadDir, filename);
+    fs.writeFileSync(filePath, buffer);
+    image_path = `/uploads/${work_id}/${filename}`;
+  }
+
   try {
-    // E1 Trust Pipeline Logic (Simplified):
-    // In a real system, we would calculate distance to work's known coordinates.
-    // For now, we accept it as PUBLIC authority.
-    await appendEvidence(work_id, media_type, lat, lng, 'PUBLIC');
+    await appendEvidence(work_id, media_type, lat, lng, 'PUBLIC', image_path);
   } catch (e) {
     console.error('[Public Evidence Error]', e.message);
   }
@@ -228,6 +244,7 @@ export default async function PublicView() {
                           <option value="PHOTO">PHOTO</option>
                           <option value="VIDEO">VIDEO</option>
                         </select>
+                        <input type="file" name="evidence_photo" accept="image/*" required className="input-field" style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} />
                         <input name="latitude" type="number" step="0.00001" defaultValue="28.61390" placeholder="Lat" className="input-field" style={{ width: '80px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} />
                         <input name="longitude" type="number" step="0.00001" defaultValue="77.20900" placeholder="Lng" className="input-field" style={{ width: '80px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} />
                         <button className="btn" style={{ background: '#10B981', color: '#fff', padding: '6px 12px', fontSize: '0.75rem' }}>Upload</button>
@@ -239,11 +256,16 @@ export default async function PublicView() {
                     <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
                       <div className="label" style={{ marginBottom: '6px' }}>Geo-tagged Evidence</div>
                       {w.evidence.map(e => (
-                        <div key={e.id} style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '6px', marginBottom: '2px' }}>
-                          <span>{e.media_type_code === 'PHOTO' ? '📷' : '🎥'}</span>
-                          <span>{e.media_type_code}</span>
-                          <span>📍 {Number(e.lat || 0).toFixed(4)}, {Number(e.lon || 0).toFixed(4)}</span>
-                          <span>{new Date(e.created_at || new Date()).toLocaleDateString('en-IN')}</span>
+                        <div key={e.id} style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '8px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
+                            <span>{e.media_type_code === 'PHOTO' ? '📷' : '🎥'}</span>
+                            <span>{e.media_type_code}</span>
+                            <span>📍 {Number(e.lat || 0).toFixed(4)}, {Number(e.lon || 0).toFixed(4)}</span>
+                            <span>{new Date(e.created_at || new Date()).toLocaleDateString('en-IN')}</span>
+                          </div>
+                          {e.image_path && (
+                            <img src={e.image_path} alt="Evidence" style={{ width: '100%', maxWidth: '250px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }} />
+                          )}
                         </div>
                       ))}
                     </div>

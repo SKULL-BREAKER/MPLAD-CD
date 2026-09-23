@@ -51,7 +51,7 @@ export async function updateExecutionState(work_id, requested_new_state) {
  * PUBLIC upload allowed — creates no state change, no process trigger, non-authoritative.
  * Validates media_type_code ∈ {PHOTO, VIDEO} and capture_authority_code ∈ {OFFICER, PUBLIC}.
  */
-export async function appendEvidence(work_id, media_type_code, geo_latitude, geo_longitude, capture_authority_code) {
+export async function appendEvidence(work_id, media_type_code, geo_latitude, geo_longitude, capture_authority_code, image_path = null) {
   if (!work_id) throw new Error('work_id is required.');
 
   if (!VALID_MEDIA_TYPES.has(media_type_code)) {
@@ -76,14 +76,21 @@ export async function appendEvidence(work_id, media_type_code, geo_latitude, geo
     throw new Error(`Cannot append evidence: Work ${work_id} is in pre-sanction state '${work.status}'.`);
   }
 
+  const crypto = require('crypto');
+  const evidence_id = 'E-' + crypto.randomBytes(4).toString('hex').toUpperCase();
+
   // WORK-EVIDENCE: immutable at creation (no updates ever performed)
-  return await db.workEvidence.create({
+  return await db.evidenceSubmission.create({
     data: {
+      id: evidence_id,
       work_id,
-      media_type_code,
-      geo_latitude,
-      geo_longitude,
-      capture_authority_code,
+      image_path: image_path,
+      created_at: new Date().toISOString(),
+      captured_at: new Date().toISOString(),
+      lat: geo_latitude,
+      lon: geo_longitude,
+      capture_source: capture_authority_code,
+      status: 'submitted'
     },
   });
 }
