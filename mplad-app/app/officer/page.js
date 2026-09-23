@@ -2,6 +2,7 @@ import db from '../../lib/db';
 import { updateExecutionState, appendEvidence } from '../../lib/modules/execution';
 import { revalidatePath } from 'next/cache';
 import Chatbot from '../components/Chatbot';
+import EvidenceUploadForm from '../components/EvidenceUploadForm';
 
 // Canonical state transition chain
 const NEXT_STATE = {
@@ -352,27 +353,7 @@ export default async function OfficerView() {
                   </form>
 
                   {/* Evidence upload with geo inputs */}
-                  <form action={handleUploadEvidence} style={{ display: 'flex', gap: '8px', flex: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-                    <input type="hidden" name="work_id" value={w.id} />
-                    <select name="media_type" className="select-field" style={{ width: '110px', margin: 0, padding: '8px 10px', fontSize: '0.8rem' }}>
-                      <option value="PHOTO">📷 PHOTO</option>
-                      <option value="VIDEO">🎥 VIDEO</option>
-                    </select>
-                    <input type="file" name="evidence_photo" accept="image/*" required className="input-field" style={{ flex: 1, minWidth: '150px', margin: 0, padding: '6px', fontSize: '0.8rem' }} />
-                    <input name="latitude" type="number" step="0.00001" min="-90" max="90"
-                      className="input-field" defaultValue="28.61390" placeholder="Latitude"
-                      style={{ width: '90px', margin: 0, padding: '8px 10px', fontSize: '0.8rem' }} />
-                    <input name="longitude" type="number" step="0.00001" min="-180" max="180"
-                      className="input-field" defaultValue="77.20900" placeholder="Longitude"
-                      style={{ width: '90px', margin: 0, padding: '8px 10px', fontSize: '0.8rem' }} />
-                    <select name="authority" className="select-field" style={{ width: '110px', margin: 0, padding: '8px 10px', fontSize: '0.8rem' }}>
-                      <option value="OFFICER">Officer</option>
-                      <option value="PUBLIC">Public</option>
-                    </select>
-                    <button className="btn" style={{ background: 'var(--primary)', minWidth: '140px' }}>
-                      📍 Append Evidence
-                    </button>
-                  </form>
+                  <EvidenceUploadForm workId={w.id} authority="OFFICER" action={handleUploadEvidence} />
                 </div>
               </div>
             );

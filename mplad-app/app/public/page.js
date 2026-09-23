@@ -1,5 +1,6 @@
 import db from '../../lib/db';
 import Chatbot from '../components/Chatbot';
+import EvidenceUploadForm from '../components/EvidenceUploadForm';
 import { appendEvidence } from '../../lib/modules/execution';
 import { revalidatePath } from 'next/cache';
 
@@ -235,22 +236,10 @@ export default async function PublicView() {
                   )}
 
                   {/* E1 Pipeline: Citizen Evidence Upload */}
-                  {(w.status || '').toUpperCase() !== 'SANCTIONED' && (
-                    <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                      <div className="label" style={{ marginBottom: '8px', color: '#10B981' }}>📸 Submit Field Evidence (E1 Trust Pipeline)</div>
-                      <form action={handleUploadPublicEvidence} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <input type="hidden" name="work_id" value={w.id} />
-                        <select name="media_type" className="select-field" style={{ width: '90px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }}>
-                          <option value="PHOTO">PHOTO</option>
-                          <option value="VIDEO">VIDEO</option>
-                        </select>
-                        <input type="file" name="evidence_photo" accept="image/*" required className="input-field" style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} />
-                        <input name="latitude" type="number" step="0.00001" defaultValue="28.61390" placeholder="Lat" className="input-field" style={{ width: '80px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} />
-                        <input name="longitude" type="number" step="0.00001" defaultValue="77.20900" placeholder="Lng" className="input-field" style={{ width: '80px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} />
-                        <button className="btn" style={{ background: '#10B981', color: '#fff', padding: '6px 12px', fontSize: '0.75rem' }}>Upload</button>
-                      </form>
-                    </div>
-                  )}
+                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div className="label" style={{ marginBottom: '8px', color: '#10B981' }}>📸 Submit Field Evidence (E1 Trust Pipeline)</div>
+                    <EvidenceUploadForm workId={w.id} authority="PUBLIC" action={handleUploadPublicEvidence} />
+                  </div>
 
                   {w.evidence && w.evidence.length > 0 && (
                     <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
