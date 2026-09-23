@@ -1,0 +1,117 @@
+================================================================================
+COMPLETE INFORMATION AND ADVANCED ARCHITECTURE OF THE MPLAD PROJECT (WITH AI INTEGRATION)
+================================================================================
+
+This document provides a highly detailed, comprehensive, and plain-English explanation of the advanced Members of Parliament Local Area Development Scheme (MPLADS) software project. It covers the entire logical structure, advanced data pipelines, the 10 sophisticated Artificial Intelligence (AI) detection engines, and how they seamlessly fuse together to eliminate fraud and ensure total transparency.
+
+--------------------------------------------------------------------------------
+1. INTRODUCTION TO THE SYSTEM
+--------------------------------------------------------------------------------
+The MPLADS software is a strictly governed digital platform designed to manage the ₹5 Crore annual development fund allocated to every Member of Parliament (MP) in India. Its primary goal is to ensure zero waste and total transparency. The system prevents fraud, duplicate projects, and overspending by replacing manual paperwork with a tamper-proof digital ledger.
+
+Crucially, the system is powered by an advanced suite of 10 Artificial Intelligence Detection Engines. These engines act as read-only advisors. They do not make decisions on their own; instead, they analyze millions of data points and feed their findings into an interactive Investigator Dashboard. Human officers use this dashboard to review highly sophisticated risk alerts before giving final approvals.
+
+--------------------------------------------------------------------------------
+2. SYSTEM ARCHITECTURE & LOGICAL FLOW
+--------------------------------------------------------------------------------
+The project is built on a highly advanced, multi-layered architecture:
+
+The Investigator Dashboard (React): The frontend is a React-based application featuring interactive India/district maps with risk heat-maps, work drill-downs with full evidence trails, and priority audit queues sorted automatically by AI risk scores. It also features a Contractor Network Graph visualization and allows officers to export alerts as PDF audit reports.
+
+The Backend (Python FastAPI): A high-performance Python FastAPI server acts as the bridge. It houses the Risk Scoring Engine (which fuses weighted signals from all AI modules), handles query endpoints (like /works, /risk, /network, /alerts), and manages cases (allowing investigators to mark AI flags as verified or false-positives).
+
+The Data Store (PostgreSQL + Data Lake): A robust PostgreSQL database serving as a harmonized data lake. It securely stores all cross-referenced works, contractors, sanctions, utilization certificates (UCs), and geographical data.
+
+The Ingestion Pipeline: A dedicated data-gathering pipeline (built with Python scraping and synthetic generation) that continuously pulls data from mplads.gov.in, CAG reports, and state tender portals into the data lake.
+
+--------------------------------------------------------------------------------
+3. THE 10 AI DETECTION ENGINES (THE CORE INTELLIGENCE)
+--------------------------------------------------------------------------------
+At the heart of the backend are 9 specialized detection engines and 1 fusion brain. These algorithms scrutinize every piece of data:
+
+Module 1 — Cost Outlier Engine
+This engine normalizes the cost of every work into a "cost-per-unit" (like cost-per-square-foot for buildings or per-kilometer for roads). Instead of using easily skewed averages, it groups projects by type and district and calculates robust statistical medians. If a project's cost is more than 3 times the district median, it triggers a flag (e.g., "₹4,800/sqft vs district median ₹1,150/sqft").
+
+Module 2 — Duplicate-Work Detector
+Fraudsters often re-sanction the exact same project in later years to steal funds. This module uses "Sentence Transformers" to embed work descriptions and groups them using near-duplicate clustering. If two projects have 85% textual similarity, are in the same district, and have similar costs across different years, a major duplication alert is fired.
+
+Module 3 — Timeline Rule Engine
+This engine applies hard, logical rules to expose impossible timelines. It raises red flags for critical errors, such as a Utilization Certificate being submitted before the funds were even released, a completion certificate arriving less than 15 days after sanction, or a project remaining "in progress" for over 3 years.
+
+Module 4 — Fund Aging Analyzer
+This module analyzes district-level inefficiency. It compares funds released versus funds utilized versus funds lapsed, bucketing them into 1-year, 2-year, and 3-year delays. It generates an "idle-fund leaderboard" to highlight severe administrative bottlenecks.
+
+Module 5 — Contractor Network Analyzer
+A highly advanced visualization tool that builds a bipartite graph mapping contractors to works to districts. It looks for severe concentration (e.g., one contractor winning 40% of all works), rotation patterns (Contractors A, B, and C taking turns winning), and high single-bidder tender ratios. It identifies cartel clusters and displays them as an interactive network graph on the dashboard.
+
+Module 6 — Splitting (Tender-Avoidance) Detector
+To bypass competitive bidding rules, corrupt officials sometimes split a large project into several smaller ones. This engine clusters works by location (within 500 meters), type, and a 90-day time window. If the individual amounts are just below the tender threshold (e.g., ₹15 Lakhs) but the total sum far exceeds it, the system flags the pattern as deliberate splitting.
+
+Module 7 — Guideline Compliance NLP
+This Hybrid Classifier ensures that funds are not spent on prohibited items (like religious structures or administrative offices). It uses keyword rules and natural language embedding similarities to cross-reference proposed work descriptions against the official MPLADS prohibited list.
+
+Module 8 — Benami Entity Resolver
+Corrupt contractors often create fake (Benami) companies. This module uses fuzzy-matching algorithms (like Levenshtein distance and phonetic matching) to analyze contractor registrations. It pieces together fragments of PAN numbers, phone numbers, and addresses to prove that "Sri Balaji Constructions" and "Sree Balaji Const." are secretly owned by the exact same person. When linked with Module 5, it confirms the existence of illegal cartels.
+
+Module 9 — Satellite Verifier
+This module acts as the ultimate truth verifier. For geotagged works, it automatically fetches free Sentinel-2 satellite imagery from before the sanction date and after the completion date. It uses change detection algorithms to physically verify if a building footprint appeared or a road was built. It even uses NDWI (water indices) to verify pond construction. If a completion certificate is submitted but the satellite shows empty land, it triggers a massive "GHOST WORK" flag.
+
+Module 10 — Risk Scoring Engine (The Fusion Brain)
+This is the central intelligence hub. It takes the flags from the 9 modules above, multiplies them by a severity weight, and fuses them into a single, comprehensive Risk Score. Every score is shipped with an exact list of evidence (e.g., Score: 87, Factors: Cost Outlier + Timeline + Splitting). Crucially, this engine features a feedback loop: as investigators mark alerts as "verified" or "false-positive," the AI retrains its weights and becomes permanently smarter.
+
+--------------------------------------------------------------------------------
+4. HOW THE ENTIRE SYSTEM WORKS
+--------------------------------------------------------------------------------
+The workflow seamlessly integrates the Data Pipeline, AI Engines, and Human Investigators.
+
+First, the Ingestion Pipeline constantly scrapes data from tender portals and government databases, normalizing it into the PostgreSQL Data Lake.
+Second, the Python FastAPI Backend routes this new data through the 9 Detection Engines (Cost, Satellite, Benami, etc.). 
+Third, Module 10 (The Fusion Brain) compiles all the findings and assigns a Risk Score to every single project and contractor.
+Finally, an investigator opens the React Dashboard. Instead of blindly clicking through thousands of projects, their queue is already prioritized. They open a high-risk project, view the Satellite imagery (Module 9), see the Benami cartel connections (Modules 5 & 8), and click "Export Alert as PDF" to immediately trigger an official government audit. 
+
+--------------------------------------------------------------------------------
+5. WHAT ARE THE DATA NEEDED?
+--------------------------------------------------------------------------------
+To power this massive architecture, the system requires highly structured and unstructured data:
+- Identity Data: MPs, Constituencies, Contractors, PAN registrations, Phone numbers.
+- Financial Data: Annual entitlements, requested project costs, exact release dates.
+- Geographical Data: GPS coordinates (latitude/longitude) and historical Sentinel-2 Satellite imagery.
+- Temporal Data: Dates of sanctions, tender openings, completion certificates, and utilization certificates.
+- NLP Data: Unstructured text descriptions of proposed works.
+
+--------------------------------------------------------------------------------
+6. HOW THE DATA IS GATHERED
+--------------------------------------------------------------------------------
+Data enters the PostgreSQL Data Lake through the Ingestion Pipeline. This automated Python-based pipeline scrapes external websites (like mplads.gov.in, CAG audit reports, and state tender portals). It harmonizes messy, real-world data (cleaning up bad spellings and missing dates) and safely locks it into the database for the AI engines to read.
+
+--------------------------------------------------------------------------------
+7. IMPLEMENTATION AND ALGORITHM OF USING THE DATA
+--------------------------------------------------------------------------------
+Once the data is inside PostgreSQL, the Python FastAPI backend constantly pulls it out and feeds it into the mathematical and machine learning models of the 10 modules. The algorithms apply normalizations (cost-per-unit), run Sentence Transformers for text, build NetworkX bipartite graphs for contractor cartels, and calculate robust statistical Z-scores. The final calculated outputs are instantly served via API endpoints to the interactive React maps and graphs on the Investigator's screen.
+
+--------------------------------------------------------------------------------
+8. THE DETAILS OF DATASETS AND THEIR PURPOSE FOR AI
+--------------------------------------------------------------------------------
+The data lake is the lifeblood of the AI. The AI relies heavily on massive historical datasets of completed works, contractor bidding histories, and expenditure reports. 
+The purpose of this massive dataset is pattern recognition. Without thousands of historical data points, the Cost Engine wouldn't know the median price of a road in a specific district, the Duplicate Engine wouldn't be able to spot identical text from three years ago, and the Contractor Network Analyzer wouldn't have enough data to identify a bidding cartel. By harmonizing this massive web of data, the AI becomes an inescapable net for fraud detection.
+
+--------------------------------------------------------------------------------
+9. RECENT SYSTEM FIXES AND SCHEMA UPDATES
+--------------------------------------------------------------------------------
+To maintain system stability and strict data typing, the following critical updates were applied:
+
+1. Project Execution
+The frontend Next.js dashboard is initialized via `npm run dev`, while data pipeline processes (like `seed`, `db-load`, `detect`) can be executed via npm scripts or the accompanying `Makefile`.
+
+2. Next.js Schema Synchronization
+The React/Next.js dashboard (`app/page.js`) was completely rewritten to correctly sync with the updated Prisma ORM schema (`schema.prisma`). It now queries the normalized tables (`Work`, `FundFlow`, `Mp`, `Agency`) rather than deprecated models, resolving crash errors (`Cannot read properties of undefined (reading 'count')`). 
+
+3. SQLite Database Type Casting & Prisma Compliance
+The system leverages strict-typing through Prisma. However, the underlying SQLite data lake allows loose typing, which caused a `PrismaClientKnownRequestError` when an integer (`0`) was found in the MP's `constituency` column instead of a String. A database patch was executed to cast all misaligned integer types in the `mps` table to `TEXT`, ensuring full compliance with the strict Prisma schema constraints.
+
+4. Comprehensive Frontend & Backend Schema Harmonization
+A massive refactoring was executed across all Next.js dashboard routes (MP, Authority, Officer, Monitor, Public, Assets) and the AI Fraud Engine. 
+- Legacy, overlapping schemas (`workProposal`, `entitlementYear`, `implementingAgency`, `publicAssetInventory`) were entirely eradicated.
+- The system now relies on a highly flattened, unified, and performant data structure: `Work` (containing all project details, geolocation, and dynamic status) and `FundFlow` (containing granular entitlement/expenditure tracking).
+- Strict canonical execution pipelines (`SANCTIONED` → `IN-EXECUTION` → `COMPLETED` → `UTILISED`) are now directly enforced by the `status` field on the `Work` model.
+- AI pipelines (Modules 1-10) now securely commit their detection scores and evidence payloads directly into the centralized `WorkRisk` and `DetectionResult` tables, which the Investigator UI instantly retrieves for cross-referencing.

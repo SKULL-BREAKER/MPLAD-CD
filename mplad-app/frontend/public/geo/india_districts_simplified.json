@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "geo_key": "DIST-004", "name": "District 4" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[78.96, 20.59], [79.0, 20.6], [79.1, 20.5], [78.96, 20.59]]]
+      }
+    }
+  ]
+}

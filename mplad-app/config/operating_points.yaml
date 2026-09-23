@@ -1,0 +1,27 @@
+active: balanced
+presets:
+  balanced:
+    thresholds:
+      c5_gap_pct: 0.3
+      d1_primary: 0.80
+      d1_review: 0.82
+      d1_split_max_amt: 1600000
+      d1_split_min_total: 2500000
+      d2_min_group: 5
+      d2_z: 3.0
+      d3_flash_amount: 500000
+      d3_flash_days: 14
+      d3_flash_spend: 0.95
+      d3_not_started_days: 365
+      d3_stalled_days: 540
+      d3_stalled_days_low_spend: 365
+      d4_rush_month: 3
+      d4_rush_spend_max: 0.1
+      d5_hhi: 0.25
+      d5_share: 0.25
+      d6_ghost_km: 8
+      ensemble: 0.6
+    tiers:
+      critical: 0.6
+      high: 0.4
+      medium: 0.25

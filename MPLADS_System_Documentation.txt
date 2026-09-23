@@ -1,0 +1,107 @@
+================================================================================
+               MPLADS CANONICAL LOGIC ARCHITECTURE — FULL SYSTEM DOCUMENTATION
+================================================================================
+
+1. INTRODUCTION & SCOPE
+--------------------------------------------------------------------------------
+This system is a strict, canonical implementation of the Members of Parliament 
+Local Area Development Scheme (MPLADS). It enforces authority separation, 
+immutable audit trails, and derivation of facts to ensure a zero-waste, 
+transparent, and highly constrained logical architecture.
+
+Irreducible Coverage: 
+Maintenance of constituency area scope, member entitlement-year position, 
+structured work proposals (MP only), statutory scrutiny & sanction (Authority only), 
+execution state tracking (Officer), immutable geo-verifiable media evidence, 
+strict append-only action auditing, and read-only AI decision-support.
+
+Deliberate Non-Coverage: 
+Individual benefits, subjective public feedback, unstructured text remarks, 
+predictive work-lists, auto-sanctions, and legacy data migration.
+
+
+2. SYSTEM BOUNDARIES & HARD RULES
+--------------------------------------------------------------------------------
+- WORK-PROPOSAL ≠ WORK. A "Work" only exists after authorised sanction.
+- System-generated WORK identity: (CONSTITUENCY, MEMBER, YEAR, sequence). No human-supplied IDs.
+- Individual Benefit = Absolute Disqualifier.
+- Year-bound funds: Sanctioning must never cause over-commitment of the ₹5 Cr entitlement.
+- ACTION-AUDIT: Append-only, immutable, non-deletable, non-updatable. Minimal facts.
+- State Changes: Every WORK state change requires an authorised, audited action. No implicit/automatic changes.
+- EVIDENCE: Immutable at creation. Captured via latitude/longitude geo-tags.
+- Canonical Data: Language-independent canonical persistent data. No free natural-language business text.
+- Derivations: Fund balances are strictly derived from Entitlements minus Sanctioned Works. Balances are never persisted directly.
+
+
+3. ROLE-BASED ACCESS & WORKFLOWS
+--------------------------------------------------------------------------------
+A. MEMBER OF PARLIAMENT (MP Workspace)
+   - Function: Structure and submit new Work Proposals.
+   - Guardrails: Must select from 12 canonical priority sectors. Must select locality (including SC/ST tagged areas).
+   - Visibility: Views annual entitlement, committed funds, available balance, and SC/ST earmarking compliance.
+
+B. DESIGNATED AUTHORITY (Authority Scrutiny Board)
+   - Function: Scrutinise proposals, analyze AI flags, and make independent sanction/reject decisions.
+   - Guardrails: Cannot sanction if it over-commits the MP's balance. Cannot sanction projects < ₹1,00,000. Rejections require exactly one minimal reason.
+   - Visibility: Views fund utilisation reports, sector-wise distribution, pending proposals, and state distribution of works.
+
+C. IMPLEMENTING OFFICER (Officer Execution Dashboard)
+   - Function: Update execution states and append immutable evidence.
+   - Guardrails: Strict linear state advancement (SANCTIONED → IN-EXECUTION → COMPLETED → UTILISED). No skipping, no reversal.
+   - Visibility: Views active pipeline, assigns geo-tagged photo/video evidence.
+
+D. GENERAL PUBLIC (Transparency Portal & Asset Register)
+   - Function: Read-only visibility into sanctioned works and durable community assets.
+   - Visibility: Views scheme statistics, sector-wise fund breakdown, expenditure progress, SC/ST tags, and geo-coordinates of evidence. Cannot edit or submit proposals.
+
+
+4. WORK LIFECYCLE (STATE MACHINE)
+--------------------------------------------------------------------------------
+The execution state of a Work strictly follows a linear chain.
+1. PROPOSED: Created by MP (WorkProposal entity).
+2. SCRUTINISED: (Optional intermediate step prior to sanction).
+3. SANCTIONED: Approved by Authority. System-generated Work entity created. Funds committed.
+4. IN-EXECUTION: Officer marks work as started.
+5. COMPLETED: Officer marks physical completion. Automatically populates the Public Asset Register.
+6. UTILISED: Final sign-off that the asset is in public use.
+
+
+5. REAL-WORLD MPLADS FEATURES INTEGRATED
+--------------------------------------------------------------------------------
+To mirror the actual MoSPI guidelines, the following features are hard-coded into the logical architecture:
+- ₹5 Crore Annual Entitlement: Hardcoded baseline per MP per year.
+- SC/ST Mandatory Earmarking: Tracks that ≥ 15% of funds go to SC areas and ≥ 7.5% go to ST areas.
+- 12 Canonical Priority Sectors: 
+   Drinking Water, Education, Electricity, Non-Conventional Energy, Healthcare & Sanitation, 
+   Irrigation, Railways/Roads/Bridges, Sports, Agriculture, Self-Help Group, Urban Development, Other.
+- ₹1 Lakh Minimum Sanction Guard: The Scrutiny module aggressively rejects any project costing < ₹1,00,000.
+- Sector-wise Spending Breakdown: Real-time calculation of fund percentage allocated to each sector.
+
+
+6. BACKEND MODULES
+--------------------------------------------------------------------------------
+- Entitlement Module (`entitlement.js`): Calculates derived balances and tracks SC/ST compliance ratios dynamically.
+- Proposal Module (`proposal.js`): Handles structural validation of MP submissions against the 12 canonical sectors.
+- Scrutiny Module (`scrutiny.js`): Executes Sanction/Reject transactions atomically. Enforces minimum sanction amounts and double-sanctioning guards.
+- Execution Module (`execution.js`): Handles linear state transitions and append-only evidence insertion.
+- Audit Module (`audit.js`): Creates immutable ActionAudit records for every state change.
+
+
+7. DATABASE ARCHITECTURE (MINIMAL DOMAIN MODEL)
+--------------------------------------------------------------------------------
+- Constituency: area_scope_term_id
+- Member: member_id
+- EntitlementYear: member_id, year_val, annual_amount
+- WorkProposal: constituency_id, member_id, year_val, public_utility_term_id, public_locality_term_id, requested_amount
+- Work: work_id (PK), proposal_id, constituency_id, member_id, sequence_num, sanctioned_amount, state_term_id, expended_amount, is_completed, is_utilised
+- WorkEvidence: work_id, media_type_code (PHOTO/VIDEO), geo_latitude, geo_longitude, capture_authority_code
+- ActionAudit: actor_type_code, affected_identity_id, state_change_code, action_datetime, reason_term_id
+- PublicAssetInventory: constituency_id, public_utility_term_id, public_locality_term_id
+
+
+8. READ-ONLY AI SUPPORT SYSTEMS
+--------------------------------------------------------------------------------
+AI operates strictly as a read-only decision support tool. It never takes decisions or mutates state.
+- Eligibility Support: Scans proposal terms. If "individual" or "personal" is detected, it flags the proposal as an absolute disqualifier (✗ Individual benefit).
+- Duplication Support: Checks the PublicAssetInventory and active works for exact matches of utility + locality to prevent redundant infrastructure.
+- Cost-Reasonableness Support: Flags high-value outliers (> ₹1 Crore) or warns on below-minimum (< ₹1 Lakh) proposals.

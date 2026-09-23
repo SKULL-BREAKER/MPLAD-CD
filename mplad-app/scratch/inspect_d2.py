@@ -1,0 +1,1 @@
+import sqlite3, pandas as pd; con=sqlite3.connect('data_tuning/app.db'); print(pd.read_sql_query("SELECT f.work_id, f.label_class, f.pattern, w.sanctioned_amount, w.physical_qty, d.score FROM fraud_labels f JOIN works w ON f.work_id = w.id JOIN detection_results d ON d.work_id = w.id WHERE d.detector = 'D2' AND abs(d.score) >= 3.0 AND f.label_class = 'innocent';", con))

@@ -1,0 +1,1 @@
+import sqlite3, pandas as pd; con=sqlite3.connect('data_tuning/app.db'); labels = pd.read_sql("SELECT * FROM fraud_labels", con); caught = pd.read_sql("SELECT work_id FROM detection_results WHERE detector='D2' AND score >= 3.0", con); works = caught['work_id'].tolist(); df = labels[labels['work_id'].isin(works)]; print(df[df['label_class'] == 'innocent'])

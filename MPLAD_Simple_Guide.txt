@@ -1,0 +1,389 @@
+================================================================================
+  MPLAD PROJECT — SIMPLE GUIDE (Plain English)
+  Written for anyone to understand, no technical knowledge required.
+================================================================================
+Last Updated: 2026-09-14
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 1 — WHAT IS THIS PROJECT?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This is a software system for managing the MPLADS scheme — which stands for
+"Member of Parliament Local Area Development Scheme."
+
+In simple words:
+  Every Member of Parliament (MP) in India gets a fixed amount of money
+  (currently ₹5 crore per year) to spend on small development works in
+  their own constituency — like building roads, water tanks, schools, health
+  centres, streetlights, etc.
+
+The problem this software solves:
+  Managing this money is complicated. There are strict rules about what the
+  money can be used for, who can approve what, and how the work needs to be
+  tracked. Without a proper system, money can be misused, works can go
+  unfinished, or the same work can be approved twice.
+
+What this software does:
+  - It lets the MP formally recommend (propose) a new work.
+  - It lets an Authority officer review and either APPROVE or REJECT the proposal.
+  - It tracks the work from approval → in progress → completed → fully utilised.
+  - It uses AI to automatically flag suspicious patterns (like money spent but
+    no work done, or a project that has been delayed for years).
+  - It lets the public see what works are happening in their area.
+  - Every single action is recorded permanently and cannot be deleted or changed.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 2 — WHO USES THIS SYSTEM?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+There are 4 types of users:
+
+  1. MP (Member of Parliament)
+     - The MP recommends which works should be done in their constituency.
+     - They use the "MP Page" in the software.
+     - They CANNOT approve their own proposals — that is done by someone else.
+
+  2. Authority Officer
+     - A government officer who reviews the MP's proposals.
+     - They check if the proposal follows the rules (is it a community work?
+       is there enough money left? has the same work already been done?).
+     - They either SANCTION (approve) or REJECT the proposal.
+     - If rejected, they must give a specific reason.
+
+  3. Implementing Officer
+     - Once a work is approved, an agency (like a state PWD department) actually
+       builds it.
+     - The implementing officer updates the system as the work progresses:
+       Approved → In Progress → Completed → Fully Used
+
+  4. Public / Citizens
+     - Citizens can VIEW what works are happening in their area.
+     - They can also UPLOAD photos or videos of works as evidence.
+     - They cannot approve or change anything — they can only see and upload.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 3 — WHAT ARE THE RULES? (What money can and cannot be used for)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ALLOWED works (community/public benefit):
+  ✔  Bore wells, water tanks, pipelines (Drinking Water)
+  ✔  School buildings, libraries, labs (Education)
+  ✔  Health centres, toilets, sanitation (Healthcare & Sanitation)
+  ✔  Streetlights, solar panels (Electricity / Clean Energy)
+  ✔  Rural roads, culverts, bridges (Roads & Bridges)
+  ✔  Playgrounds, gyms (Sports)
+  ✔  Field channels, check dams (Irrigation)
+  ✔  Community centres, parks (Urban Development)
+
+NOT ALLOWED:
+  ✘  Works that benefit only one individual (like building someone's house)
+  ✘  Government office buildings or staff quarters
+  ✘  Works in religious places (temples, mosques, churches, etc.)
+  ✘  Statues or monuments
+  ✘  Works costing less than ₹1 lakh
+  ✘  Works outside the MP's own constituency
+  ✘  Anything that is already covered by another government scheme
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 4 — HOW DOES A WORK GET DONE? (Step by step)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  STEP 1 — MP Submits a Proposal
+    The MP goes to the "MP" page in the system and fills in a form:
+      - What type of work? (e.g., Road construction)
+      - Where? (e.g., Village Ramnagar, Dist. Varanasi)
+      - How much will it cost? (e.g., ₹25,00,000)
+    The AI immediately checks if this type of work is allowed and shows a
+    green or red signal. The MP saves the proposal.
+
+  STEP 2 — Authority Reviews the Proposal
+    The Authority officer sees all pending proposals on their page.
+    They check:
+      - Is this work allowed under MPLADS rules?
+      - Is there enough money remaining in the MP's fund for this year?
+      - Has the same work already been done or approved nearby?
+      - Is the cost reasonable compared to similar works?
+    The AI helps with all these checks but the OFFICER makes the final decision.
+    The officer either SANCTIONS or REJECTS the proposal.
+
+  STEP 3 — If Sanctioned: A "Work" is Created
+    Once approved, the system automatically creates a WORK record with a
+    unique ID. The money is "committed" (reserved) from the MP's fund.
+    An implementing agency (like a government department) is assigned.
+
+  STEP 4 — Work Starts (In Execution)
+    The implementing officer updates the system when work begins.
+    They can also upload photos/videos from the site as evidence.
+
+  STEP 5 — Work Finishes (Completed)
+    When the physical work is done, the officer marks it Completed.
+    They enter how much money was actually spent.
+
+  STEP 6 — Fully Utilised
+    After all payments are cleared, the work is marked Utilised.
+    The fund is now officially "spent" for this work.
+
+  At every single step, the system automatically records WHO did WHAT and WHEN.
+  This record is permanent — nobody can delete or change it.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 5 — WHAT DOES THE AI DO?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The AI is like an expert assistant that reads project data and highlights
+anything suspicious. It NEVER makes a final decision — it just tells the
+officer "hey, look at this carefully."
+
+The AI does 4 things:
+
+  1. ELIGIBILITY CHECK
+     Looks at the type of work proposed and signals:
+     - Green = This looks like a proper community benefit work.
+     - Red   = This might be for individual benefit — not allowed.
+
+  2. DUPLICATION CHECK
+     Looks at existing assets and approved works to check if the same type
+     of work has already been done or approved in the same area.
+     - No duplicate = Fine.
+     - Possible duplicate = Officer should verify.
+     - Likely duplicate = Strong warning flag.
+
+  3. COST CHECK
+     Compares the proposed cost against thousands of real MPLADS projects.
+     It adjusts for inflation (prices in 2018 vs 2024 are different) and
+     also for location (building a road in Ladakh costs more than in UP).
+     - Cost is normal = Fine.
+     - Cost is too high = Warning (possible over-pricing).
+     - Cost is suspiciously low = Warning (may be under-scoped or fake).
+
+  4. ANOMALY & RISK DETECTION (on running works)
+     Once a work is in progress, the AI monitors it and raises alerts like:
+     - 🔴 CRITICAL: 80% of money is spent but only 10% of work is reported done.
+     - 🔴 CRITICAL: The GPS location of uploaded photos is 8,000 metres away
+                    from the actual project site — photos might be fake.
+     - 🟠 HIGH: Project is 400 days delayed past its planned deadline.
+     - 🟡 MEDIUM: No citizen reports uploaded for a project running 6+ months.
+     - 🟢 LOW RISK: Everything looks normal.
+
+  IMPORTANT: The AI is trained on data from 2,38,000+ real MPLADS projects
+  from all over India. It uses machine learning — it has "learned" from past
+  patterns of both normal projects and fraudulent/mismanaged ones.
+
+  But remember: The AI just raises a flag. The human officer decides.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 6 — HOW IS THE DATA STORED?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Think of it like a very organised filing cabinet with 9 folders:
+
+  Folder 1 — Constituencies
+    Stores a record for each constituency (MP's area).
+
+  Folder 2 — Members (MPs)
+    Stores a record for each MP.
+
+  Folder 3 — Entitlement Years
+    For each MP and each year, how much money do they have?
+    How much is committed? How much is spent?
+
+  Folder 4 — Public Asset Inventory
+    A list of community assets that already exist in each area.
+    (So we know what already exists before approving new works.)
+
+  Folder 5 — Work Proposals
+    Every proposal submitted by an MP, before it is approved or rejected.
+
+  Folder 6 — Implementing Agencies
+    A list of agencies/departments that can do the actual construction work.
+
+  Folder 7 — Works
+    Every approved and active work. Created ONLY after official approval.
+    Contains the current status, money spent, completion status.
+
+  Folder 8 — Work Evidence
+    All photos and videos uploaded for any work.
+    Each piece of evidence has a GPS location and timestamp.
+    Once uploaded, it CANNOT be changed or deleted.
+
+  Folder 9 — Action Audit
+    A permanent log of every single action taken in the system.
+    Who approved what, when, why was it rejected, etc.
+    This is like a "black box" — completely tamper-proof.
+
+  The data is stored in a simple database file (called "dev.db") on your
+  computer. No internet or separate database server is needed.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 7 — WHAT PAGES ARE IN THE WEB APP?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+When you open the app in your browser (at http://localhost:3000), you will see:
+
+  HOME PAGE (/)
+    A public dashboard showing:
+    - Total works across India, how much money is sanctioned and spent.
+    - Breakdown by sector (how many road works, how many water works, etc.)
+    - What types of works are allowed and not allowed.
+    Anyone can see this page.
+
+  MP PAGE (/mp)
+    For the Member of Parliament to submit new work proposals.
+    The AI shows a green/red signal for eligibility instantly.
+
+  AUTHORITY PAGE (/authority)
+    For the authority officer to see all pending proposals and approve or reject them.
+    The AI's checks are shown here to help the officer make a decision.
+
+  OFFICER PAGE (/officer)
+    For the implementing agency to update the progress of works.
+    Mark a work as "started", "completed", and enter how much was spent.
+
+  ASSETS PAGE (/assets)
+    Shows all existing public assets in each constituency.
+    Helps avoid approving duplicate works.
+
+  PUBLIC PAGE (/public)
+    For citizens to:
+    - See what works are happening in their area.
+    - Upload a photo or video as evidence for any sanctioned work.
+
+  MONITOR PAGE (/monitor)
+    The AI monitoring dashboard.
+    Officers can paste in project details and the AI analyses them instantly,
+    showing all alerts with severity levels (Critical, High, Medium, Low).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 8 — HOW TO START THE APPLICATION (Simple Steps)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You only need to do Step 1-3 the FIRST TIME you set up the project.
+After that, just do Step 4 and 5 every time you want to run it.
+
+  STEP 1 — Open PowerShell (the black terminal window).
+
+  STEP 2 — Type this command and press Enter:
+      cd "C:\Users\nanth\OneDrive\Desktop\MPLAD\mplad-app"
+    (This takes you into the web app's folder.)
+
+  STEP 3 — Install the required software (first time only):
+      npm install
+    Wait for it to finish. You'll see some warnings — that's okay, ignore them.
+
+  STEP 4 — Set up the database (first time only):
+      npx prisma generate
+      npx prisma db push
+
+  STEP 5 — Start the web app:
+      npm run dev
+    You will see: "Ready in 944ms" and "Local: http://localhost:3000"
+    This means it's running!
+
+  STEP 6 — Open your browser and go to:
+      http://localhost:3000
+    You should see the MPLAD dashboard.
+
+  TO STOP THE APP: Go back to PowerShell and press Ctrl + C.
+
+  TO RUN THE AI SEPARATELY (optional, not required):
+    Open a new PowerShell window and type:
+      cd "C:\Users\nanth\OneDrive\Desktop\MPLAD\mplad_ai"
+      node alert.js --demo
+    This will print AI analysis for a sample project.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 9 — PROBLEMS YOU MIGHT FACE (and what to do)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  PROBLEM 1: Python scripts (alert.py, train.py) don't run.
+    What happens: An error saying "DLL blocked" or "Application Control policy."
+    Why it happens: The computer is an institutional/school machine and Windows
+                    is blocking certain Python files as a security measure.
+    What to do: DON'T worry. Use the Node.js version instead:
+                  node alert.js --demo
+                The Node.js version does exactly the same thing and is not blocked.
+
+  PROBLEM 2: "pip.exe failed to run" error.
+    Why it happens: Same reason — the computer blocks pip (Python package installer).
+    What to do: You don't need pip for this project. Node.js handles everything.
+
+  PROBLEM 3: Yellow warning about "SWC compiler blocked."
+    What you see in the terminal: A warning about "@next/swc-win32-x64-msvc"
+    Why it happens: Same policy. Windows blocks the fast compiler.
+    What to do: IGNORE IT. The app still works perfectly using a backup compiler.
+
+  PROBLEM 4: "allow-scripts" warnings during npm install.
+    What you see: Warnings about Prisma packages.
+    What to do: IGNORE THEM. These are just warnings, not errors. Everything works.
+
+  PROBLEM 5: The browser shows an error on first open.
+    What to do: Make sure the terminal shows "Ready" before opening the browser.
+                If the database isn't set up yet, run:
+                  npx prisma generate
+                  npx prisma db push
+                Then refresh the browser.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 10 — WHAT IS CURRENTLY WORKING AND WHAT IS NOT?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  WORKING PERFECTLY:
+    ✅ The full web application (all 7 pages)
+    ✅ Database (stores all proposals, works, evidence, audit logs)
+    ✅ MP can submit proposals
+    ✅ Authority can approve or reject proposals
+    ✅ Officer can track and complete works
+    ✅ Public can view works and upload evidence
+    ✅ AI Monitor page (shows risk alerts in the browser)
+    ✅ AI scripts using Node.js (alert.js, train2.js)
+    ✅ App accessible on local network too (http://26.113.137.153:3000)
+
+  NOT WORKING ON THIS MACHINE (but workaround exists):
+    ❌ Python scripts (alert.py, train.py) — blocked by school/institution policy
+    ❌ pip (Python package installer) — also blocked
+    ↳ WORKAROUND: Use alert.js and train2.js instead. They are identical.
+    ↳ OR: Run Python scripts at https://colab.research.google.com (free, online)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  PART 11 — QUICK REFERENCE: KEY TERMS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Term                  What it means in plain English
+  ────────────────────────────────────────────────────────────────────────────
+  Proposal              A request by the MP to spend money on a particular work.
+  Work                  An approved project that is actually being built/done.
+  Sanctioned            Officially approved by the authority officer.
+  In Execution          Work has started on the ground.
+  Completed             Physical work is finished.
+  Utilised              All payments are done, money is fully accounted for.
+  Entitlement           The total fund available to an MP for a given year.
+  Committed Amount      Money reserved for works that are approved but not yet done.
+  Expended Amount       Money actually paid out for completed work.
+  Action Audit          The permanent log of every decision made in the system.
+  Work Evidence         Photos/videos uploaded from the work site as proof.
+  GPS Coordinates       Exact location (latitude + longitude) recorded with evidence.
+  Anomaly               Something unusual or suspicious detected by the AI.
+  SMOTE                 A technique used to train the AI when fraud examples are rare.
+  Ensemble Model        The AI uses two "brains" together (Random Forest + Gradient
+                        Boosting) and combines their answers for better accuracy.
+  Prisma                The tool that connects the web app to the database.
+  SQLite                The database — a single file on your computer (dev.db).
+  Next.js               The web framework used to build the website/app.
+  Node.js               The software that runs JavaScript outside of a browser.
+  npm run dev           The command that starts the web application.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  END OF SIMPLE GUIDE
+  For full technical details, refer to MPLAD.txt in the same folder.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

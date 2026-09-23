@@ -1,0 +1,295 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   PRAHARI Design System
+   Primary: Claymorphism + Premium Solid Morphism
+   Secondary: Selective glass on nav/modal layers
+   Forbidden: Neon, cyberpunk, AI template aesthetics
+   ============================================================ */
+
+:root {
+  /* Font */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Surface palette — dark, controlled, no neon */
+  --surface-base:   #0c1120;
+  --surface-1:      #111827;
+  --surface-2:      #1a2235;
+  --surface-3:      #1e293b;
+  --surface-4:      #263347;
+  --surface-hover:  #2d3f5a;
+  --surface-input:  #1e2d42;
+
+  /* Border */
+  --border-1:       rgba(99, 132, 174, 0.12);
+  --border-2:       rgba(99, 132, 174, 0.20);
+  --border-3:       rgba(99, 132, 174, 0.30);
+
+  /* Text */
+  --text-primary:   #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted:     #64748b;
+  --text-dim:       #475569;
+
+  /* Tier badge colours — exact values used throughout the application */
+  --tier-critical-bg:   #dc2626;
+  --tier-critical-text: #fff1f1;
+  --tier-high-bg:       #ea580c;
+  --tier-high-text:     #fff7ed;
+  --tier-medium-bg:     #d97706;
+  --tier-medium-text:   #fffbeb;
+  --tier-low-bg:        #64748b;
+  --tier-low-text:      #f1f5f9;
+
+  /* Claymorphism shadow system */
+  --shadow-clay-sm:
+    0 1px 2px rgba(0,0,0,0.5),
+    0 4px 8px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.04);
+
+  --shadow-clay:
+    0 2px 4px rgba(0,0,0,0.55),
+    0 8px 16px rgba(0,0,0,0.45),
+    0 20px 40px rgba(0,0,0,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 -1px 0 rgba(0,0,0,0.25);
+
+  --shadow-clay-lg:
+    0 4px 8px rgba(0,0,0,0.55),
+    0 16px 32px rgba(0,0,0,0.50),
+    0 32px 64px rgba(0,0,0,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    inset 0 -1px 0 rgba(0,0,0,0.30);
+
+  /* Premium solid shadows */
+  --shadow-solid-sm:
+    0 1px 3px rgba(0,0,0,0.6),
+    0 2px 6px rgba(0,0,0,0.4);
+
+  --shadow-solid:
+    0 2px 6px rgba(0,0,0,0.6),
+    0 6px 20px rgba(0,0,0,0.45);
+
+  /* Glass (selective — modal, nav overlay only) */
+  --glass-bg:       rgba(17, 24, 39, 0.85);
+  --glass-border:   rgba(148, 163, 184, 0.08);
+  --glass-blur:     12px;
+
+  /* Border radius */
+  --radius-sm:   8px;
+  --radius-card: 14px;
+  --radius-lg:   20px;
+
+  /* Accent (used sparingly — risk indicators, active state) */
+  --accent-blue:   #3b82f6;
+  --accent-emerald:#10b981;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--surface-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   Claymorphism card
+   ============================================================ */
+
+.card-clay {
+  background: var(--surface-2);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-clay);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.card-clay:hover {
+  box-shadow: var(--shadow-clay-lg);
+  transform: translateY(-1px);
+}
+
+.card-clay-sm {
+  background: var(--surface-2);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-clay-sm);
+}
+
+/* ============================================================
+   Premium solid panel
+   ============================================================ */
+
+.panel-solid {
+  background: var(--surface-1);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-solid);
+}
+
+.panel-solid-inner {
+  background: var(--surface-3);
+  border: 1px solid var(--border-1);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-solid-sm);
+}
+
+/* ============================================================
+   Glass (modal overlay, header only)
+   ============================================================ */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* ============================================================
+   Skeleton loading animation
+   ============================================================ */
+
+@keyframes prahari-skeleton {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-3) 25%,
+    var(--surface-4) 50%,
+    var(--surface-3) 75%
+  );
+  background-size: 200% 100%;
+  animation: prahari-skeleton 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================================
+   Tier badge utilities
+   ============================================================ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+
+.badge-critical { background: rgba(220,38,38,0.18); color: #fca5a5; border: 1px solid rgba(220,38,38,0.30); }
+.badge-high     { background: rgba(234,88,12,0.18);  color: #fdba74; border: 1px solid rgba(234,88,12,0.30); }
+.badge-medium   { background: rgba(217,119,6,0.18);  color: #fcd34d; border: 1px solid rgba(217,119,6,0.30); }
+.badge-low      { background: rgba(100,116,139,0.15); color: #94a3b8; border: 1px solid rgba(100,116,139,0.25); }
+.badge-clear    { background: rgba(16,185,129,0.12);  color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+
+/* ============================================================
+   Warning banners
+   ============================================================ */
+
+.warning-banner {
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-solid-sm);
+}
+
+.warning-banner-orange {
+  background: rgba(234,88,12,0.10);
+  border: 1px solid rgba(234,88,12,0.25);
+  color: #fdba74;
+}
+
+.warning-banner-amber {
+  background: rgba(217,119,6,0.10);
+  border: 1px solid rgba(217,119,6,0.25);
+  color: #fcd34d;
+}
+
+/* ============================================================
+   Scrollbar (panel scrollable areas)
+   ============================================================ */
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-4) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--surface-4);
+  border-radius: 4px;
+}
+
+/* ============================================================
+   Input / select base
+   ============================================================ */
+
+.input-base {
+  background: var(--surface-input);
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  padding: 6px 10px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.input-base:focus {
+  border-color: var(--border-3);
+}
+
+/* ============================================================
+   Table base
+   ============================================================ */
+
+.table-row-hover {
+  transition: background-color 0.12s ease;
+  cursor: pointer;
+}
+
+.table-row-hover:hover {
+  background-color: var(--surface-hover);
+}
+
+/* ============================================================
+   Transitions
+   ============================================================ */
+
+.transition-surface {
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}

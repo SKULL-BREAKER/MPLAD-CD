@@ -1,0 +1,921 @@
+ARCHITECTURE NAME
+MPLADS Canonical Logic Architecture
+
+REAL SCOPE
+- Irreducible Coverage: Maintenance of constituency area scope and member entitlement-year position; structured work proposal authored exclusively by the Member; statutory scrutiny, technical feasibility verification, and work sanction by designated authority; execution state tracking; immutable geo-verifiable media evidence for completed assets; strict append-only action audit of all state changes; read-only AI decision-support for eligibility, duplication, cost-reasonableness, and need/gap analysis.
+- Deliberate Non-Coverage: Individual benefits, predictive work-lists, auto-sanctions, multi-year spillover workflows, release/tranche management, physical file or document management, user interfaces, subjective public feedback, unstructured text remarks, and legacy data migration.
+
+SYSTEM BOUNDARY
+Logical architecture and logical database ONLY. Encompasses domain models, business rules, minimal business entities, minimal persistent business facts, minimal business processes, minimal AI augmentation, logical modules, integrity rules, authority separation, visibility rules, language-neutrality, identifiers, keys, relationships, and domain constraints. Excludes all physical implementations, UI/UX, frameworks, APIs, databases, hardware, storage, and presentation artifacts.
+
+BUSINESS ENTITIES
+- CONSTITUENCY: Public area of the MP. (language-independent identity, area-scope).
+- MEMBER: Recommending authority. (language-independent identity).
+- ENTITLEMENT-YEAR / FUND-FLOW: (district-identity, year, member-identity, entitlement, funds_released, expenditure, unspent).
+- PUBLIC-ASSET-INVENTORY: (language-independent durable community asset identity, language-independent public utility, lowest required public locality).
+- WORK: (system-generated identity, mp-identity, district-identity, agency-identity, sanctioned amount, expenditure, status, physical_qty).
+- WORK-EVIDENCE: (media-type, geo-latitude, geo-longitude, capture-source, immutable creation date/time).
+- ACTION-AUDIT: (actor-type, affected identity, action, date/time, note).
+
+LOGICAL DATABASE MODEL
+- CONSTITUENCY
+  - Logical Primary Identifier: `constituency_id`
+  - Minimal Columns: `area_scope_term_id` (Term ID)
+  - Business Key: `constituency_id`
+  - Append-only/Updatable: Updatable
+  - Necessary Foreign Keys: None
+  - Minimal Domain/Check Constraints: Valid Canonical Term ID
+  - Non-redundancy: No derived area facts.
+- MEMBER
+  - Logical Primary Identifier: `member_id`
+  - Minimal Columns: None beyond PID
+  - Business Key: `member_id`
+  - Append-only/Updatable: Updatable
+  - Necessary Foreign Keys: None
+  - Minimal Domain/Check Constraints: None
+  - Non-redundancy: Authority scopes strictly derived by relations.
+- FUND-FLOW
+  - Logical Primary Identifier: `(district_id, fy, mp_id)`
+  - Minimal Columns: `entitlement` (Amount), `funds_released` (Amount), `expenditure` (Amount), `unspent` (Amount)
+  - Append-only/Updatable: Updatable
+  - Minimal Domain/Check Constraints: Amount ≥ 0
+  - Non-redundancy: Aggregates persisted only for irreducible atomic transaction locks.
+- WORK
+  - Logical Primary Identifier: `id` (System-generated)
+  - Minimal Columns: `mp_id` (ID), `district_id` (ID), `agency_id` (ID), `fy` (Year), `sanctioned_amount` (Amount), `expenditure` (Amount), `status` (Term ID)
+  - Append-only/Updatable: Updatable
+  - Minimal Domain/Check Constraints: Amounts ≥ 0. `status` ∈ {PROPOSED, SANCTIONED, IN-EXECUTION, COMPLETED, UTILISED}
+  - Non-redundancy: No partial sanctions, revisions, or phasing state artifacts.
+- IMPLEMENTING-AGENCY
+  - Logical Primary Identifier: `id`
+  - Minimal Columns: None beyond PID
+  - Append-only/Updatable: Updatable
+  - Non-redundancy: Canonical agency identities only.
+- WORK-EVIDENCE
+  - Logical Primary Identifier: `id`
+  - Minimal Columns: `work_id` (ID), `media_type_code` (Term ID), `lat` (Decimal), `lon` (Decimal), `capture_source` (Term ID), `created_at` (Timestamp)
+  - Append-only/Updatable: Append-only
+  - Necessary Foreign Keys: `work_id` → WORK
+  - Minimal Domain/Check Constraints: Valid Geo-coordinate domains.
+  - Non-redundancy: No textual captions, remarks, or notes.
+- ACTION-AUDIT
+  - Logical Primary Identifier: `id`
+  - Minimal Columns: `actor` (Term ID), `work_id` (ID), `action` (Term ID), `at` (Timestamp)
+  - Append-only/Updatable: Append-only
+  - Non-redundancy: Strictly state transition facts, no full row-copy trails.
+
+RELATIONSHIPS
+- MEMBER → ENTITLEMENT-YEAR (1:N)
+- CONSTITUENCY → MEMBER (context)
+- CONSTITUENCY → PUBLIC-ASSET-INVENTORY (1:N)
+- CONSTITUENCY → WORK-PROPOSAL (1:N)
+- CONSTITUENCY → WORK (1:N)
+- WORK-PROPOSAL → 0..1 WORK
+- WORK → WORK-EVIDENCE (1:N, append-only)
+- WORK → ACTION-AUDIT (1:N)
+- IMPLEMENTING-AGENCY → WORK (1:N)
+
+WORKFLOW
+1. ENTITLEMENT-YEAR exists for (MEMBER,YEAR).
+2. MP structures WORK-PROPOSAL with canonical minimal fields. Invokes Eligibility and Duplication AI support (read-only). Save if structurally valid.
+3. Authority scrutinises: fund discipline, feasibility, Cost-Reasonableness AI support, area, eligibility, non-duplication. Either SANCTIONS → system-generated WORK, sets commitment/sanction, appends ACTION-AUDIT, state SANCTIONED; OR REJECTS → no WORK, appends ACTION-AUDIT with exactly ONE minimal reason.
+4. SANCTIONED → IN-EXECUTION → COMPLETED (authorised) → UTILISED (authorised). Immutable WORK-EVIDENCE may append from SANCTIONED onward. Work-level expenditure/completion/utilisation updated only by authorised actions with audit.
+5. All state changes audited. Public/officer visibility = read-only subset.
+
+FUND FLOW
+- Year-bound entitlement.
+- Only WORK-level sanctioned amounts create commitments against ENTITLEMENT-YEAR.
+- Derived balance: `balance = annualAmount − (sanctionedAmountSum of WORKs of that (MEMBER,YEAR) whose utilisation is NOT complete)`.
+- No release/instalment flow. No multi-year spillover flow. No revision/re-appropriation flow.
+
+AI SUPPORTS
+1. ELIGIBILITY-SUPPORT: Computes {isCommunityPublicUtility, isDurableCommunityAsset, isIndividualBenefit}. If `isIndividualBenefit=true` → absolute disqualifier signal.
+2. DUPLICATION-SUPPORT: Compares (language-independent public-utility + lowest required public locality) against PUBLIC-ASSET-INVENTORY and WORKs in {SANCTIONED, IN-EXECUTION, COMPLETED, COMPLETED-not-fully-UTILISED}. Returns {NO_DUP, POSSIBLE_DUP, LIKELY_DUP} and exactly ONE reason-token.
+3. COST-REASONABLENESS-SUPPORT: Gross reasonableness band relative to minimal scope.
+4. NEED/GAP-SUPPORT: Constituency-level public-utility presence/gaps from known assets and utilised/completed works.
+
+HARD RULES
+- WORK-PROPOSAL ≠ WORK. WORK exists only after authorised sanction.
+- System-generated WORK identity by (CONSTITUENCY, MEMBER, YEAR, sequence). No human-supplied code/number.
+- Individual benefit = absolute disqualifier.
+- Duplication = substantially the same public utility at the same lowest required public locality.
+- Year-bound funds. Sanction must not cause over-commitment.
+- ACTION-AUDIT: append-only, immutable, non-deletable, non-updatable. Minimal facts only.
+- Every WORK state change = authorised audited action. No implicit, automatic or time-driven changes.
+- WORK-EVIDENCE: immutable at creation. Only latitude/longitude as geo-tag. PUBLIC upload allowed only for existing sanctioned WORKs, creates no proposal, no state change, no process trigger, no approval, non-authoritative.
+- Public write = WORK-EVIDENCE only. Public/MEMBER/authority writes restricted by systemic authority limits.
+- Read-only visibility subset. "Review projects/works" = record-level visibility, not feedback.
+- Authority separation.
+- Language-independent canonical persistent data. No free natural-language business text stored.
+- If optional/uncertain → OMIT. No convenience nulls.
+- Non-redundancy: derive computed facts unless an irreducible hard business rule absolutely requires persistence.
+
+LOGICAL MODULES
+- ENTITLEMENT-FUND MODULE
+- PROPOSAL-STRUCTURING MODULE
+- SCRUTINY-SANCTION MODULE
+- EXECUTION-COMPLETION-UTILISATION MODULE
+- ASSET-INVENTORY MODULE
+- EVIDENCE-VISIBILITY MODULE
+- AUDIT MODULE
+- AI-SUPPORT MODULE (read-only)
+
+MULTILINGUAL READINESS
+- Business persistent data must be LANGUAGE-INDEPENDENT. Canonical identities, system IDs, amounts, years, dates/times, states, flags, geo-coordinates, numeric/structured values.
+- Domain terms (public-utility, lowest required public locality, IMPLEMENTING-AGENCY, CONSTITUENCY, WORK states) must be canonical term-entities/values, representable in any Indian language without free-text business columns.
+- No UI language packs, translations, scripts, input methods, locale, direction or fallback design encoded at the business layer.
+
+PUBLIC/OFFICER VISIBILITY & REVIEW
+- Derived read-only subset: minimal WORK facts (system identity scope, year, public-utility, lowest required public locality, sanctioned amount, state, completion, utilisation, immutable evidence, minimal known asset facts).
+- No personal data, comments, remarks, endorsements, objections, complaints, votes, ratings, priorities, orders, totals beyond irreducible scheme totals.
+- Upload = evidence only. Review = transparency only.
+
+INTEGRITY CONSTRAINTS
+- Non-duplication by (public-utility + lowest required public locality) only.
+- Immutability: WORK-EVIDENCE, ACTION-AUDIT.
+- Authority separation.
+- AI-as-support (read-only), never decision-taker.
+- Data minimisation, non-redundancy, write-minimisation.
+- Chain integrity, single state path, system-generated identity.
+- Canonical-only persistent data, process integrity.
+
+DESIGN PRINCIPLES
+- Domain-as-constraint, not design source.
+- AI-as-support only (read-only). Support ≠ decision.
+- "If not logically necessary to persist → omit".
+- "If derivable → do not persist".
+- Language-neutral canonical model.
+- Immutability over mutability.
+- Authority separation over automation.
+- Visibility without socialisation.
+- Non-replication, non-duplication, least tokens, real, error-free, no waste.
+
+================================================================================
+AI ANALYSIS & CALCULATION — FULL TECHNICAL DOCUMENTATION
+================================================================================
+Last Updated: 2026-09-14
+Implementation: mplad_ai/train2.js (training) | mplad_ai/alert.js (inference)
+Model Files: mplad_ai/models/*.json
+Principle: ALL AI outputs are READ-ONLY decision SUPPORT. The AI NEVER approves,
+           rejects, or modifies any record. Every final decision rests with the
+           authorised officer.
+
+--------------------------------------------------------------------------------
+SECTION A: TRAINING DATA USED
+--------------------------------------------------------------------------------
+
+FILE                                    ROWS     PURPOSE
+mplads_project_guardian_prototype.csv   2,500    Labeled anomaly + risk training
+mplads_expenditures_2026-09-14.csv    108,695    Cost reasonableness bands
+mplads_recommended_works_2026-09-14   87,272     Cost reasonableness bands
+mplads_completed_works_2026-09-14      44,028    Cost reasonableness bands
+mplads_mp_summary_2026-09-14.csv          774    MP/State need-gap stats
+json_2026-09-14.json                        1    Dashboard validation benchmark
+TOTAL RECORDS USED FOR TRAINING       238,542+
+
+--------------------------------------------------------------------------------
+SECTION B: ECONOMIC CONTEXT DATA (BUILT-IN)
+--------------------------------------------------------------------------------
+
+B.1 India Consumer Price Index (CPI) — Annual Average (MoSPI/RBI)
+Source: MoSPI eSankhyiki + RBI DBIE. Base reference: 2023 = 95.79
+
+  YEAR   CPI INDEX   GDPGROWTH%   CONSTRUCTION PREMIUM
+  2015   64.83        8.00         1.05
+  2016   68.05        8.26         1.07
+  2017   70.32        6.80         1.06
+  2018   73.08        6.53         1.09
+  2019   75.82        3.87         1.08
+  2020   80.83       -5.83         1.12  (COVID disruption)
+  2021   84.99        9.05         1.15  (steel/cement surge)
+  2022   90.67        7.24         1.18
+  2023   95.79        8.15         1.10
+  2024  100.56        6.40         1.08
+  2025  102.75        6.20         1.07
+  2026  107.94        6.50         1.06  (estimated July 2026)
+
+B.2 State-Level Cost Index (relative to national average = 1.0)
+Applied to account for terrain, remoteness, logistics cost differences:
+
+  HIGH-COST STATES (>1.15):
+    Ladakh=1.40, Lakshadweep=1.50, Andaman & Nicobar=1.45
+    Arunachal Pradesh=1.35, Jammu & Kashmir=1.28, Sikkim=1.30
+    Manipur=1.30, Himachal Pradesh=1.25, Mizoram=1.25, Nagaland=1.28
+
+  STANDARD STATES (0.95–1.10):
+    Maharashtra=1.05, Delhi=1.10, Kerala=1.08, Goa=1.12
+    Tamil Nadu=1.02, Gujarat=1.00, Karnataka=1.00, Telangana=1.00
+    West Bengal=1.00, Punjab=1.00, Haryana=1.02
+
+  LOW-COST STATES (<0.95):
+    Bihar=0.93, Madhya Pradesh=0.94, Andhra Pradesh=0.98
+    Rajasthan=0.96, Chhattisgarh=0.96, Jharkhand=0.95
+    Uttar Pradesh=0.95, Odisha=0.95
+
+B.3 Amount Normalisation Formula
+All project costs are converted to a 2023 base price before any comparison:
+
+  normalized_amount = raw_amount
+                      × (CPI_2023 / CPI_year)
+                      / construction_premium_year
+                      / state_cost_index
+
+  This ensures a project sanctioned in 2018 at ₹10 lakh is fairly compared
+  against a 2024 project — the 2018 cost is inflated to 2023 prices, and
+  the higher construction premium of that year is divided out.
+
+  Economic Pressure Score (composite indicator):
+  economic_pressure = (CPI_year / 95.79) × construction_premium × state_cost_index
+
+--------------------------------------------------------------------------------
+SECTION C: MODEL 1 — ANOMALY DETECTOR
+--------------------------------------------------------------------------------
+
+C.1 Architecture
+  Type: Ensemble (Random Forest + Gradient Boosting Machine, soft vote)
+  RF Weight: 40% | GBM Weight: 60%
+  Random Forest: 200 trees, max depth 9, min leaf 4
+  Gradient Boosting: 150 estimators, max depth 5, learning rate 0.05,
+                     subsample 0.8 per iteration
+  Feature Scaling: StandardScaler (zero mean, unit variance)
+  Oversampling: Proper SMOTE (k=5 nearest-neighbour interpolation)
+  Post-SMOTE class balance: 2,280 Normal vs 2,280 Anomaly (1:1)
+
+C.2 Training Performance
+  5-Fold Cross-Validation Accuracy: 99.9% ± 0.1%
+  F1 Score (Anomaly class): 1.000
+  F1 Score (Normal class):  1.000
+  Ensemble F1:              1.000
+
+C.3 Input Features (30 features)
+
+  RATIO FEATURES:
+    expenditure_ratio       = actual_expenditure / approved_cost
+    fund_utilization_ratio  = fund_released / approved_cost
+    progress_gap_pct        = expected_progress_pct - reported_progress_pct
+    progress_spend_gap      = reported_progress_pct - (expenditure_ratio × 100)
+    delay_ratio             = delay_days / days_planned
+    fund_leakage_ratio      = max(0, fund_released - actual_expenditure) / fund_released
+    utilisation_eff         = actual_expenditure / approved_cost
+    cost_overrun_flag       = 1 if actual_expenditure > fund_released, else 0
+
+  TIME FEATURES:
+    delay_days              = max(0, days_elapsed - days_planned)
+    days_elapsed            = calendar days since project start
+    days_planned            = originally planned duration in days
+
+  PROGRESS FEATURES:
+    reported_progress_pct   = progress declared by implementing agency (0–100)
+    expected_progress_pct   = expected % completion given time elapsed (0–100)
+
+  SITE/PUBLIC FEATURES:
+    gps_distance_m          = distance in metres between evidence GPS and declared site
+    citizen_reports         = number of public evidence uploads
+    vendor_projects_count   = number of concurrent projects by same vendor
+    ground_verification_flag= 1 if physical inspection done, 0 otherwise
+
+  CATEGORICAL ENCODINGS:
+    sector_enc              = label-encoded work category
+    project_type_enc        = label-encoded project type (New/Repair/etc.)
+    state_enc               = label-encoded state name
+    state_cost_index        = state cost multiplier (from B.2)
+    region_enc              = geographic region (South=0, West=1, North=2,
+                              East=3, Central=4, NorthEast=5, Islands=6)
+
+  ECONOMIC FEATURES:
+    cpi_index               = India CPI for the project year (from B.1)
+    gdp_growth              = India GDP growth rate for the project year
+
+  INTERACTION TERMS (capture combined risk signals):
+    delay_x_gps             = delay_days × gps_distance_m / 1000
+    exp_over_x_citizen      = (expenditure>1.0 ? 1:0) × (1 - citizen_reports/10)
+    leak_x_delay            = fund_leakage_ratio × min(delay_days/365, 2)
+    state_x_delay           = state_cost_index × delay_days
+    risk_x_exp              = risk_score × expenditure_ratio
+    risk_score              = composite proxy:
+                              min(delay/365,1)×30 + progress_gap/100×30
+                              + min(gps/10000,1)×20 + (1-citizen/10)×10
+                              + cost_overrun_flag×10
+
+C.4 Prediction Output
+  Returns probability P(anomaly) in [0,1] from ensemble.
+
+  ALERT THRESHOLDS:
+    P ≥ 0.70  → AI_ANOMALY_CRITICAL (🔴 CRITICAL)
+    P ≥ 0.50  → AI_ANOMALY_HIGH     (🟠 HIGH)
+    P ≥ 0.30  → AI_ANOMALY_MEDIUM   (🟡 MEDIUM)
+    P < 0.30  → AI_ANOMALY_CLEAR    (ℹ️  INFO)
+
+C.5 GBM Internal Mechanics
+  Each iteration fits a regression tree to the residuals (actual_label −
+  predicted_probability) using log-loss gradients. Softmax is applied across
+  all classes after summing boosted scores. Learning rate 0.05 shrinks each
+  tree's contribution to prevent overfitting.
+
+--------------------------------------------------------------------------------
+SECTION D: MODEL 2 — COST REASONABLENESS
+--------------------------------------------------------------------------------
+
+D.1 Architecture
+  Type: Non-parametric Quantile Band Model
+  No single trained estimator — instead builds empirical percentile tables
+  from 238,542 real MPLADS transactions.
+  Three lookup levels (most-to-least specific):
+    Level 1: sector × year   (45 bands)   — most precise, time-aware
+    Level 2: sector × state  (298 bands)  — regional specificity
+    Level 3: sector only     (13 bands)   — broadest fallback
+    Level 4: state only      (36 bands)   — geographic fallback
+
+  IQR Outlier Fence per sector:
+    upper_fence = Q3 + 3.0 × IQR   (extreme statistical outlier threshold)
+    lower_fence = Q1 - 3.0 × IQR
+
+D.2 How a Cost is Evaluated
+
+  Step 1: Normalise the project cost to 2023 base (see B.3 formula).
+
+  Step 2: Look up the most specific available band for (sector, year, state).
+          Fallback order: sector-year → sector-state → sector → default.
+
+  Step 3: IQR extreme outlier check:
+          IF normalised_cost > Q3 + 3×IQR
+          → AI_COST_IQR_OUTLIER (🔴 CRITICAL)
+
+  Step 4: Percentile band comparison:
+          IF normalised_cost > P95  → COST_UNUSUALLY_HIGH   (🟠 HIGH)
+          IF normalised_cost > P90  → COST_HIGH             (🟡 MEDIUM)
+          IF normalised_cost < P5   → COST_SUSPICIOUSLY_LOW (🟡 MEDIUM)
+          ELSE                      → COST_NORMAL           (ℹ️  INFO, shows percentile band)
+
+  Step 5: Inflation context note:
+          IF project_year < current_year - 1
+          → Reports cumulative CPI inflation % since project year.
+          Formula: inflation_pct = (CPI_current / CPI_project_year − 1) × 100
+
+D.3 Sector Keyword Detection (for unstructured work descriptions)
+  The system reads work description text and maps to canonical sectors:
+    Road:        road, path, link, culvert, bridge, bypass
+    Building:    building, hall, office, room, toilet, construct
+    Water:       water, well, bore, tank, drain, canal, irrigation
+    School:      school, education, library, classroom
+    Health:      health, hospital, clinic, dispensary, ambulance
+    Electricity: electric, solar, light, power, transformer
+    Sanitation:  sanit, latrine, sewer, drain, waste
+    Sports:      sport, ground, stadium, gym
+    Repair:      repair, renovat, maintain, remodel, restoration
+    Default:     Normal/Others
+
+D.4 Band Statistics Stored Per Cell
+  count, P5, P10, P25, median(P50), P75, P90, P95, P99, mean, std_dev
+  All amounts are stored in 2023-normalised rupees.
+
+--------------------------------------------------------------------------------
+SECTION E: MODEL 3 — RISK CLASSIFIER
+--------------------------------------------------------------------------------
+
+E.1 Architecture
+  Type: Ensemble (Random Forest + Gradient Boosting Machine, soft vote)
+  RF Weight: 40% | GBM Weight: 60%
+  Random Forest: 180 trees, max depth 9, min leaf 4
+  Gradient Boosting: 100 estimators, max depth 4, learning rate 0.07
+  Classes: Low, Medium, High (3-class classification)
+  Oversampling: SMOTE (k=5) for Medium and High classes
+  Post-SMOTE: High=2,480 | Medium=1,234 | Low=1,522
+
+E.2 Training Performance
+  5-Fold Cross-Validation Accuracy: 99.9% ± 0.1%
+  F1 Score (High-risk class): 1.000
+  F1 Score (GBM, High-risk):  1.000
+
+E.3 Input Features (25 features)
+  All ratio/time/site/categorical features from C.3 except:
+    - Removes: cpi_index, gdp_growth, delay_x_gps, exp_over_x_citizen,
+               leak_x_delay, state_x_delay, risk_x_exp (not used here)
+    - Adds:
+        risk_x_delay   = risk_score × delay_days
+        gps_x_citizen  = gps_distance_m / (citizen_reports + 1)
+
+E.4 Prediction Output
+  Returns class label (Low/Medium/High) and confidence probability per class.
+
+  ALERT SEVERITY MAPPING:
+    High   → 🔴 CRITICAL
+    Medium → 🟡 MEDIUM
+    Low    → ℹ️  INFO
+
+--------------------------------------------------------------------------------
+SECTION F: RULE-BASED CHECKS (always run, no model needed)
+--------------------------------------------------------------------------------
+
+These fire before any ML model and flag clear arithmetic violations:
+
+  CODE                   CONDITION                               SEVERITY
+  ZERO_COST              approved_cost ≤ 0                       CRITICAL
+  COST_OVERRUN           actual_expenditure > approved×1.10      HIGH
+  OVER_RELEASE           fund_released > approved×1.05           HIGH
+  EXTREME_DELAY          days_elapsed − days_planned > 365       HIGH
+  SIGNIFICANT_DELAY      days_elapsed − days_planned > 180       MEDIUM
+  PROGRESS_SPEND_MISMATCH (exp_ratio − prog_ratio) > 0.35        HIGH
+  GPS_DRIFT              gps_distance_m > 5,000m                 MEDIUM
+  NO_CITIZEN_REPORTS     days_elapsed > 180 AND citizen=0        LOW
+  FUTURE_DATE            project_year > current_year             MEDIUM
+
+  PROGRESS_SPEND_MISMATCH calculation:
+    exp_ratio  = actual_expenditure / approved_cost
+    prog_ratio = reported_progress_pct / 100
+    gap        = exp_ratio − prog_ratio
+    IF gap > 0.35 (spending is 35+ percentage points ahead of reported work)
+    → suggests ghost expenditure or under-reporting of completion
+
+--------------------------------------------------------------------------------
+SECTION G: ALERT PIPELINE (order of execution per project)
+--------------------------------------------------------------------------------
+
+  INPUT: New project record (JSON or CSV row)
+
+  STEP 1 — Input Normalisation
+    Accepts flexible field names (snake_case, title case, with/without ₹ symbol).
+    Extracts year from date strings if not explicitly provided.
+    Applies defaults for missing optional fields.
+
+  STEP 2 — Rule-Based Checks (Section F)
+    Fast arithmetic checks. No model loading required.
+
+  STEP 3 — Cost Reasonableness (Section D)
+    Normalises amount → looks up quantile band → generates cost alert.
+    Also generates inflation context note.
+
+  STEP 4 — ML Anomaly Detection (Section C)
+    Builds 30-feature row → applies StandardScaler →
+    RF predicts probability → GBM predicts probability →
+    Ensemble = 0.4×RF_prob + 0.6×GBM_prob →
+    Maps probability to severity threshold → generates alert.
+
+  STEP 5 — ML Risk Classification (Section E)
+    Builds 25-feature row → applies StandardScaler →
+    RF + GBM ensemble → soft vote → label + confidence → alert.
+
+  STEP 6 — Sort & Output
+    All alerts sorted by severity: CRITICAL → HIGH → MEDIUM → LOW → INFO.
+    Output JSON includes: project_id, analysed_at, summary counts,
+    overall_status, disclaimer, full alert list, project_snapshot.
+
+  OUTPUT FORMAT PER ALERT:
+    alert_code    — machine-readable code (e.g. COST_OVERRUN)
+    severity      — CRITICAL / HIGH / MEDIUM / LOW / INFO
+    title         — short human-readable summary
+    detail        — full explanation with values and context
+    value         — the triggering numeric value
+    threshold     — the limit that was breached
+    action        — always "OFFICER REVIEW REQUIRED — AI provides support only, not decision"
+    timestamp     — ISO-8601 UTC
+
+--------------------------------------------------------------------------------
+SECTION H: OVERALL SYSTEM STATUS LOGIC
+--------------------------------------------------------------------------------
+
+  IF any CRITICAL alert exists  → "🔴 CRITICAL — Immediate review required"
+  ELSE IF any HIGH alert        → "🟠 HIGH RISK — Review before proceeding"
+  ELSE IF any MEDIUM alert      → "🟡 MEDIUM RISK — Review recommended"
+  ELSE                          → "🟢 LOW RISK — Appears within normal parameters"
+
+--------------------------------------------------------------------------------
+SECTION I: ENSEMBLE VOTING FORMULA
+--------------------------------------------------------------------------------
+
+  For any binary or multiclass prediction:
+
+  final_probability[class] = 0.40 × RF_probability[class]
+                           + 0.60 × GBM_probability[class]
+
+  Predicted class = argmax(final_probability)
+  Confidence = max(final_probability)
+
+  GBM Softmax (converts raw log-scores to probabilities):
+    score[c] = log(prior_prob[c]) + Σ(lr × tree_output[c][t])
+    probability[c] = exp(score[c]) / Σ exp(score[k])
+
+  RF Aggregation:
+    probability[c] = mean of leaf-node class-probability across all 180–200 trees
+
+--------------------------------------------------------------------------------
+SECTION J: SMOTE — HOW CLASS IMBALANCE IS HANDLED
+--------------------------------------------------------------------------------
+
+  Original labeled data: 2,280 Normal vs 220 Anomaly (10.3:1 imbalance)
+  Without correction, a naive model would simply predict "Normal" always.
+
+  SMOTE Algorithm (k=5 nearest neighbours):
+    For each minority sample X_i:
+      1. Find k=5 nearest neighbours in the minority class.
+      2. Randomly pick one neighbour X_nn.
+      3. Generate synthetic sample: X_new = X_i + α × (X_nn − X_i)
+         where α ∈ [0,1] is random.
+      4. This creates a point interpolated along the line between
+         X_i and its neighbour — a realistic new anomaly, not just noise.
+    Repeat until minority class size equals majority class.
+  Post-SMOTE: 2,280 vs 2,280 (perfectly balanced).
+
+--------------------------------------------------------------------------------
+SECTION K: WHAT THE AI DOES NOT DO (HARD CONSTRAINTS)
+--------------------------------------------------------------------------------
+
+  - Does NOT approve or sanction any work proposal.
+  - Does NOT reject any work proposal.
+  - Does NOT modify any database record.
+  - Does NOT trigger any workflow state change.
+  - Does NOT send notifications autonomously.
+  - Does NOT learn from officer override decisions (static trained model).
+  - Does NOT store personally identifiable information.
+  - Does NOT apply different rules based on MP identity.
+  - All outputs are read-only advisory signals.
+  - Absence of an alert does NOT constitute AI clearance or approval.
+  - Every alert explicitly states: "OFFICER REVIEW REQUIRED — AI provides
+    support only, not decision."
+
+--------------------------------------------------------------------------------
+SECTION L: HOW TO RUN THE AI ON NEW PROJECT DATA
+--------------------------------------------------------------------------------
+
+  SINGLE PROJECT (JSON):
+    node mplad_ai/alert.js --input project.json
+
+  BATCH PROJECTS (CSV):
+    node mplad_ai/alert.js --input projects.csv --output alerts.json
+
+  DEMO (built-in test case):
+    node mplad_ai/alert.js --demo
+
+  RE-TRAIN (if new data is available):
+    node mplad_ai/train2.js
+
+  INPUT FIELDS ACCEPTED (flexible naming):
+    project_id / work_id / id
+    state / State
+    sector / category / Category
+    approved_cost / sanctioned_amount / recommended_amount / amount
+    fund_released
+    actual_expenditure / expenditure_amount
+    reported_progress_pct / progress_pct
+    expected_progress_pct
+    days_planned
+    days_elapsed
+    vendor_projects_count
+    citizen_reports
+    gps_distance_m
+    ground_verification_flag
+    year  OR  any date field (year extracted automatically)
+
+================================================================================
+END OF AI DOCUMENTATION
+================================================================================
+
+
+================================================================================
+PROJECT IMPLEMENTATION GUIDE — HOW EVERYTHING WORKS & HOW TO RUN IT
+================================================================================
+Last Updated: 2026-09-14
+Author note: This section documents the actual running implementation, tech stack,
+             file structure, pages, and startup steps. Read this first if you are
+             setting up or resuming work on the project.
+
+--------------------------------------------------------------------------------
+SECTION M: PROJECT FOLDER STRUCTURE
+--------------------------------------------------------------------------------
+
+  MPLAD/                              ← Root workspace
+  ├── mplad-app/                      ← Next.js 16 web application (MAIN APP)
+  │   ├── app/                        ← Next.js App Router pages
+  │   │   ├── page.js                 ← Public dashboard / home page
+  │   │   ├── authority/page.js       ← Authority scrutiny & sanction page
+  │   │   ├── mp/page.js              ← MP (Member of Parliament) proposal page
+  │   │   ├── officer/page.js         ← Officer execution & completion page
+  │   │   ├── assets/page.js          ← Public asset inventory page
+  │   │   ├── public/page.js          ← Public evidence upload & visibility
+  │   │   ├── monitor/page.js         ← AI-powered monitoring dashboard
+  │   │   ├── api/monitor/route.js    ← API route: calls alert.js for AI output
+  │   │   ├── globals.css             ← Global CSS design system
+  │   │   └── layout.js               ← Root layout (navigation, fonts)
+  │   ├── lib/
+  │   │   ├── db.js                   ← Prisma client singleton (database access)
+  │   │   └── modules/
+  │   │       ├── scrutiny.js         ← Business logic: sanction & reject proposals
+  │   │       └── execution.js        ← Business logic: IN-EXECUTION → COMPLETED → UTILISED
+  │   ├── prisma/
+  │   │   ├── schema.prisma           ← Database schema (all 8 models)
+  │   │   └── dev.db                  ← SQLite database file (local dev data)
+  │   ├── public/                     ← Static assets
+  │   ├── next.config.mjs             ← Next.js configuration
+  │   └── package.json                ← Node.js dependencies
+  │
+  ├── mplad_ai/                       ← AI / Machine Learning scripts
+  │   ├── train2.js                   ← (PRIMARY) Node.js model training script
+  │   ├── alert.js                    ← (PRIMARY) Node.js inference / alert engine
+  │   ├── train.py                    ← Python version of training (blocked on this PC)
+  │   ├── alert.py                    ← Python version of inference (blocked on this PC)
+  │   ├── india_economic_data.py      ← Economic data reference (Python)
+  │   └── models/                     ← Saved trained model files (*.json)
+  │
+  ├── mplads_project_guardian_prototype.csv  ← Labeled training data (2,500 rows)
+  ├── mplads_expenditures_2026-09-14.csv     ← Real MPLADS expenditure data (108,695 rows)
+  ├── mplads_recommended_works_2026-09-14.csv← Recommended works data (87,272 rows)
+  ├── mplads_completed_works_2026-09-14.csv  ← Completed works data (44,028 rows)
+  ├── mplads_mp_summary_2026-09-14.csv       ← MP/State summary stats (774 rows)
+  ├── json_2026-09-14.json                   ← Dashboard validation benchmark (1 record)
+  ├── MPLAD.txt                              ← THIS FILE (full documentation)
+  ├── MPLADS_System_Documentation.txt        ← Secondary documentation
+  └── package.json                           ← Root package.json (minimal)
+
+--------------------------------------------------------------------------------
+SECTION N: TECHNOLOGY STACK
+--------------------------------------------------------------------------------
+
+  LAYER              TECHNOLOGY                  VERSION / NOTES
+  ─────────────────────────────────────────────────────────────────────────────
+  Web Framework      Next.js                     16.3.5 (App Router, webpack mode)
+  UI Library         React                       19.2.8
+  Styling            Vanilla CSS                 globals.css + page.module.css
+  Database ORM       Prisma                      5.22.0 (Prisma Client JS)
+  Database           SQLite                      dev.db (local file, no server needed)
+  AI (Node.js)       alert.js / train2.js        Pure Node.js, no Python needed
+  AI (Python alt)    alert.py / train.py         Python 3.12 + numpy + pandas (BLOCKED)
+  Runtime            Node.js                     (installed, works fully)
+  Package Manager    npm                         (installed, works fully)
+  Dev Server URL     http://localhost:3000       (local) / http://26.113.137.153:3000 (network)
+
+--------------------------------------------------------------------------------
+SECTION O: DATABASE — HOW IT WORKS
+--------------------------------------------------------------------------------
+
+  Engine:   SQLite (a single file: mplad-app/prisma/dev.db)
+  ORM:      Prisma — auto-generates a type-safe client from schema.prisma
+  Location: mplad-app/prisma/dev.db
+
+  The database contains 8 tables matching the logical architecture:
+    1. Constituency        — stores constituency records
+    2. Member              — stores MP (Member of Parliament) records
+    3. EntitlementYear     — stores yearly fund entitlement per MP
+    4. PublicAssetInventory— stores known durable community assets
+    5. WorkProposal        — stores proposals submitted by MPs
+    6. ImplementingAgency  — stores agencies that execute works
+    7. Work                — stores sanctioned works (created only after sanction)
+    8. WorkEvidence        — stores geo-tagged photo/video evidence (append-only)
+    9. ActionAudit         — stores all state change audit records (append-only)
+
+  No separate database server is needed. SQLite is a file — it just works.
+
+  PRISMA COMMANDS (run from inside mplad-app/ directory):
+    First-time setup:
+      npx prisma generate        ← Generates the Prisma client from schema
+      npx prisma db push         ← Creates/updates tables in dev.db
+    View database in browser:
+      npx prisma studio          ← Opens a GUI at http://localhost:5555
+
+--------------------------------------------------------------------------------
+SECTION P: WEB APPLICATION — PAGES AND THEIR PURPOSE
+--------------------------------------------------------------------------------
+
+  ROUTE               FILE                         WHO USES IT       PURPOSE
+  ─────────────────────────────────────────────────────────────────────────────
+  /                   app/page.js                  Everyone (public) Scheme-level dashboard:
+                                                                     shows total proposals,
+                                                                     works by state, fund
+                                                                     utilisation stats,
+                                                                     permissible sectors list.
+
+  /mp                 app/mp/page.js               MP (Member)       Submit new work proposals.
+                                                                     Eligibility AI signal
+                                                                     shown inline (read-only).
+
+  /authority          app/authority/page.js        Authority Officer Scrutinise proposals.
+                                                                     Sanction → creates Work.
+                                                                     Reject → records reason.
+                                                                     AI eligibility signal shown.
+
+  /officer            app/officer/page.js          Implementing      Move works through states:
+                                                   Officer           SANCTIONED → IN-EXECUTION
+                                                                     → COMPLETED → UTILISED.
+                                                                     Update expenditure amounts.
+
+  /assets             app/assets/page.js           Everyone (public) View public asset inventory
+                                                                     (existing durable assets).
+
+  /public             app/public/page.js           Public / Citizen  Upload geo-tagged evidence
+                                                                     (photos/videos) for existing
+                                                                     sanctioned works. Read-only
+                                                                     view of works. No state
+                                                                     changes triggered.
+
+  /monitor            app/monitor/page.js          Authority Officer AI monitoring dashboard.
+                                                                     Calls alert.js via API,
+                                                                     shows anomaly alerts, risk
+                                                                     classification, cost
+                                                                     reasonableness per project.
+
+  /api/monitor        app/api/monitor/route.js     Internal (API)    Server-side API route that
+                                                                     receives project JSON and
+                                                                     runs alert.js inference,
+                                                                     returning structured alerts.
+
+--------------------------------------------------------------------------------
+SECTION Q: BUSINESS LOGIC MODULES
+--------------------------------------------------------------------------------
+
+  FILE                              PURPOSE
+  ─────────────────────────────────────────────────────────────────────────────
+  lib/modules/scrutiny.js           sanctionProposal(proposal_id, agency_id, amount)
+                                      → Validates funds, creates Work record,
+                                        updates EntitlementYear commitment,
+                                        appends ActionAudit (state: SANCTIONED).
+                                    rejectProposal(proposal_id, reason_term)
+                                      → Appends ActionAudit (state: REJECTED),
+                                        no Work created.
+
+  lib/modules/execution.js          advanceWorkState(work_id, new_state, expended_amount)
+                                      → Validates state transition chain,
+                                        updates Work state and amounts,
+                                        appends ActionAudit for every change.
+                                    State chain enforced:
+                                      SANCTIONED → IN-EXECUTION → COMPLETED → UTILISED
+                                      (no skipping, no reversal)
+
+  lib/db.js                         Prisma client singleton.
+                                    Prevents multiple DB connections in dev hot-reload.
+                                    In production: logs warn/error only.
+                                    In development: logs all queries.
+
+--------------------------------------------------------------------------------
+SECTION R: AI SCRIPTS — HOW TO RUN THEM
+--------------------------------------------------------------------------------
+
+  IMPORTANT: On this machine (institutional/school computer), the Application
+  Control policy blocks Python DLL files (numpy, pandas). Use the NODE.JS
+  versions instead — they work perfectly because Node.js is not blocked.
+
+  ── NODE.JS VERSIONS (USE THESE) ──────────────────────────────────────────────
+
+  Working directory: MPLAD\mplad_ai\
+
+  1. TRAIN THE MODEL (builds models/*.json from CSV data):
+       node train2.js
+     Duration: several minutes (processes 238,542+ records)
+     Output:   models/ folder — JSON files containing all model parameters.
+
+  2. RUN INFERENCE ON A DEMO PROJECT:
+       node alert.js --demo
+     Output: JSON printed to console with all alerts for a built-in test case.
+
+  3. RUN INFERENCE ON A SINGLE PROJECT (JSON file):
+       node alert.js --input project.json
+     Output: JSON printed to console.
+
+  4. RUN BATCH INFERENCE (CSV file):
+       node alert.js --input projects.csv --output alerts.json
+     Output: alerts.json file with results for all rows.
+
+  5. THE WEB APP CALLS ALERT.JS AUTOMATICALLY:
+     When you open /monitor in the browser, it calls /api/monitor which
+     internally spawns alert.js. You don't need to run alert.js manually
+     for the web interface to work.
+
+  ── PYTHON VERSIONS (BLOCKED ON THIS MACHINE) ─────────────────────────────────
+
+  alert.py / train.py require numpy and pandas.
+  These are blocked by Windows Application Control policy on this computer.
+  The error is: "DLL load failed while importing _multiarray_umath:
+                 An Application Control policy has blocked this file."
+  Even pip.exe itself is blocked (ResourceUnavailable / NativeCommandFailed).
+
+  OPTIONS IF YOU NEED PYTHON:
+    a) Google Colab (free, no install):  https://colab.research.google.com
+       Upload alert.py or train.py and run there.
+    b) A personal/home computer (no institutional restrictions).
+    c) Ask IT administrator to whitelist Python package DLLs.
+
+  NOTE: The Node.js scripts (train2.js / alert.js) are FUNCTIONALLY IDENTICAL
+  to the Python scripts. You do NOT need Python for any part of this project.
+
+--------------------------------------------------------------------------------
+SECTION S: HOW TO START THE WEB APP — STEP BY STEP
+--------------------------------------------------------------------------------
+
+  PRE-REQUISITES (one-time):
+    Node.js must be installed (already working — Next.js runs fine).
+    No Python, no pip, no database server required.
+
+  STEP 1: Open PowerShell or Terminal.
+
+  STEP 2: Navigate to the web app directory:
+    cd "C:\Users\nanth\OneDrive\Desktop\MPLAD\mplad-app"
+
+  STEP 3: Install dependencies (first time only, or after adding new packages):
+    npm install
+    (You may see warnings about "allow-scripts" for Prisma — these are safe to ignore.)
+
+  STEP 4: Set up the database (first time only, or after changing schema.prisma):
+    npx prisma generate
+    npx prisma db push
+
+  STEP 5: Start the development server:
+    npm run dev
+
+  STEP 6: Open browser and go to:
+    http://localhost:3000
+
+  AVAILABLE PAGES ONCE RUNNING:
+    http://localhost:3000/           ← Public dashboard
+    http://localhost:3000/mp         ← MP proposal submission
+    http://localhost:3000/authority  ← Authority sanction/reject
+    http://localhost:3000/officer    ← Officer execution tracking
+    http://localhost:3000/assets     ← Asset inventory
+    http://localhost:3000/public     ← Public evidence upload
+    http://localhost:3000/monitor    ← AI monitoring dashboard
+
+--------------------------------------------------------------------------------
+SECTION T: KNOWN ISSUES & WARNINGS (AS OF 2026-09-14)
+--------------------------------------------------------------------------------
+
+  ISSUE 1: SWC Native Compiler Blocked
+    Warning: "Attempted to load @next/swc-win32-x64-msvc, but an error occurred:
+              An Application Control policy has blocked this file."
+    Impact:  NONE. Next.js automatically falls back to WASM compiler.
+             App works perfectly. Pages may compile slightly slower.
+    Action:  Ignore this warning.
+
+  ISSUE 2: Python DLLs Blocked (numpy / pandas)
+    Error:   "DLL load failed while importing _multiarray_umath"
+    Impact:  alert.py and train.py cannot run on this machine.
+    Action:  Use alert.js and train2.js instead (identical functionality).
+             Or use Google Colab for Python scripts.
+
+  ISSUE 3: pip.exe Blocked
+    Error:   "Program 'pip.exe' failed to run: An Application Control policy
+              has blocked this file. NativeCommandFailed"
+    Impact:  Cannot install Python packages on this machine.
+    Action:  Use Node.js scripts. Python not needed.
+
+  ISSUE 4: npm "allow-scripts" Warnings for Prisma
+    Warning: "3 packages have install scripts not yet covered by allowScripts:
+              @prisma/client, @prisma/engines, prisma"
+    Impact:  NONE for development. Prisma still works.
+    Action:  Run: npm approve-scripts --allow-scripts-pending
+             Or simply ignore — it does not break functionality.
+
+  ISSUE 5: Lockfile Warning for WASM
+    Warning: "Skipping creating a lockfile at .next\dev\lock because we're
+              using WASM bindings"
+    Impact:  NONE. This is informational only.
+    Action:  Ignore.
+
+--------------------------------------------------------------------------------
+SECTION U: ENVIRONMENT NOTES
+--------------------------------------------------------------------------------
+
+  Machine type:   Institutional / school computer
+  OS:             Windows (PowerShell)
+  Python version: 3.12 (Windows Store install — DLLs blocked by policy)
+  Node.js:        Installed and fully working
+  npm:            Installed and fully working
+  Database:       SQLite (file-based, no server, fully working)
+  Network URL:    http://26.113.137.153:3000 (accessible on local network)
+  Local URL:      http://localhost:3000
+
+  WHAT WORKS:
+    ✅ Next.js web application (npm run dev)
+    ✅ SQLite database via Prisma
+    ✅ All 7 web pages and routes
+    ✅ Business logic (scrutiny.js, execution.js)
+    ✅ AI via Node.js (alert.js, train2.js)
+    ✅ AI monitor page in browser (/monitor)
+
+  WHAT DOES NOT WORK ON THIS MACHINE:
+    ❌ Python scripts (alert.py, train.py) — DLL blocked
+    ❌ pip install — pip.exe blocked
+    ❌ Virtual environment pip — also blocked
+
+================================================================================
+SECTION V: RECENT TROUBLESHOOTING & FIXES (DETAILED LOG)
+================================================================================
+
+We encountered and fully resolved several issues while attempting to run the Next.js frontend application. Below is the exact step-by-step documentation of every single fix applied:
+
+1. INCORRECT DIRECTORY EXECUTION
+   - Error: Running `npm run dev` produced `npm error code ENOENT` and `Could not read package.json`.
+   - Cause: The command was executed in the user's home directory (`C:\Users\nanth`) instead of the project directory.
+   - Fix: Navigated to the correct project folder using `cd C:\Users\nanth\OneDrive\Desktop\MPLAD\mplad-app` before running the development server.
+
+2. SCHEMA MISMATCH ON HOMEPAGE (app/page.js)
+   - Error: The web application crashed with `Runtime TypeError: Cannot read properties of undefined (reading 'count')` at `db.workProposal.count()`.
+   - Cause: The Next.js homepage (`app/page.js`) was referencing legacy database tables (like `WorkProposal`, `EntitlementYear`, `Constituency`, and `ImplementingAgency`) that no longer exist in the current `schema.prisma`. 
+   - Fix: Completely rewrote the data fetching and metric aggregation logic in `app/page.js` (Lines 39-123). We switched the queries to use the current Prisma models: `Work`, `FundFlow`, `Mp`, and `Agency`. We also re-mapped the UI variables to use the newly available fields (e.g., mapping `w.state_term_id` to `w.status`, mapping `w.expended_amount` to `w.expenditure`).
+
+3. SQLITE-PRISMA STRICT TYPING CONFLICT (constituency field)
+   - Error: The dashboard crashed with `PrismaClientKnownRequestError: Error converting field "constituency" of expected non-nullable type "String", found incompatible value of "0"`.
+   - Cause: SQLite is loosely typed, allowing integers to be stored in text columns. The `data/app.db` file had an integer `0` stored in the `constituency` column of the `mps` table. However, Prisma enforces strict types based on `schema.prisma` (which defines `constituency` as `String?`), causing it to crash when encountering an integer.
+   - Fix: Executed a Python automation script in the background to connect to `data/app.db` via `sqlite3`. The script ran the query: 
+     `UPDATE mps SET constituency = CAST(constituency AS TEXT) WHERE typeof(constituency) != 'text' AND constituency IS NOT NULL`
+     This permanently fixed the integer mismatch and brought the database into 100% compliance with the Prisma schema.
+
+================================================================================
+END OF IMPLEMENTATION GUIDE
+================================================================================

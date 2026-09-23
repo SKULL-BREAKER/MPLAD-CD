@@ -1,0 +1,164 @@
+{
+  "alert_budget": 0.0,
+  "confusion": {
+    "flagged": {
+      "anomaly": 0,
+      "innocent": 0,
+      "unlabeled": 0
+    },
+    "unflagged": {
+      "anomaly": 677,
+      "innocent": 410,
+      "unlabeled": 1334
+    }
+  },
+  "counts": {
+    "total_anomaly_labels": 688,
+    "total_anomaly_works": 677,
+    "total_flagged": 0,
+    "total_innocent": 410,
+    "total_works": 2421
+  },
+  "db": "data/app.db",
+  "detector_metrics": {
+    "P1": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 30
+    },
+    "P10": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 62
+    },
+    "P2": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 120
+    },
+    "P3": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P4": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 100
+    },
+    "P5": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 109
+    },
+    "P6": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 57
+    },
+    "P7": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P8": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    },
+    "P9": {
+      "caught": 0,
+      "innocent_fp": null,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    }
+  },
+  "git_sha": "5c999bf75749dde57131b49e9ce72f35e8a6fd09",
+  "innocent_fp": 0.0,
+  "macro_f1": 0.0,
+  "n4_fp": 0.0,
+  "patterns": {
+    "P1": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 30
+    },
+    "P10": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 62
+    },
+    "P2": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 120
+    },
+    "P3": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P4": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 100
+    },
+    "P5": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 109
+    },
+    "P6": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 57
+    },
+    "P7": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P8": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    },
+    "P9": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    }
+  },
+  "preset": "balanced",
+  "seed": 42,
+  "system_precision": null
+}

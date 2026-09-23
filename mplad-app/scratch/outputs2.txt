@@ -1,0 +1,138 @@
+--- Running commands ---
+
+# python scripts/gate02.py
+--- Running Gate 02 ---
+Running eval run 1...
+Running eval run 2...
+PASS: determinism (sha256 identical)
+PASS: patterns present with support > 0, recall=0.0, precision=null
+PASS: reconciliation check (confusion sum == total works == DB works, pattern sum == anomaly labels)
+Testing locked eval...
+PASS: locked behavior verified
+GATE 02 PASSED.
+
+# cat reports/eval_dev.json
+{
+  "alert_budget": 0.0,
+  "confusion": {
+    "flagged": {
+      "anomaly": 0,
+      "innocent": 0,
+      "unlabeled": 0
+    },
+    "unflagged": {
+      "anomaly": 664,
+      "innocent": 387,
+      "unlabeled": 1368
+    }
+  },
+  "counts": {
+    "total_anomaly_labels": 689,
+    "total_anomaly_works": 664,
+    "total_flagged": 0,
+    "total_innocent": 387,
+    "total_works": 2419
+  },
+  "git_sha": "1cf9d4c3ffb22b4fb35290312c2576058a555247",
+  "innocent_fp": 0.0,
+  "macro_f1": 0.0,
+  "n4_fp": 0.0,
+  "patterns": {
+    "P1": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 30
+    },
+    "P10": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 66
+    },
+    "P2": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 120
+    },
+    "P3": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P4": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 100
+    },
+    "P5": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 109
+    },
+    "P6": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 54
+    },
+    "P7": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P8": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    },
+    "P9": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    }
+  },
+  "preset": "balanced",
+  "system_precision": null
+}
+
+# git show --stat 1cf9d4c | head -25
+commit 1cf9d4c3ffb22b4fb35290312c2576058a555247
+Author: NANTHAKUMAR <nanthakumar7750@gmail.com>
+Date:   Sat Sep 19 22:07:03 2026 +0530
+
+    Step 02: Fix determinism, semantics, and add missing specs
+
+ mplad-app/STEP_01.md              | 27 ++++++++++++++++++
+ mplad-app/STEP_02.md              | 29 +++++++++++++++++++
+ mplad-app/STEP_03.md              | 31 ++++++++++++++++++++
+ mplad-app/STEP_04.md              | 31 ++++++++++++++++++++
+ mplad-app/STEP_05.md              | 59 +++++++++++++++++++++++++++++++++++++++
+ mplad-app/STEP_06.md              | 32 +++++++++++++++++++++
+ mplad-app/STEP_07.md              | 35 +++++++++++++++++++++++
+ mplad-app/STEP_08.md              | 27 ++++++++++++++++++
+ mplad-app/STEP_09.md              | 35 +++++++++++++++++++++++
+ mplad-app/STEP_10.md              | 33 ++++++++++++++++++++++
+ mplad-app/STEP_11.md              | 35 +++++++++++++++++++++++
+ mplad-app/STEP_12.md              | 50 +++++++++++++++++++++++++++++++++
+ mplad-app/app/pipeline/eval.py    |  9 ++++--
+ mplad-app/app/pipeline/metrics.py | 22 ++++++++-------
+ mplad-app/scripts/gate02.py       | 24 ++++++++++------
+ 15 files changed, 459 insertions(+), 20 deletions(-)
+
+
+# COMMIT AND TAG
+
+# git tag -l && git log --oneline -3
+step-01-passed
+step-02-passed
+f9b7871 Step 02: Fix confusion matrix reconciliation
+1cf9d4c Step 02: Fix determinism, semantics, and add missing specs
+a098dcc Step 02: Implement Metrics Engine (eval) with zero-division safety and determinism

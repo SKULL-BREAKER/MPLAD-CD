@@ -1,0 +1,7 @@
+﻿{
+  "PLAIN": 1.0,
+  "HILLY": 1.25,
+  "DIFFICULT": 1.40,
+  "_source": "PWD Schedule of Rates - Terrain Classification Norms",
+  "_note": "Applied as multiplier on top of WPI-adjusted rate. HILLY: altitude > 1000m or gradient > 1:20. DIFFICULT: remote/island/snowbound areas."
+}

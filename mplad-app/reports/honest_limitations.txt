@@ -1,0 +1,3 @@
+D1's `is_p2` logic currently requires the literal `(Phase 2)` suffix to be present in the text to identify P2 clones. This is recipe-matching against the synthetic data generator, not general duplication detection. Real-data transfer and judge Q&A must account for it. 
+
+Step 14 candidate: drop this crutch and lean on corroboration (distance, same agency, similar cost) instead of relying on exact string suffixes.

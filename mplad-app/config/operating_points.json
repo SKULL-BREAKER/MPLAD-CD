@@ -1,0 +1,68 @@
+{
+  "presets": {
+    "balanced": {
+      "anomaly": {
+        "CRITICAL": 0.70,
+        "HIGH": 0.50,
+        "MEDIUM": 0.30
+      },
+      "rules": {
+        "cost_overrun_multiplier": 1.10,
+        "over_release_multiplier": 1.05,
+        "extreme_delay_days": 365,
+        "significant_delay_days": 180,
+        "progress_spend_mismatch": 0.35,
+        "gps_drift_m": 5000
+      },
+      "cost_bands": {
+        "CRITICAL_IQR_MULT": 3.0,
+        "HIGH_PERCENTILE": 95,
+        "MEDIUM_PERCENTILE_HIGH": 90,
+        "MEDIUM_PERCENTILE_LOW": 5
+      }
+    },
+    "strict": {
+      "anomaly": {
+        "CRITICAL": 0.60,
+        "HIGH": 0.40,
+        "MEDIUM": 0.20
+      },
+      "rules": {
+        "cost_overrun_multiplier": 1.05,
+        "over_release_multiplier": 1.00,
+        "extreme_delay_days": 180,
+        "significant_delay_days": 90,
+        "progress_spend_mismatch": 0.25,
+        "gps_drift_m": 2000
+      },
+      "cost_bands": {
+        "CRITICAL_IQR_MULT": 2.0,
+        "HIGH_PERCENTILE": 90,
+        "MEDIUM_PERCENTILE_HIGH": 80,
+        "MEDIUM_PERCENTILE_LOW": 10
+      }
+    },
+    "quiet": {
+      "anomaly": {
+        "CRITICAL": 0.85,
+        "HIGH": 0.70,
+        "MEDIUM": 0.50
+      },
+      "rules": {
+        "cost_overrun_multiplier": 1.20,
+        "over_release_multiplier": 1.15,
+        "extreme_delay_days": 730,
+        "significant_delay_days": 365,
+        "progress_spend_mismatch": 0.50,
+        "gps_drift_m": 10000
+      },
+      "cost_bands": {
+        "CRITICAL_IQR_MULT": 4.0,
+        "HIGH_PERCENTILE": 99,
+        "MEDIUM_PERCENTILE_HIGH": 95,
+        "MEDIUM_PERCENTILE_LOW": 1
+      }
+    }
+  },
+  "active_preset": "balanced"
+}

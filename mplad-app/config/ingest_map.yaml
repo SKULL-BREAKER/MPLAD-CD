@@ -1,0 +1,57 @@
+synonyms:
+  title:
+    - work_name
+    - name_of_work
+    - work_title
+    - name
+    - project_name
+  sanctioned_amount:
+    - amount_sanctioned
+    - sanctioned_cost
+    - cost
+    - amount
+    - approved_amount
+    - sanctioned_amount_rs
+  sanction_date:
+    - date_of_sanction
+    - date_sanctioned
+    - sanction_dt
+    - approval_date
+  agency:
+    - executing_agency
+    - agency_name
+    - impl_agency
+    - implementing_agency
+  lat:
+    - latitude
+    - lat
+  lon:
+    - longitude
+    - long
+    - lng
+  fy:
+    - financial_year
+    - year
+  district:
+    - district_name
+    - dist
+  status:
+    - work_status
+    - current_status
+    - status
+  expenditure:
+    - spent
+    - expenditure_incurred
+  physical_qty:
+    - quantity
+    - qty
+  unit:
+    - physical_unit
+  start_date:
+    - date_of_start
+  completion_date:
+    - date_of_completion
+  category:
+    - sector
+    - work_category
+    - type_of_work

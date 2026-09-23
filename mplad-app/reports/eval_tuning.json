@@ -1,0 +1,166 @@
+{
+  "alert_budget": 0.0,
+  "confusion": {
+    "flagged": {
+      "anomaly": 0,
+      "innocent": 0,
+      "unlabeled": 0
+    },
+    "unflagged": {
+      "anomaly": 673,
+      "innocent": 410,
+      "unlabeled": 1388
+    }
+  },
+  "counts": {
+    "total_anomaly_labels": 686,
+    "total_anomaly_works": 673,
+    "total_flagged": 0,
+    "total_innocent": 410,
+    "total_works": 2471
+  },
+  "db": "data_tuning/app.db",
+  "detector_metrics": {
+    "P1": {
+      "caught": 30,
+      "innocent_fp": 0.0,
+      "precision": 0.9090909090909091,
+      "recall": 1.0,
+      "support": 30
+    },
+    "P10": {
+      "caught": 74,
+      "innocent_fp": 0.02631578947368421,
+      "precision": 0.9736842105263158,
+      "recall": 1.0,
+      "support": 74
+    },
+    "P2": {
+      "caught": 0,
+      "innocent_fp": 0.0,
+      "precision": 0.9959349593495935,
+      "recall": 0.0,
+      "support": 120
+    },
+    "P3": {
+      "caught": 0,
+      "innocent_fp": 0.014492753623188406,
+      "precision": 0.927536231884058,
+      "recall": 0.0,
+      "support": 78
+    },
+    "P4": {
+      "caught": 0,
+      "innocent_fp": 0.0,
+      "precision": 1.0,
+      "recall": 0.0,
+      "support": 100
+    },
+    "P5": {
+      "caught": 108,
+      "innocent_fp": 0.038461538461538464,
+      "precision": 0.6923076923076923,
+      "recall": 1.0,
+      "support": 108
+    },
+    "P6": {
+      "caught": 46,
+      "innocent_fp": 0.0,
+      "precision": 0.9959349593495935,
+      "recall": 1.0,
+      "support": 46
+    },
+    "P7": {
+      "caught": 0,
+      "innocent_fp": 0.0,
+      "precision": 0.9959349593495935,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P8": {
+      "caught": 25,
+      "innocent_fp": 0.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 25
+    },
+    "P9": {
+      "caught": 0,
+      "innocent_fp": 0.0,
+      "precision": 1.0,
+      "recall": 0.0,
+      "support": 25
+    }
+  },
+  "git_sha": "95acc4926f175fcf1017e64b0883fca167ae072b",
+  "innocent_fp": 0.0,
+  "macro_f1": 0.0,
+  "n4_fp": 0.0,
+  "overlap_signal": 547,
+  "patterns": {
+    "P1": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 30
+    },
+    "P10": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 74
+    },
+    "P2": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 120
+    },
+    "P3": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 78
+    },
+    "P4": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 100
+    },
+    "P5": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 108
+    },
+    "P6": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 46
+    },
+    "P7": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P8": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    },
+    "P9": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    }
+  },
+  "preset": "balanced",
+  "rule_violations": 273,
+  "seed": 43,
+  "system_precision": null
+}

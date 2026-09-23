@@ -1,0 +1,1 @@
+import sqlite3, pandas as pd; con=sqlite3.connect('data_tuning/app.db'); print(pd.read_sql_query("SELECT f.pattern, COUNT(*) as c FROM fraud_labels f JOIN detection_results d ON d.work_id = f.work_id WHERE d.detector = 'D2' AND abs(d.score) >= 3.0 GROUP BY f.pattern;", con))

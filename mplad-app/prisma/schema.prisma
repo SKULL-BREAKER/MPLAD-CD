@@ -1,0 +1,247 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../data/app.db"
+}
+
+model Mp {
+  id              String  @id
+  name            String?
+  house           String?
+  party           String?
+  state           String?
+  constituency    String?
+  nodal_districts String?
+
+  @@map("mps")
+}
+
+model District {
+  id           String  @id
+  name         String?
+  state        String?
+  centroid_lat Float?
+  centroid_lon Float?
+  terrain      Float?  @default(1.0)
+  geo_key      String?
+
+  @@map("districts")
+}
+
+model Agency {
+  id            String  @id
+  name          String?
+  agency_type   String?
+  home_district String?
+
+  @@map("agencies")
+}
+
+model Village {
+  id          String  @id
+  district_id String?
+  name        String?
+  lat         Float?
+  lon         Float?
+
+  @@map("villages")
+}
+
+model Work {
+  id                String  @id
+  mp_id             String?
+  district_id       String?
+  agency_id         String?
+  title             String?
+  description       String? @default("")
+  category          String?
+  fy                String?
+  sanctioned_amount Float?
+  expenditure       Float?
+  physical_qty      Float?
+  unit              String?
+  area_type         String?
+  status            String?
+  sanction_date     String?
+  start_date        String? @default("")
+  completion_date   String? @default("")
+  lat               Float?
+  lon               Float?
+  village           String?
+  block             String?
+  created_at        String?
+  import_hash       String? @unique
+
+  @@map("works")
+}
+
+model FundFlow {
+  district_id    String
+  fy             String
+  mp_id          String
+  entitlement    Float?
+  funds_released Float?
+  expenditure    Float?
+  unspent        Float?
+
+  @@id([district_id, fy, mp_id])
+  @@map("fund_flows")
+}
+
+model WorkSpec {
+  work_id    String  @id
+  spec_json  String?
+  source     String?
+  confidence Float?
+
+  @@map("work_specs")
+}
+
+model CostEstimate {
+  work_id        String
+  method         String
+  expected_cost  Float?
+  mape           Float?
+  breakdown_json String?
+  created_at     String?
+
+  @@id([work_id, method])
+  @@map("cost_estimates")
+}
+
+model User {
+  id          String  @id
+  role        String?
+  name        String?
+  district_id String?
+  phone_hash  String?
+  trust_score Float?  @default(50)
+  created_at  String?
+
+  @@map("users")
+}
+
+model EvidenceSubmission {
+  id               String  @id
+  work_id          String?
+  user_id          String?
+  captured_at      String?
+  lat              Float?
+  lon              Float?
+  image_path       String?
+  phash            String?
+  capture_source   String?
+  geo_match        Float?
+  phase_label      String?
+  officer_verified Int?
+  trust_score      Float?
+  status           String?
+  created_at       String?
+
+  @@map("evidence_submissions")
+}
+
+model Comment {
+  id         String  @id
+  work_id    String?
+  user_id    String?
+  body       String?
+  status     String?
+  created_at String?
+
+  @@map("comments")
+}
+
+model Alert {
+  id            String  @id
+  work_id       String?
+  district_id   String?
+  severity      String?
+  type          String?
+  title         String?
+  evidence_json String?
+  routed_to     String?
+  escalated     Int?    @default(0)
+  status        String?
+  sla_due_at    String?
+  resolved_at   String?
+  created_at    String?
+
+  @@map("alerts")
+}
+
+model WorkUpdate {
+  id        String  @id
+  work_id   String?
+  actor_id  String?
+  field     String?
+  old_value String?
+  new_value String?
+  at        String?
+
+  @@map("work_updates")
+}
+
+model DetectionResult {
+  work_id       String
+  detector      String
+  score         Float?
+  tier          String?
+  evidence_json String?
+
+  @@id([work_id, detector])
+  @@map("detection_results")
+}
+
+model DistrictFlag {
+  district_id   String
+  flag          String
+  value         Float?
+  evidence_json String?
+
+  @@id([district_id, flag])
+  @@map("district_flags")
+}
+
+model WorkRisk {
+  work_id            String  @id
+  risk_score         Float?
+  tier               String?
+  contributions_json String?
+  updated_at         String?
+
+  @@map("work_risk")
+}
+
+model DistrictRisk {
+  district_id        String  @id
+  risk_score         Float?
+  tier               String?
+  contributions_json String?
+  updated_at         String?
+
+  @@map("district_risk")
+}
+
+model FraudLabel {
+  work_id     String
+  pattern     String
+  label_class String?
+
+  @@id([work_id, pattern])
+  @@map("fraud_labels")
+}
+
+model AuditAction {
+  id      String  @id
+  work_id String?
+  action  String?
+  actor   String?
+  note    String?
+  at      String?
+
+  @@map("audit_actions")
+}

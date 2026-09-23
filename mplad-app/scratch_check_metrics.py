@@ -1,0 +1,1 @@
+import sqlite3, pandas as pd; con=sqlite3.connect('data_tuning/app.db'); df = pd.read_sql("SELECT detector, COUNT(DISTINCT work_id) FROM detection_results WHERE score >= 0.92 AND detector='D1' GROUP BY detector", con); print(df)

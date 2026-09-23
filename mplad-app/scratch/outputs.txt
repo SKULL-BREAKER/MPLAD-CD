@@ -1,0 +1,235 @@
+# A — Step 01 final proof
+--- Running Gate 01 ---
+PASS: determinism (sha256 identically matches across runs)
+PASS: seed_43_runs (Seed 43 generates successfully)
+PASS: works_count (2419 works)
+PASS: total_sanctioned (Rs 384 cr)
+PASS: max_overshoot (1.20x <= 1.6)
+PASS: 19_tables (19 tables)
+PASS: orphan_labels (0 orphans)
+GATE 01 PASSED.
+
+# B — BIRTH INSPECTION of gate02
+import json
+import os
+import subprocess
+import hashlib
+import sys
+
+def run_cmd(cmd, check=True):
+    res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if check and res.returncode != 0:
+        print(f"Command failed: {cmd}")
+        print(res.stdout)
+        print(res.stderr)
+        sys.exit(1)
+    return res
+
+def get_hash(filepath):
+    with open(filepath, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+def main():
+    print("--- Running Gate 02 ---")
+    
+    # Ensure starting clean
+    if os.path.exists("reports/eval_dev.json"):
+        os.remove("reports/eval_dev.json")
+    if os.path.exists("reports/test_lock.json"):
+        os.remove("reports/test_lock.json")
+        
+    # 1. Determinism
+    print("Running make eval run 1...")
+    run_cmd("python -m app.pipeline.eval --db data/app.db --out reports/eval_dev.json")
+    if not os.path.exists("reports/eval_dev.json"):
+        print("FAIL: reports/eval_dev.json not generated.")
+        sys.exit(1)
+    hash1 = get_hash("reports/eval_dev.json")
+    
+    # Save the output to parse
+    with open("reports/eval_dev.json", "r") as f:
+        eval_data = json.load(f)
+        
+    os.remove("reports/eval_dev.json")
+    
+    print("Running make eval run 2...")
+    run_cmd("python -m app.pipeline.eval --db data/app.db --out reports/eval_dev.json")
+    hash2 = get_hash("reports/eval_dev.json")
+    
+    if hash1 != hash2:
+        print("FAIL: Determinism failed. Runs produced different JSONs.")
+        sys.exit(1)
+    print("PASS: determinism (sha256 identical)")
+    
+    # 2. Structure and null metrics (since work_risk is empty)
+    patterns = eval_data.get("patterns", {})
+    if len(patterns) != 10:
+        print(f"FAIL: Expected 10 patterns, got {len(patterns)}")
+        sys.exit(1)
+        
+    for p in [f"P{i}" for i in range(1, 11)]:
+        if p not in patterns:
+            print(f"FAIL: Pattern {p} missing.")
+            sys.exit(1)
+            
+        data = patterns[p]
+        if data["support"] <= 0:
+            print(f"FAIL: Pattern {p} support is {data['support']}, expected > 0")
+            sys.exit(1)
+            
+        if data["precision"] is not None:
+            print(f"FAIL: Pattern {p} precision not null when work_risk is empty.")
+            sys.exit(1)
+            
+        if data["recall"] != 0.0:
+            print(f"FAIL: Pattern {p} recall should be 0.0 when work_risk is empty.")
+            sys.exit(1)
+            
+        if data["f1"] != 0.0:
+            print(f"FAIL: Pattern {p} f1 should be 0.0 when work_risk is empty.")
+            sys.exit(1)
+            
+    print("PASS: patterns present with support > 0, recall=0.0, precision=null")
+    
+    # 3. Locked behavior
+    print("Testing locked eval...")
+    run_cmd("python -m app.pipeline.eval --db data/app.db --out reports/test_lock.json --locked")
+    if not os.path.exists("reports/test_lock.json"):
+        print("FAIL: reports/test_lock.json not created on first locked run.")
+        sys.exit(1)
+        
+    # Run again, should fail
+    res = run_cmd("python -m app.pipeline.eval --db data/app.db --out reports/test_lock.json --locked", check=False)
+    if res.returncode != 1:
+        print(f"FAIL: Locked run should exit 1, but exited {res.returncode}")
+        sys.exit(1)
+        
+    if "LOCKED EVAL EXISTS" not in res.stdout and "LOCKED EVAL EXISTS" not in res.stderr:
+        print("FAIL: Did not output LOCKED EVAL EXISTS refusal message.")
+        sys.exit(1)
+        
+    os.remove("reports/test_lock.json")
+    print("PASS: locked behavior verified")
+    
+    with open("reports/gate_log.txt", "a") as f:
+        f.write("GATE 02 PASSED: determinism, structure, and locked behavior verified.\n")
+        
+    print("GATE 02 PASSED.")
+
+if __name__ == "__main__":
+    main()
+
+# C — the gate's own words, every line
+--- Running Gate 02 ---
+Running make eval run 1...
+Running make eval run 2...
+PASS: determinism (sha256 identical)
+PASS: patterns present with support > 0, recall=0.0, precision=null
+Testing locked eval...
+PASS: locked behavior verified
+GATE 02 PASSED.
+
+# D — the artifact itself, complete
+{
+  "alert_budget": 0.0,
+  "confusion": {
+    "flagged": {
+      "anomaly": 0,
+      "innocent": 0,
+      "unlabeled": 0
+    },
+    "unflagged": {
+      "anomaly": 689,
+      "innocent": 410,
+      "unlabeled": 1368
+    }
+  },
+  "counts": {
+    "total_anomalies": 689,
+    "total_flagged": 0,
+    "total_innocent": 410,
+    "total_works": 2419
+  },
+  "git_sha": "1cf9d4c3ffb22b4fb35290312c2576058a555247",
+  "innocent_fp": 0.0,
+  "macro_f1": 0.0,
+  "n4_fp": 0.0,
+  "patterns": {
+    "P1": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 30
+    },
+    "P10": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 66
+    },
+    "P2": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 120
+    },
+    "P3": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P4": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 100
+    },
+    "P5": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 109
+    },
+    "P6": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 54
+    },
+    "P7": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 80
+    },
+    "P8": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    },
+    "P9": {
+      "f1": 0.0,
+      "precision": null,
+      "recall": 0.0,
+      "support": 25
+    }
+  },
+  "preset": "balanced",
+  "system_precision": null
+}
+
+# E — locked refusal: BOTH runs, plus exit codes
+[2026-09-19T16:38:03.375030Z] Metrics written to reports/test_lock.json
+exit: 0
+LOCKED EVAL EXISTS — results frozen. FORCE=1 to discard (logs to reports/eval_log.txt).
+exit: 1
+
+# F — state
+step-01-passed
+1cf9d4c Step 02: Fix determinism, semantics, and add missing specs
+a098dcc Step 02: Implement Metrics Engine (eval) with zero-division safety and determinism
+5102688 Step 01: Enforce strict budget limits with fits() guard to restore 1.6 max_overshoot
+d72a8e6 Step 01: Fix P6 RS MP cloning and spread NXT/P3/P8/P9 injections; append gate logs
+b422ab2 Step 01: Generator fix, config, script, repo cleanup

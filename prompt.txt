@@ -1,0 +1,424 @@
+<USER_REQUEST>
+RULES: build ONLY this step · all numbers in config/ · deterministic seeds ·offline-first · modules <500 LoC · run gate, paste output, stop, commit.
+1. REPO STRUCTURE (exact)
+prahari/├── BUILD_STEPS.md, STEP_01..12.md (committed)├── Makefile, requirements.txt, .env.example (GEMINI_API_KEY=, ADMIN_TOKEN=)├── backend/│ ├── app/{main.py, db.py, models.py, schemas.py}│ ├── app/routers/{overview,districts,works,network,copilot,admin}.py│ ├── app/pipeline/{run.py, aggregate.py, metrics.py, eval.py, tune.py}│ ├── app/pipeline/detectors/{d1..d8}.py, ensemble.py│ ├── app/copilot/{text2sql.py, guardrails.py, memo.py, llm.py}│ ├── app/ingest/{csv_import.py}│ ├── seed/{generate_dataset.py}│ └── tests/├── frontend/ (vite react-ts)│ └── public/geo/india_districts_simplified.json├── config/{app,detectors,rules,operating_points,tuning_grid,eval_map,boq_templates}.yaml├── data/ (gitignored except demo.db) · data_tuning/ · data/cache/├── data/norms/{norm_items.csv, price_indices.csv}└── reports/
+2. DATABASE SCHEMA — create ALL tables now, one pass (SQLAlchemy models)
+CREATE TABLE mps (id TEXT PRIMARY KEY, name TEXT, house TEXT CHECK(house IN('LS','RS')), party TEXT, state TEXT, constituency TEXT, nodal_districts TEXT);CREATE TABLE districts (id TEXT PRIMARY KEY, name TEXT, state TEXT, centroid_lat REAL, centroid_lon REAL, terrain REAL DEFAULT 1.0, geo_key TEXT);CREATE TABLE agencies (id TEXT PRIMARY KEY, name TEXT, agency_type TEXT, home_district TEXT);CREATE TABLE villages (id TEXT PRIMARY KEY, district_id TEXT, name TEXT, lat REAL, lon REAL);CREATE TABLE works (id TEXT PRIMARY KEY, mp_id TEXT, district_id TEXT, agency_id TEXT, title TEXT, description TEXT DEFAULT '', category TEXT, fy TEXT, sanctioned_amount REAL, expenditure REAL, physical_qty REAL, unit TEXT, area_type TEXT CHECK(area_type IN('general','sc','st')), status TEXT CHECK(status IN('recommended','sanctioned','in_progress','completed','dropped')), sanction_date TEXT, start_date TEXT DEFAULT '', completion_date TEXT DEFAULT '', lat REAL, lon REAL, village TEXT, block TEXT, created_at TEXT);CREATE TABLE fund_flows (district_id TEXT, fy TEXT, mp_id TEXT, entitlement REAL, funds_released REAL, expenditure REAL, unspent REAL, PRIMARY KEY(district_id,fy,mp_id));CREATE TABLE work_specs (work_id TEXT PRIMARY KEY, spec_json TEXT, source TEXT CHECK(source IN('provided','inferred','officer_confirmed')), confidence REAL);CREATE TABLE cost_estimates (work_id TEXT, method TEXT CHECK(method IN('norm','peer','ml')), expected_cost REAL, mape REAL, breakdown_json TEXT, created_at TEXT, PRIMARY KEY(work_id, method));CREATE TABLE users (id TEXT PRIMARY KEY, role TEXT CHECK(role IN('citizen','officer','admin')), name TEXT, district_id TEXT, phone_hash TEXT, trust_score REAL DEFAULT 50, created_at TEXT);CREATE TABLE evidence_submissions (id TEXT PRIMARY KEY, work_id TEXT, user_id TEXT, captured_at TEXT, lat REAL, lon REAL, image_path TEXT, phash TEXT, capture_source TEXT CHECK(capture_source IN('in_app','gallery')), geo_match REAL, phase_label TEXT, officer_verified INTEGER, trust_score REAL, status TEXT, created_at TEXT);CREATE TABLE comments (id TEXT PRIMARY KEY, work_id TEXT, user_id TEXT, body TEXT, status TEXT CHECK(status IN('pending','approved','rejected')), created_at TEXT);CREATE TABLE alerts (id TEXT PRIMARY KEY, work_id TEXT, district_id TEXT, severity TEXT CHECK(severity IN('critical','high','medium')), type TEXT, title TEXT, evidence_json TEXT, routed_to TEXT, escalated INTEGER DEFAULT 0, status TEXT CHECK(status IN('new','ack','resolved','escalated')), sla_due_at TEXT, resolved_at TEXT, created_at TEXT);CREATE TABLE work_updates (id TEXT PRIMARY KEY, work_id TEXT, actor_id TEXT, field TEXT, old_value TEXT, new_value TEXT, at TEXT);CREATE TABLE detection_results (work_id TEXT, detector TEXT, score REAL, tier TEXT, evidence_json TEXT, PRIMARY KEY(work_id, detector));CREATE TABLE district_flags (district_id TEXT, flag TEXT, value REAL, evidence_json TEXT, PRIMARY KEY(district_id, flag));CREATE TABLE work_risk (work_id TEXT PRIMARY KEY, risk_score REAL, tier TEXT, contributions_json TEXT, updated_at TEXT);CREATE TABLE district_risk (district_id TEXT PRIMARY KEY, risk_score REAL, tier TEXT, contributions_json TEXT, updated_at TEXT);CREATE TABLE fraud_labels (work_id TEXT, pattern TEXT, label_class TEXT CHECK(label_class IN('fraud','inefficiency','violation','innocent')), PRIMARY KEY(work_id, pattern));CREATE TABLE audit_actions (id TEXT PRIMARY KEY, work_id TEXT, action TEXT CHECK(action IN('dismissed','escalated','verified')), actor TEXT, note TEXT, at TEXT);
+3. GENERATOR
+Implement seed/generate_dataset.py EXACTLY as DATASET_AND_ML_SPEC §1 (full codein that file). Add CLI: --seed N (default 42), --out DIR (default data/),--ref-today YYYY-MM-DD (default 2024-06-30; all relative dates shift).Write CSVs: works, mps, districts, agencies, villages, fund_flows, work_specs,fraud_labels + prints counts summary.
+4. LOADER + MAKEFILE
+app/db_load.py --csv DIR --db PATH: create tables, bulk load CSVs.
+Makefile: seed, seed-tuning (seed 43 → data_tuning/), db-load (working);detect, aggregate, eval, tune → stubs printing "not implemented".
+5. CONFIG SKELETONS (real values, not empty)
+app.yaml: {random_state: 42, ref_today: "2024-06-30", active_preset: balanced}
+detectors.yaml: {d1: {storage_floor: 0.70}, d2: {storage_floor: 1.0},d3: {}, d5: {storage_floor: 0.10}, d6: {storage_floor_km: 3.0},ensemble: {contamination: 0.03, random_state: 42}}
+rules.yaml: R1 prohibited keywords [temple, mosque, church, gurudwara, statue,memorial, office building] severity critical; R2 trust_cap 200 lakh VERIFY;R3 sc 15 st 7 VERIFY; R4 jurisdiction critical
+operating_points.yaml: {active: balanced, presets: {balanced: {thresholds: {d1_primary: 0.92, d1_review: 0.82, d2_z: 3.0, d3_flash_days: 14,d3_stalled_days: 540, d5_hhi: 0.25, d5_share: 0.30, d6_ghost_km: 8,c5_gap_pct: 0.30, ensemble: 0.60}, tiers: {critical: 0.60, high: 0.40, medium: 0.25}}}}}
+eval_map.yaml: {D1:[P2,P6,P7], D2:[P3], D3:[P4,P9], D4:[P10], D5:[P5],D6:[P1], D7:[P8], D8:[P5,P6], C5:[P3]}
+tuning_grid.yaml / boq_templates.yaml: placeholders (filled in Steps 09/11).
+GATE (run, paste output — all must pass)
+python seed/generate_dataset.py --seed 42 --out data/ TWICE → sha256 ofevery CSV identical between runs.
+python seed/generate_dataset.py --seed 43 --out data_tuning/ completes.
+python -m app.db_load --csv data --db data/app.db → sqlite3 data/app.db ".tables" lists every table above.
+Check script: every fraud_labels.work_id exists in works. Zero orphans.
+Works count printed ≈ 5,000; fund flow total ≈ ₹300–340 crore.
+DO NOT
+No detector code. No FastAPI routes. No frontend. Step 01 is data + bones.
+No migrations later — schema is complete NOW.
+STEP_02.md — Metrics Engine
+STEP 02 — METRICS ENGINE (measurement before detection)
+Prerequisite: STEP 01 gate passed.
+RULES: build ONLY this step · determinism · config not code · gate, stop, commit.
+TASK: app/pipeline/metrics.py + make eval
+Definitions (implement exactly — these numbers reach the judges)
+A work is FLAGGED iff work_risk.tier ∈ {CRITICAL, HIGH} (current preset).
+L_P = works with fraud_labels.pattern = P
+recall_P = |flagged ∩ L_P| / |L_P|
+precision_P (system) = |flagged ∩ L_P| / |flagged|
+innocent_FP = |{w: label_class=innocent ∧ flagged}| / |{label_class=innocent}|
+N4 line = innocent_FP restricted to pattern N4
+macro_F1 = mean(F1_P) over P1..P10
+alert_budget = total HIGH/CRITICAL alerts / (n_districts × active_FYs × 52)→ printed as "alerts per district per week"
+confusion matrix: rows = flagged?, cols = {anomaly-labeled, innocent-labeled,unlabeled(honest base)}; unlabeled-flagged count printed separately
+Implementation
+Function: compute_metrics(db_path, preset) -> dict reading works,work_risk (may be EMPTY at this step — guard all divisions), fraud_labels.
+app/pipeline/eval.py: CLI --db PATH --out reports/eval_dev.json [--locked]; writes {timestamp, preset, git_sha (subprocess git rev-parseHEAD), patterns: {P1: {precision, recall, f1, support}, ...},system_precision, innocent_fp, n4_fp, macro_f1, alert_budget,confusion: {...}, counts}.
+If --locked and output file EXISTS → exit code 1 with message"LOCKED EVAL EXISTS — results frozen. FORCE=1 to discard (logs toreports/eval_log.txt)." FORCE=1 appends timestamp+note to eval_log.txt.
+Makefile eval target wires it.
+Zero-division guards everywhere: empty L_P → pattern reported withsupport=0, null metrics, never a crash.
+Determinism
+Pure reads; two consecutive runs → byte-identical JSON (verify in gate).
+GATE
+make eval runs on the seeded DB with EMPTY work_risk → writeseval_dev.json, all 10 patterns present with support>0, null metrics, no crash.
+Run twice → identical files (sha256).
+python -m app.pipeline.eval --db data/app.db --out reports/test_lock.json --locked then run again → second run EXITS 1 with the refusal message.Delete test_lock.json after.
+DO NOT
+No thresholds, no detectors, no aggregation — those come later and mustnot be peeked at. This step is a ruler, not a judge.
+STEP_03.md — Detectors D1–D3
+STEP 03 — CORE DETECTORS D1 (duplicates), D2 (cost), D3 (timeline)
+Prerequisite: STEP 02 gate passed.
+RULES: RAW scores only — NO thresholds in detectors (aggregation applies them,Step 05) · every result carries evidence_json · deterministic.
+D1 — DUPLICATES (detectors/d1.py)
+Text: (title + " | " + description).lower()
+Embed: sentence-transformers all-MiniLM-L6-v2, batch 256. If modelunavailable offline → TF-IDF char ngrams (3,5) fallback, log which path used.
+CACHE (mandatory): data/cache/embeddings_.npy + ids.json +text_sha256.json. If text hash unchanged → load, never re-embed.
+Blocking: within each district (catches P2/P7) AND within each categoryglobally (catches P6). Pairwise cosine via numpy on the block matrices.
+For EVERY work store one row: detector='D1', score = max similarity found(storage floor 0.70 — pairs below not stored), evidence_json:{"matched_with": id, "similarity": s, "amount_delta": |a1-a2|/max, "same_agency": bool, "geo_distance_km": haversine, "fy_delta": |y1-y2|}.
+INNOCENT GUARD: if villages differ AND geo_distance > 5km → scorecapped at 0.69 (below every threshold — protects N1 near-dupes).
+Split-sanction (D1_split): group works by (village, agency, 30-daysanction window); ≥3 works each ≤ ₹12L and group total ≥ ₹25L →all members get row detector='D1_split', score=1.0, evidence withgroup members list.
+D2 — COST (detectors/d2.py)
+per-unit = sanctioned_amount / physical_qty (qty>0 guard).
+Per (category, fy): median + MAD of per-unit. z = 0.6745*(x−median)/MAD(MAD=0 → z=0). Store raw z (floor: only |z|≥1.0 rows stored).Evidence: {category, fy, perunit, median, mad, z, n_group}.
+Benford per district: first-digit distribution of sanctioned_amount vsBenford expected (log10(1+1/d)); chi-square statistic → district_flagsrow flag='benford_chi2' (raw value stored; significance decided inaggregation), evidence {chi2, p, n, digit_counts}.
+D3 — TIMELINE (detectors/d3.py) — pure raw metrics, one row per work:
+stalled_days = (ref_today − sanction_date).days if status='in_progress'
+not_started_days = (ref_today − sanction_date).days if status='sanctioned'
+flash_gap_days = (completion − sanction).days if status='completed'
+start_gap_days = (start − sanction).days if start existsEvidence: {stalled_days, not_started_days, flash_gap_days, spend_ratio}.score = flash_gap_days (raw; thresholds live in aggregation).
+TESTS (tests/test_d3.py etc.) — tiny fixtures, known outcomes:
+D1: two works, identical title, same district → similarity ≥ 0.95;same title, different village + 10km apart → guarded ≤ 0.69.
+D2: 10 works perunit [10,10,10,10,10,10,10,10,10,40] → the outlierz ≥ 3.
+D3: completed in 8 days → flash_gap 8; sanctioned 500 days ago, exp=0 →not_started_days 500.
+GATE
+pytest tests/ -k "d1 or d2 or d3" green.
+make detect (implement: run D1–D3 only) then make eval:P2 ≥ .90/.90 · P4 recall = 1.00 · P9 recall = 1.00 · P3 ≥ .80/.85.
+Embedding cache: second make detect run skips embedding (log line"cache hit") and produces identical detection_results (sha256).
+DO NOT
+No tier assignment, no thresholds (0.92 etc. live in operating_points.yamland are NOT used here). No other detectors. No API.
+STEP_04.md — Detectors D4–D8 + Ensemble
+STEP 04 — D4 UTILIZATION · D5 VENDOR · D6 GEO · D7 RULES · D8 NETWORK · ENSEMBLE
+Prerequisite: STEP 03 gate passed.
+RULES: raw scores only · evidence_json always · deterministic · config-driven.
+D4 — UTILIZATION (district-level → district_flags + per-work raw)
+utilization(district) = Σ expenditure / Σ entitlement (cumulative, non-lapsable).
+Store district_flags {flag: 'utilization', value: raw ratio,evidence: {spent, entitlement, fy_breakdown}}.
+Year-end rush: per (district, fy): fraction of sanctions in last 30 daysof FY → district_flags {flag:'yearend_rush', value: fraction}.
+D5 — VENDOR CONCENTRATION
+Per work: agency_district_share = agency's expenditure in district /total district expenditure (raw, storage floor 0.10). Evidence:{share, agency_id, hhi_district}.
+Per district: HHI = Σ share² over agencies → district_flags 'hhi'.
+D6 — GEO (detectors/d6.py)
+ghost_distance_km: haversine(work, nearest village centroid in samedistrict) — raw per work, floor 3.0km stored. Evidence: {distance_km,nearest_village, status, spend_ratio}.
+DBSCAN per district: eps=300m (convert to radians: eps/(6371×1000)),min_samples=2 → cluster id per work; same cluster + same category +FY overlap ±1 → detection_results row detector='D6_overlap' score=1.0,evidence {cluster_members, categories}.
+D7 — RULES ENGINE (detectors/d7.py, reads config/rules.yaml)
+R1: word-boundary, case-insensitive keyword match on title+description →score 1.0, evidence {rule_id: R1, keyword, snippet}.
+R2: agency_type ∈ (TRUST, SOCIETY) cumulative spend per agency > cap → flag.
+R3: district-level SC/ST area spend share < minimums → district_flags.
+R4: LS MP works outside nodal_districts; RS MP outside state → flag,evidence {mp_house, constituency_districts, work_district}.
+Binary scores (1.0); severity decided in aggregation from rules.yaml.
+D8 — NETWORK (detectors/d8.py)
+Per work: agency_cross_districts = # districts its agency executes in;agency_description_duplicates = # exact-title matches of this work's titlein OTHER districts. Row score = min(1.0, cross_districts/5 +dup_matches/3), evidence {agency_id, cross_districts, dup_matches,matched_works[]}.
+ENSEMBLE (pipeline/ensemble.py)
+IsolationForest(n_estimators=200, contamination=from config, random_statefrom config). Features per work (NaN → column median, then stored):[log(sanctioned_amount+1), d2_z (0 if missing), duration_norm,agency_district_share (0 if missing), max d1 score (floor if missing),geo_cluster_size, spend_ratio, ghost_distance_km (clip 20)]
+Row: detector='ENSEMBLE', score = 1 − decision_function normalized to[0,1], evidence {feature_values}.
+GATE
+pytest tests/ fully green (add one test per new detector: P5 injection→ agency share ≥ 0.30; P1 → ghost_distance ≥ 8; P8 → D7 matches R1).
+make detect (all detectors) + make eval:macro F1 ≥ 0.75 · P5 ≥ .70/.70 · P8 = 1.00/1.00 · P10 ≥ .90/1.00.
+Every detection_results row has non-empty evidence_json (SQL check).
+DO NOT
+Still no thresholds, no aggregation, no tier logic, no API, no frontend.
+STEP_05.md — Aggregation + REST API
+STEP 05 — PHASE 2 AGGREGATION + FULL REST API
+Prerequisite: STEP 04 gate passed. This is where thresholds FIRST appear.
+RULES: thresholds ONLY here, ONLY from config/operating_points.yaml ·risk is a sum of capped contributions · every contribution auditable.
+1. app/pipeline/aggregate.py
+Input: detection_results + district_flags + config preset. Output:work_risk, district_risk, detection tiers, alerts rows (status 'new').
+Threshold application (per preset)
+For each raw row, compare against preset thresholds → row.tier:
+D1: score ≥ d1_primary → 'critical'; ≥ d1_review → 'review'
+D2: z ≥ d2_z → critical; z ≤ −d2_z → review
+D3: flash_gap ≤ d3_flash_days ∧ spend≥.95 ∧ amount≥5L → critical;stalled_days > d3_stalled_days ∨ not_started > 365 → 'inefficiency'
+D5: share ≥ d5_share ∨ district HHI ≥ d5_hhi → review
+D6: ghost_distance ≥ d6_ghost_km ∧ completed ∧ spend ≥ .9 → critical
+D7: rule severity from rules.yaml → critical/medium
+D1_split, D6_overlap, D8: 1.0 → review
+ENSEMBLE: score ≥ ensemble threshold → review
+district_flags: benford p<0.01, utilization z, yearend_rush>0.6 →district contributions
+Risk = min(1, Σ capped contributions) — caps in config:
+Signal
+Cap
+D7 critical rule
+0.35
+D1 primary duplicate
+0.30
+D6 ghost
+0.30
+D3 flash
+0.25
+D2 critical z
+0.20
+D1 review / D6 overlap / D5 / D8 / D7-medium
+0.15
+D3 stalled/not-started
+0.10
+ENSEMBLE
+score × 0.20
+Tiers: CRITICAL ≥ 0.60 · HIGH ≥ 0.40 · MEDIUM ≥ 0.25.
+contributions_json = [{signal, points, detector, evidence-ref}].
+district_risk = 0.5×(P95 work risk) + 0.2×benford_flag + 0.15×HHI_norm
+0.15×(1−utilization_norm)
+Alerts (created here, detailed console in Step 08):
+work crossing HIGH/CRITICAL → alerts row {severity=tier, type=topcontribution detector, evidence_json, routed_to= district officer user,sla_due_at = now + (3d critical / 7d high)}.
+2. FASTAPI (app/main.py + routers)
+GET /api/overview → {total_works, sanctioned_cr, unspent_cr,flagged:{critical,high,medium}, district_risk_top:[{id,name,risk,tier}],benford_outliers:[district ids], utilization_avg, sankey:{release,sanction, spend, unspent}, last_run}
+GET /api/districts → list w/ risk, hhi, utilization, flags
+GET /api/districts/{id} → stats + flags
+GET /api/districts/{id}/works?status=&tier=&category=&fy=&q= → filtered
+GET /api/works/{id} → full dossier:{work, risk:{score,tier,contributions[]}, flags:[{detector,tier,score,evidence}], agency_stats:{works_in_district, spend_share,districts_active}, cost_estimate?: null (Step 09), actions:[]}
+GET /api/works/{id}/matches → duplicate pairs side-by-side fields
+GET /api/fundflow?district_id= → sankey arrays
+GET /api/eval/metrics → eval_dev.json contents
+CORS allow [http://localhost:5173](http://localhost:5173/). Static /uploads for evidence photos.
+GATE
+make aggregate && make eval: macro F1 ≥ .75 · innocent_FP ≤ .05 ·P2 recall ≥ .95 (aggregation thresholds sharpen D1).
+curl localhost:8000/api/works/<a P2 work id> → risk + tier + ≥1 flagwith evidence_json + contributions non-empty.
+curl /api/overview → all KPI fields non-null; top district is aP5-capture or P10 district.
+Alerts created: sqlite3 ... "SELECT count(*) FROM alerts WHERE status='new'" > 0 and matches flagged counts.
+DO NOT
+No frontend. No citizen layer. No LLM. Thresholds never in detector files.
+STEP_06.md — Frontend Core
+STEP 06 — FRONTEND CORE: OVERVIEW · DISTRICT · DOSSIER
+Prerequisite: STEP 05 gate passed.
+RULES: offline-first (NO tile CDN, NO Google Fonts, NO external URLs atruntime) · dark command-center theme · Tailwind only · every async view hasloading/empty/error states.
+1. SETUP
+npm create vite@latest frontend -- --template react-tsDeps: tailwindcss, echarts, echarts-for-react, react-leaflet, leaflet,react-router-dom, axios (or fetch wrapper src/api/client.ts).Bundle district GeoJSON: frontend/public/geo/india_districts_simplified.json(match by districts.geo_key; fallback: state-level shading if key mismatch —log a warning, never crash).
+2. MAP COMPONENT (the one hard rule)
+with GeoJSON layer ONLY:
+choropleth: district_risk → color ramp (#0f172a → #dc2626)
+onEachFeature: hover tooltip (name, risk, tier); click → navigate/district/:id
+work pins on district view: radius by amount, fill by tier
+NO with http URL. Base = dark CSS background.
+3. PAGES
+/overview:
+KpiRow: works · ₹ sanctioned · unspent · flagged (c/h/m chips) ·utilization avg · last detection run timestamp
+RiskMap (above) · TopRiskyDistricts table (top 10) · BenfordOutlierChips
+Sankey (ECharts): release → sanction → spend → unspent/district/:id:
+header: entitlement/released/spent/unspent + utilization sparkline +HHI + works count
+filters bar: status/tier/category/FY + text search
+works table: id, title, mp, agency, amount, status, tier badge,top-evidence chip; row click → dossier
+mini map with pins; district_flags rendered as warning cards/work/:id:
+Left: work meta card · TimelineBar (sanction→start→completion vs categorynorm) · mini-map pin · agency card
+Right: WHY FLAGGED cards — one per flag, EXACT copy templates:D1: "Near-duplicate of {matched} — {sim}% title similarity, amountswithin {delta}%, {sameAgency}."D2: "Sanctioned per-unit cost is {z}× the {category} norm (z={z})."D3: "Marked complete {gap} days after sanction with {spend}% spent."D5: "Executing agency holds {share}% of district MPLADS spend (HHI {hhi})."D6: "Located {km} km from the nearest habitation — completed with{spend}% spent."D7: "Title matches prohibited works list ({rule}: '{snippet}')."Each card: [Compare side-by-side] (duplicates → modal with both worksside-by-side) + data chips.
+contributions list (risk waterfall mini-chart)
+4. QUALITY
+client.ts: single axios instance, 404/500 → toast; every page skeleton; empty arrays → guidance text.
+GATE (drill, not checklist)
+make demo-dev (starts API + vite) → airplane mode (wifi off):click-through map → district → dossier → compare modal. Works.
+DevTools console: ZERO errors, ZERO warnings on the full path.
+All three pages render from real API data; tier colors consistent.
+DO NOT
+No citizen PWA, no officer console, no copilot UI. Three pages only.
+STEP_07.md — Citizen Evidence Layer
+STEP 07 — AUTH/RBAC · CITIZEN PWA · E1 TRUST PIPELINE
+Prerequisite: STEP 06 gate passed. Human input: 5 local site photo sets.
+RULES: citizens NEVER see risk/tier/alerts · trust pipeline order is fixed ·offline-first · DPDP consent notice on first upload.
+1. AUTH (demo-grade)
+POST /api/auth/login {role, district_id?, name?} → {token, user}.
+Token = signed dict (itsdangerous or hmac) with user id + role +district. middleware: role guard per router group:citizen → public endpoints only; officer → own district only;admin → everything.
+Seed users: 1 citizen, 1 officer per district (12), 1 admin.
+Security tests: citizen token calling /api/works/{id} dossier → 403;officer A calling district B works → 403.
+2. CITIZEN PWA (mobile-first, route /public/*)
+/public/works?near=lat,lon&radius= → map + cards (PUBLIC fields only:title, category, cost, status, agency, village — no risk/tier/flags)
+/public/work/:id → public card + camera button + comment box
+Camera flow: getUserMedia → capture canvas → POST /api/evidence/submitmultipart {image, lat, lon, captured_at, source: 'in_app'}
+FALLBACKS (mandatory, graceful): camera denied/failed → file input(source 'gallery'); geolocation failed → manual work select fromnear-me list, geo_match null
+/public/my → my submissions with status + trust score
+comments: POST pending → officer approves/rejects (Step 08 console)
+consent modal on first submit (DPDP text, stored accepted_at on user)
+Hindi labels via src/i18n/hi.json, toggle EN/HI, Hindi default
+3. E1 PIPELINE (server, app/ingest/evidence.py) — exact order:
+GEOFENCE: haversine to every work in district; ≤500m → bind(store geo_match meters); else status 'unassigned' (officer may bind)
+PHASH: imagehash.phash on stored image; compare vs all existingsubmissions; same hash ∧ different user OR different work →status 'rejected', reason 'recycled_photo', uploader reputation −15
+TIMESTAMP: captured_at before sanction_date → evidence note'predates_sanction'; within window → +
+TRUST SCORE (0–100, weights in config):in_app +20 · geo ≤200m +30 · timestamp consistent +10 ·no pHash collision +20 · reputation/5 (max +20)
+REPUTATION: officer verify +5 · recycled/geo-fail −15 · floor 0(reputation lives on users.trust_score)
+Store image under data/uploads/{work_id}/{submission_id}.jpg
+4. API ADDITIONS
+POST /api/evidence/submit → {id, work_id?, status, trust_score, reasons[]}GET /api/works/{id}/evidence (officer) → timeline w/ trust, phase, verify statePOST /api/evidence/{id}/verify {phase_label} (officer) → reputation updatePOST /api/comments, GET /api/works/{id}/comments (approved only for public)GET /api/public/works (public fields, geo filter)
+GATE
+Live phone (or devtools mobile): in-app capture near a seeded work →binds (geo_match ≤ 500), trust ≥ 70, appears in /api/works/{id}/evidence.
+Gallery upload → source 'gallery', trust reflects lower path.
+Submit same image twice (different works) → second REJECTED'recycled_photo', reputation dropped.
+Citizen token: GET /api/works/{id} → 403; GET /api/public/works → 200with NO risk/tier fields in payload.
+Anonymity: submit without login works (anon user created).
+DO NOT
+No alerts console, no officer workflow UI, no LLM, no memo.
+STEP_08.md — Alerts + Officer Console
+STEP 08 — A1 ALERT ENGINE · OFFICER CONSOLE · ESCALATION
+Prerequisite: STEP 07 gate passed.
+RULES: alerts are a queue, not a feed — dedupe, SLA, escalate above thesuspect · every action leaves an audit trail · officer sees own district ONLY.
+1. ALERT LIFECYCLE (extend aggregate.py + new app/routers/alerts.py)
+Creation (from Step 05): dedupe on (work_id, type) — if an open alertexists, update evidence, don't duplicate.
+routed_to: the district's officer user.
+sla_due_at: created + 3d (critical) / 7d (high) from config.
+Escalation check (on every aggregate run + a /api/admin/alerts/sweep):status='new'/'ack' ∧ now > sla_due_at → escalated=1, status='escalated',visible in admin queue.
+Officer actions: POST /api/alerts/{id}/action {action: ack|resolve|escalate, note} → status transitions + audit_actions row + alertresolved_at on resolve.
+Work updates: POST /api/works/{id}/update {field, value} (officer, owndistrict) → work_updates row + works updated. Allowed fields whitelist:status, expenditure, start_date, completion_date.
+Digest rule: GET /api/alerts returns sorted (severity desc, sla asc);officer badge count = 'new' only.
+2. OFFICER CONSOLE (route /officer — becomes the officer's home)
+/officer: Alert Inbox — table: severity chip, SLA countdown (red when<24h), type, work title, amount, created; row → work dossier (Step 06);action buttons per row (ack/resolve/escalate) with note modal
+/officer/works: district works table + progress-update drawer(status select, expenditure input) with update history
+/officer/evidence: review queue — submissions needing verify:photo, trust, geo, [phase dropdown: pre/during/post] → verify persists(Step 07 endpoint) + reputation effect shown
+/officer/alerts/sla: SLA breach board
+3. ADMIN ESCALATION QUEUE (route /admin/escalations)
+escalated alerts across districts: district, work, severity, evidencesummary, why escalated (SLA breach / manual), age.
+GATE (end-to-end injection — script it: scripts/test_alert_flow.py)
+Force a CRITICAL detection on a known work (temp threshold tweak viaconfig → aggregate) → alert exists, routed to correct district officer.
+Login as that officer → alert in inbox; ack → status 'ack'.
+Simulate SLA breach (set sla_due_at past, call sweep) → escalated=1,appears in /admin/escalations; officer row shows 'escalated'.
+Resolve with note → audit_actions row + resolved_at set; alert gonefrom inbox active filter.
+Officer A token → officer B's district alert → 403.
+DO NOT
+No cost engine, no copilot, no memo. Queue + console + escalation only.
+STEP_09.md — Cost Justification Engine
+STEP 09 — NORM-BASED COST ENGINE (C1 REGISTRY · C2 BoQ · C3 ESTIMATOR · C5 VERDICT)
+Prerequisite: STEP 08 gate passed.
+HUMAN INPUT REQUIRED for full gate: data/norms/norm_items.csv and
+price_indices.csv with real cited SSR/DSR/WPI lines (12–15 items,
+36+ months). DEMO-CALIBRATED rows (see DATASET_AND_ML_SPEC) let you build
+and test; cited rows close the gate.
+RULES: C3 is deterministic and auditable — every line carries source_ref ·ML corroborator (optional C4) NEVER gates a verdict alone · spec inferencestores confidence, officer confirm overrides.
+1. C1 REGISTRY (app/pipeline/cost/registry.py)
+Load norm_items.csv (item_code, description, category, unit, base_rate,mix_steel, mix_cement, mix_labor, mix_other, base_year, source_ref) andprice_indices.csv (month, steel_idx, cement_idx, labor_idx).
+adjusted_rate(item, month) = base_rate × (ms×I_steel + mc×I_cement +ml×I_labor + mo×1.0) × terrain_multiplier(district)where I_x = index at month / index at base_year reference month.
+Every adjustment factor returned alongside the rate (auditable).
+2. C2 BoQ SYNTHESIZER (app/pipeline/cost/boq.py)
+config/boq_templates.yaml per category: vars + items with qtyexpressions, e.g. BRIDGE: {span_m, width_m} →PCC_foundation: 0.9×span×width cum · RCC_M25: 0.55×span×width cum ·steel_rebar: 90×0.55×span×width kg · shuttering: 2.8×span×width sqm.7 templates: BRIDGE, ROADS, EDUCATION, SANITATION, DRINKING_WATER, OHT,ELECTRIFICATION. (Ratios: VERIFY flags for the civil-engineering teammate.)
+Spec sources in priority: officer_confirmed > provided > inferred.
+INFERENCE (app/pipeline/cost/spec_infer.py): regex on title —(\d+)\sm span → span_m; (\d+)\s(classroom|room)s? → rooms;(\d+.?\d*)\s*km → length_km. Confidence 0.6; stored in work_specswith source='inferred'.
+POST /api/works/{id}/spec {spec_json} (officer) → source'officer_confirmed', confidence 1.0, re-run estimate.
+3. C3 ESTIMATOR (app/pipeline/cost/estimator.py)
+expected = Σ(qty × adjusted_rate) + overhead_pct + contingency_pct(config, default 3% + 3%).
+breakdown_json: {items: [{item_code, description, qty, unit, base_rate,index_factors: {steel, cement, labor}, adjusted_rate, line_total,source_ref}], overhead, contingency, expected_total, month_used,terrain_multiplier}.
+Write cost_estimates row method='norm'.
+4. C5 VERDICT (app/pipeline/cost/verdict.py)
+gap_norm = (sanctioned − expected)/expected. Peer estimate: peer medianfrom D2 groups (normalized per-unit), n ≥ 5 else null.
+Logic:gap > 0.30 ∧ peer z > 3 → 'UNJUSTIFIED_PREMIUM' (critical evidence card)gap > 0.30 ∧ peers null → 'COST_REVIEW'recompute at base-year indices lands within peers → 'PRICE_EXPLAINED'(NOT FLAGGED — the N4 discrimination branch)|norm − peer| > 40% → 'INCONCLUSIVE' (system says so)else → 'WITHIN_NORM'
+Verdict → detection_results row detector='C5' (score = gap when flagged)evidence {expected, breakdown ref, gap, peer_stats, verdict}.
+5. API
+GET /api/works/{id}/cost-estimate → {verdict, estimates: {norm, peer, ml:null}, breakdown, gap}
+GATE
+make aggregate && make eval: N4 innocent FP ≤ 5% (price-explainedbranch works).
+Bridge work (P3-inflated): verdict UNJUSTIFIED_PREMIUM, breakdownrenders ≥ 4 item lines EACH with source_ref, gap > 0.30.
+N4-labeled work: verdict PRICE_EXPLAINED or WITHIN_NORM — not flagged.
+Officer spec-confirm on an inferred work → estimate updates, sourcebecomes officer_confirmed.
+All DEMO-CALIBRATED source_refs still present → listed in a warningfile reports/norms_warning.md (replaced by humans before finale).
+DO NOT
+No ML training here (C4 optional, Step 11 if time). No UI yet — API only.
+STEP_10.md — Dossier Integration + Copilot + Memo + i18n
+STEP 10 — COST TAB · EVIDENCE TAB · COPILOT · MEMO · HINDI
+Prerequisite: STEP 09 gate passed.
+RULES: copilot always SHOWS its SQL · offline canned mode is the floor,LLM is the bonus · memo is deterministic template + optional LLM polish ·bilingual = PWA + copilot + memo only (officer console stays EN).
+1. DOSSIER — COST JUSTIFICATION TAB
+Waterfall (ECharts): Materials → Labor → Overhead → Contingency →Expected → Sanctioned → GAP (red bar when gap > threshold)
+BoQ table: qty · unit · base rate · index factors · adjusted rate ·line total · source_ref (clickable tooltip)
+Price sparklines: steel/cement/labor 36 months, sanction month marked
+Three-estimate bar: norm vs peer vs sanctioned (+ml when exists)
+Verdict badge + CLEARED card copy: "Sanctioned ₹{x} vs last year{y} (+{pct}%). Steel +{s}%, cement +{c}%, labor +{l}% in the window →increase is explained by documented price movement. NOT FLAGGED."
+2. DOSSIER — EVIDENCE TAB
+photo timeline (trusted submissions by captured_at): thumbnails, trustbadges, phase labels, geo meters, pHash warnings
+E3 CONFLICT CARD when stories disagree (record says completed ∧ latesttrusted photos show no structure / phase='pre'): copy: "Work markedcomplete {date}. Latest citizen photo ({date}, trust {t}, {km} m fromsite) shows no structure." → detection_results 'E3' score 1.0.
+[Verify phase] dropdown (officer) + reputation effect displayed.
+3. COPILOT (app/copilot/)
+guardrails.py: single statement; must start SELECT/WITH; forbiddentokens INSERT|UPDATE|DELETE|DROP|PRAGMA|ATTACH|; (inside); appendLIMIT 200 if absent; read-only connection.
+text2sql flow: schema DDL (subset: works, districts, agencies,detection_results, work_risk, fund_flows, alerts) + question → SQL.Execute; error → ONE retry with error message. Result table + LLMsummary (≤3 sentences) if key, else canned template summary.
+CANNED MODE (offline floor — 10 questions EN+HI, deterministic SQL):e.g. "stalled works over ₹20 lakh in DIST-004" / "DIST-004 में ₹20 लाखसे अधिक रुके हुए कार्य", unspent by district, top agencies by spend,duplicates this FY, alerts by severity, HHI districts, benford outliers.
+UI /copilot: chat panel, EN/HI chips, renders table + the SQL (collapsible"show SQL"), offline-mode badge when no key.
+4. MEMO (app/copilot/memo.py)
+POST /api/works/{id}/memo → markdown:sections: कार्य विवरण/Work Details · समय-सीमा/Timeline · वित्तीय/Financials (sanctioned, expected-norm, gap) · रेड फ्लैग/Red Flags(each flag + evidence line from V3 §5 templates) · अनुशंसित जांच कदम/Recommended Audit Steps (deterministic per detector type) · sources.
+Deterministic template ALWAYS renders; LLM polish only if key.
+Print CSS: A4, header/footer, page-break rules; /work/:id memo view +browser print button.
+5. i18n
+src/i18n/{languages.yaml (hi: shipped, en: shipped), hi.json, en.json} —citizen PWA labels + copilot chips + memo section headers. Missing key →English fallback (logged).
+GATE
+Copilot: ask a canned question in Hindi offline (no key) → correcttable + SQL shown. Ask free-text with key (if present) → guarded SQL.
+Guardrail test: prompt crafted to DELETE → blocked (unit test).
+Memo: renders bilingual for the bridge work; print preview clean.
+Dossier: waterfall + BoQ refs + cleared-N4 card + evidence timeline +E3 conflict card (on a ghost work with seeded photos) all render.
+Airplane-mode click-through still zero console errors.
+DO NOT
+No tuning, no admin performance page, no demo mode yet.
+STEP_11.md — Tune, Lock, CAG, Risk Dial
+STEP 11 — TUNING · LOCKED EVAL · CAG HARNESS · RISK DIAL · ADMIN PAGE
+Prerequisite: STEP 10 gate passed.
+HUMAN INPUT REQUIRED for gate: tests/cag_cases/ with ≥ 8 real-cited
+CAG fixtures (origin="CAG", full citation strings).
+RULES: tune ONLY on seed-43 data · locked eval on seed-42 runs ONCE ·never fake a locked number · risk dial = preset selection, re-aggregate only.
+1. TUNING (app/pipeline/tune.py, make tune)
+Load data_tuning/app.db (seed-43; rebuild via make seed-tuning + db-loaddetect + aggregate if empty).
+Grid from config/tuning_grid.yaml (d1_primary [0.88..0.96], d2_z[2.5..3.5], d3 thresholds, d5, d6, tier cutoffs).
+RANDOM SEARCH: 50 combinations (rng seed 7 from config). Each: runaggregate with candidate preset → metrics (Step 02 engine). Store all 50.
+PER-DETECTOR 1-D sweeps → reports/tuning_curves.json: per detector,per pattern: [{threshold, precision, recall}] (PR curve data).
+PRESET SELECTION (policy order, code not vibes):quiet: innocent_FP ≤ .03 ∧ alerts/wk ≤ 5 → max precisionbalanced: innocent_FP ≤ .05 ∧ N4_FP ≤ .05 ∧ alerts ≤ 8 ∧ recall floors(P2 ≥ .95, P4/P9/P8 = 1.00, P3 ≥ .85) → max macro F1strict: floors +10% ∧ FP ≤ .10 → max F1Unreachable floor → best achievable + shortfall recorded inreports/operating_point_notes.md.
+Write 3 presets → config/operating_points.yaml. Print summary table.
+2. RISK DIAL
+POST /api/admin/risk-policy {preset} (admin token) → writes active →re-runs aggregate ONLY (Phase 2) → returns {alerts_critical, alerts_high,macro_f1, innocent_fp} per preset for comparison.
+Must complete < 5 s on 5k works (no detector re-run — embeddings cached).
+3. CAG HARNESS (app/pipeline/eval_cag.py, make eval-cag)
+Load tests/cag_cases/case_*.json: {case_id, citation, origin,finding_summary, archetype, work: {...fields}, expected_flags:[{detector, rule_id?}]}.
+For each: insert work into a scratch DB (temp file) → run pipeline(balanced preset) → check expected detectors fired on that work.
+Output: "CAG: N of M flagged (origin=CAG only)" + miss list with reasons.origin="TEAM-CASE" fixtures run but NEVER count.
+4. LOCKED EVAL
+make eval-locked → Step 02 engine with --locked → reports/eval_LOCKED.json {git_sha, config_hash, timestamp, metrics…}.
+Refusal on second run (already built in Step 02 — VERIFY it fires).
+5. ADMIN "MODEL PERFORMANCE" PAGE (/admin)
+Renders in order: locked table (per-pattern P/R/F1) → confusion matrix →innocent FP + N4 lines → alert budget per preset → PR curves (fromtuning_curves.json) → CAG line with citations → fixed sentence:"Deterministic detectors: exact by construction. Statistical detectors:measured at their operating point." + risk dial panel.
+GATE
+make tune completes; operating_points.yaml has 3 presets; notes fileexists if any floor missed.
+make eval-locked runs ONCE on seed-42 → frozen file with git SHA;second run refuses (demonstrate).
+make eval-cag: M ≥ 8, N/M ≥ 70%.
+Balanced: macro F1 ≥ .75 · innocent FP ≤ .05 · P2 recall ≥ .95 ·P4/P9/P8 recall = 1.00.
+Dial: POST strict → alert counts increase visibly; POST quiet →decrease; response < 5 s; officer inbox reflects change.
+/admin renders all elements incl. PR curves from JSON.
+DO NOT
+Never tune against seed-42. Never overwrite eval_LOCKED.json silently.
+Never count TEAM-CASE in N of M.
+STEP_12.md — Demo Mode + Unbreakable Demo
+STEP 12 — FINAL STEP: DEMO MODE · VENUE MOMENT · README · UNBREAKABLE
+Prerequisite: STEP 11 gate passed. After this step, the codebase is FROZEN.
+Any feature added after Step 12 is sabotage.
+RULES: never demo on live internet · never demo on blind data · one command ·backed up twice · two people can run it.
+1. DEMO COMMANDS
+make demo: kill ports 8000/5173 → copy committed demo.db → data/app.db→ start API + web → PRINT: "Web: http://:5173 · API:http://:8000". Target < 30 s. demo.db is never mutated at runtime.
+make demo-rebuild: full seed(--ref-today demo day) → detect →aggregate → serve. < 5 min. This is your "is it real?" answer on stage.
+2. scripts/build_demo_db.py
+generate --seed 42 --ref-today → load → detect → aggregate(balanced) → vacuum → save as demo.db → git commit it.
+Same world, time-shifted; locked eval numbers remain canonical (READMEstates this in one line).
+3. VENUE MOMENT (scripts/)
+pin_venue_work.py --lat --lon --district DIST-004: moves a seeded P1ghost work to the given coords, title "Construction of community assetat Demo Venue", status completed.
+seed_venue_evidence.py: inserts 2–3 pre-captured photos of that spotas citizen submissions (trust ≥ 70) → ghost flag + E3 conflict fire fromthese ALONE. The on-stage live photo is a bonus, never a dependency.
+Rehearse pinned at your college; re-pin at the real venue day-before.
+4. PHONE HTTPS (the silent demo-killer)
+mkcert: generate CA + cert for the LAN IP → vite server.https → installCA on the demo phone (one-time). Real HTTPS → camera + geolocation work.
+Fallback (own Android phone only): chrome://flags/#unsafely-treat-insecure-origin-as-secure += http://:5173.
+UI fallbacks already built (gallery + manual select) — verify they fire.
+Firewall: allow Node + Python on private network (laptop hotspot).
+5. README (the repo's face)
+Order: one-paragraph pitch ("Every work has four stories…") → quickstart(make demo, 30 s) → mermaid architecture diagram → four-stories table →frozen eval numbers pulled from eval_LOCKED.json (labeled "lockedevaluation") → data provenance (synthetic deterministic world + citedSSR/WPI + CAG-cited fixtures + OMS/RTI ingest path) → honest limitations(what the system does NOT claim) → deployment (CSV ingest, Parichay SSO,on-prem, Bhashini Phase 2) → team.
+6. THE 4-MINUTE CHOREOGRAPHY (rehearse with timer)
+0:00 Overview map + "₹340 crore, every flag carries evidence" → 0:20 darkdistrict → flagged bridge → 0:50 WHY FLAGGED + duplicate compare → 1:30cost waterfall + BoQ refs + CLEARED N4 card → 2:10 PHONE: live capture ofvenue floor → ghost alert in officer inbox → escalate → 2:50 Hindi copilot
+SQL + memo print → 3:20 admin: locked numbers + CAG line + risk dialstrict↔quiet → closing line.
+GATE (drills — run all, log results)
+make demo < 30 s from committed demo.db; make demo-rebuild < 5 min.
+AIRPLANE drill: wifi off, full 4-min click-through, zero console errors.
+PHONE drill ×3 consecutive: hotspot → HTTPS → camera → geofence → alert.
+BUS-FACTOR: two different people each run drill 1 solo, start to finish.
+CHAOS drill: kill API mid-session → toasts not white screens; restart →recovers from demo.db copy.
+BACKUP VIDEO of the full choreography on: demo laptop + second devicependrive. Recorded, not "planned".
+README renders locked numbers; repo pushed; final commit + tagstep-12-passed.
+DO NOT (final)
+No new features. No "small fixes" on demo day. No live internet.
+If it can fail, it will fail — at the worst second. That is why everydrill exists.
+
+USE TO ENHANCE OUR'S
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-09-19T11:07:44+05:30.
+
+The user's current state is as follows:
+Other open documents:
+- c:\Users\nanth\OneDrive\Desktop\MPLAD\mplad_ai\synthetic_data_generator.js (LANGUAGE_JAVASCRIPT)
+- c:\Users\nanth\OneDrive\Desktop\MPLAD\mplad-app\app\public\page.js (LANGUAGE_JAVASCRIPT)
+- c:\Users\nanth\OneDrive\Desktop\MPLAD\mplad-app\app\officer\[workId]\cost\page.js (LANGUAGE_JAVASCRIPT)
+- c:\Users\nanth\OneDrive\Desktop\MPLAD\mplad-app\scripts\db_load.js (LANGUAGE_JAVASCRIPT)
+- c:\Users\nanth\OneDrive\Desktop\MPLAD\mplad-app\lib\modules\costEstimator.js (LANGUAGE_JAVASCRIPT)
+</ADDITIONAL_METADATA>

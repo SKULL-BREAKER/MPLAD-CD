@@ -1,0 +1,1 @@
+import sqlite3, pandas as pd, json; con=sqlite3.connect('data_tuning/app.db'); caught_d1 = pd.read_sql("SELECT * FROM detection_results WHERE detector='D1' AND work_id='W-001872'", con); print(json.dumps(json.loads(caught_d1.iloc[0]['evidence_json']), indent=2))

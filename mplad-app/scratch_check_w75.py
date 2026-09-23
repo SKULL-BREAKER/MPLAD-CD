@@ -1,0 +1,1 @@
+import sqlite3, pandas as pd; con = sqlite3.connect('data/app.db'); df = pd.read_sql('SELECT id, title, village, district_id, agency_id FROM works WHERE id IN ("W-000075", "W-002033")', con); print(df.T)

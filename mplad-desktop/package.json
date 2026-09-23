@@ -1,0 +1,55 @@
+{
+  "name": "mplads-desktop",
+  "version": "1.0.0",
+  "description": "MPLADS Portal — Desktop App for Office Use",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "in.gov.mplads.desktop",
+    "productName": "MPLADS Portal",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../mplad-app",
+        "to": "mplad-app",
+        "filter": [
+          "**/*",
+          "!node_modules/.cache/**/*",
+          "!.next/cache/**/*"
+        ]
+      }
+    ]
+  },
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "wait-on": "^8.0.0"
+  }
+}

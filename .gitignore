@@ -1,0 +1,6 @@
+node_modules/
+.next/
+*.csv
+*.db
+!mplad-app/demo.db
+!mplad-app/data/app.db

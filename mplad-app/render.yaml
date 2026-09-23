@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: prahari-demo
+    env: docker
+    plan: free
+    region: singapore
+    rootDir: mplad-app
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/overview
+    envVars:
+      - key: PORT
+        value: 8000

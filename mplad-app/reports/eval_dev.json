@@ -1,0 +1,166 @@
+{
+  "alert_budget": 0.16346153846153846,
+  "confusion": {
+    "flagged": {
+      "anomaly": 492,
+      "innocent": 14,
+      "unlabeled": 4
+    },
+    "unflagged": {
+      "anomaly": 183,
+      "innocent": 396,
+      "unlabeled": 1330
+    }
+  },
+  "counts": {
+    "total_anomaly_labels": 683,
+    "total_anomaly_works": 675,
+    "total_flagged": 510,
+    "total_innocent": 410,
+    "total_works": 2419
+  },
+  "db": "data/app.db",
+  "detector_metrics": {
+    "P1": {
+      "caught": 30,
+      "innocent_fp": 0.0,
+      "precision": 0.967741935483871,
+      "recall": 1.0,
+      "support": 30
+    },
+    "P10": {
+      "caught": 61,
+      "innocent_fp": 0.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 61
+    },
+    "P2": {
+      "caught": 119,
+      "innocent_fp": 0.003968253968253968,
+      "precision": 0.996031746031746,
+      "recall": 1.0,
+      "support": 119
+    },
+    "P3": {
+      "caught": 73,
+      "innocent_fp": 0.05128205128205128,
+      "precision": 0.9358974358974359,
+      "recall": 0.9125,
+      "support": 80
+    },
+    "P4": {
+      "caught": 100,
+      "innocent_fp": 0.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 100
+    },
+    "P5": {
+      "caught": 108,
+      "innocent_fp": 0.0472972972972973,
+      "precision": 0.7297297297297297,
+      "recall": 0.9908256880733946,
+      "support": 109
+    },
+    "P6": {
+      "caught": 54,
+      "innocent_fp": 0.003968253968253968,
+      "precision": 0.996031746031746,
+      "recall": 1.0,
+      "support": 54
+    },
+    "P7": {
+      "caught": 80,
+      "innocent_fp": 0.003968253968253968,
+      "precision": 0.996031746031746,
+      "recall": 1.0,
+      "support": 80
+    },
+    "P8": {
+      "caught": 25,
+      "innocent_fp": 0.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 25
+    },
+    "P9": {
+      "caught": 25,
+      "innocent_fp": 0.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 25
+    }
+  },
+  "git_sha": "b102b226bad9f415b21b89c3ab02b111bb653162",
+  "innocent_fp": 0.03414634146341464,
+  "macro_f1": 0.1690858396600884,
+  "n4_fp": 0.02,
+  "overlap_signal": 519,
+  "patterns": {
+    "P1": {
+      "f1": 0.1111111111111111,
+      "precision": 0.058823529411764705,
+      "recall": 1.0,
+      "support": 30
+    },
+    "P10": {
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 61
+    },
+    "P2": {
+      "f1": 0.37837837837837834,
+      "precision": 0.23333333333333334,
+      "recall": 1.0,
+      "support": 119
+    },
+    "P3": {
+      "f1": 0.24745762711864408,
+      "precision": 0.14313725490196078,
+      "recall": 0.9125,
+      "support": 80
+    },
+    "P4": {
+      "f1": 0.05245901639344262,
+      "precision": 0.03137254901960784,
+      "recall": 0.16,
+      "support": 100
+    },
+    "P5": {
+      "f1": 0.25525040387722137,
+      "precision": 0.15490196078431373,
+      "recall": 0.7247706422018348,
+      "support": 109
+    },
+    "P6": {
+      "f1": 0.19148936170212766,
+      "precision": 0.10588235294117647,
+      "recall": 1.0,
+      "support": 54
+    },
+    "P7": {
+      "f1": 0.2677966101694915,
+      "precision": 0.15490196078431373,
+      "recall": 0.9875,
+      "support": 80
+    },
+    "P8": {
+      "f1": 0.09345794392523364,
+      "precision": 0.049019607843137254,
+      "recall": 1.0,
+      "support": 25
+    },
+    "P9": {
+      "f1": 0.09345794392523364,
+      "precision": 0.049019607843137254,
+      "recall": 1.0,
+      "support": 25
+    }
+  },
+  "preset": "balanced",
+  "rule_violations": 316,
+  "seed": 42,
+  "system_precision": 0.9647058823529412
+}

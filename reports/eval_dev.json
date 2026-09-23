@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-09-19T07:37:53.297Z",
+  "preset": "balanced",
+  "git_sha": "9ca9277458b2ea0448abc3184c0d8189c94cbd0a",
+  "patterns": {
+    "COST_OUTLIER": {
+      "precision": 0.8571428571428571,
+      "recall": 1,
+      "f1": 0.923076923076923,
+      "support": 6
+    },
+    "DUPLICATE": {
+      "precision": 0.8333333333333334,
+      "recall": 1,
+      "f1": 0.9090909090909091,
+      "support": 10
+    },
+    "TIMELINE_T1": {
+      "precision": 0.375,
+      "recall": 1,
+      "f1": 0.5454545454545454,
+      "support": 3
+    },
+    "TIMELINE_T2": {
+      "precision": null,
+      "recall": 0,
+      "f1": 0,
+      "support": 3
+    },
+    "SPLITTING": {
+      "precision": null,
+      "recall": 0.3333333333333333,
+      "f1": 0,
+      "support": 12
+    },
+    "GHOST_WORK": {
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "support": 6
+    },
+    "CONTRACTOR_CONCENTRATION": {
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "support": 80
+    },
+    "GUIDELINE_VIOLATION": {
+      "precision": 1,
+      "recall": 1,
+      "f1": 1,
+      "support": 5
+    },
+    "BENAMI": {
+      "precision": null,
+      "recall": 0,
+      "f1": 0,
+      "support": 3
+    },
+    "P3_COST_INFLATION": {
+      "precision": 0.967741935483871,
+      "recall": 1,
+      "f1": 0.9836065573770492,
+      "support": 30
+    }
+  },
+  "system_precision": 0.9863013698630136,
+  "innocent_fp": 0,
+  "n4_fp": 0,
+  "macro_f1": 0.6361228934999427,
+  "alert_budget": 0.05615384615384615,
+  "confusion": {
+    "flagged": {
+      "anomaly-labeled": 144,
+      "innocent-labeled": 0,
+      "unlabeled": 2
+    },
+    "unflagged": {
+      "anomaly-labeled": 14,
+      "innocent-labeled": 230,
+      "unlabeled": 4673
+    }
+  },
+  "counts": {
+    "total_works": 5063,
+    "flagged_works": 146
+  }
+}

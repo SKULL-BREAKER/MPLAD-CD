@@ -1,0 +1,82 @@
+﻿# BoQ Parametric Templates — MPLADS V3
+# ======================================
+# IMPORTANT: All quantity ratios (qty formulas) are derived from engineering
+# first principles and standard CPWD/PWD practice. A civil-background teammate
+# MUST verify these ratios against the SSR lines encoded in norm_items.csv
+# before the finale. Mark verified lines with: # VERIFIED
+#
+# Vars: parametric dimension variables extracted from work spec
+# Items: each item maps to an item_code in norm_items.csv
+# qty: JavaScript-compatible arithmetic expression over vars
+# unit: must match norm_items.csv unit for that item_code
+
+bridge:
+  description: "RCC Bridge Construction"
+  vars: [span_m, width_m]
+  # VERIFY_RATIOS: ratios from IS:456-2000 and standard bridge design practice
+  items:
+    - {item_code: B-07, qty: "1.2 * span_m * width_m", unit: cum}        # Excavation: ~1.2 cum/sqm plan area
+    - {item_code: B-01, qty: "0.9 * span_m * width_m", unit: cum}        # PCC M10: ~0.9 cum/sqm
+    - {item_code: B-06, qty: "0.4 * span_m * width_m", unit: cum}        # RCC Abutments+Piers: ~0.4 cum/sqm
+    - {item_code: B-02, qty: "0.55 * span_m * width_m", unit: cum}       # RCC M25 Deck: ~0.55 cum/sqm
+    - {item_code: B-03, qty: "90 * 0.55 * span_m * width_m", unit: kg}   # Steel ~90 kg/cum RCC
+    - {item_code: B-04, qty: "2.8 * span_m * width_m", unit: sqm}        # Shuttering: ~2.8× plan area
+    - {item_code: B-05, qty: "1", unit: nos}                              # Falsework: 1 set per bridge
+
+road:
+  description: "Village/Rural Road Construction"
+  vars: [length_km, width_m]
+  # VERIFY_RATIOS: standard PMGSY/MPLADS road specs
+  items:
+    - {item_code: R-01, qty: "1800 * length_km", unit: cum}               # Earthwork: 1800 cum/km (3m wide, 0.3m depth)
+    - {item_code: R-02, qty: "width_m * length_km * 1000", unit: sqm}    # WBM sub-base
+    - {item_code: R-03, qty: "width_m * length_km * 1000 * 0.85", unit: sqm}  # DBM base (85% of road area)
+    - {item_code: R-04, qty: "width_m * length_km * 1000 * 0.85", unit: sqm}  # BC wearing course
+
+classroom:
+  description: "School Classroom Block"
+  vars: [rooms]
+  # VERIFY_RATIOS: standard GoI school construction norms (1 room = 7.5m x 6m = 45 sqm)
+  items:
+    - {item_code: C-01, qty: "rooms * 18.0", unit: cum}                   # Walls: ~18 cum/room
+    - {item_code: C-02, qty: "rooms * 48.0", unit: sqm}                   # Roof slab: 48 sqm/room (incl. verandah)
+    - {item_code: C-03, qty: "rooms * 140.0", unit: sqm}                  # Plastering: ~140 sqm/room (walls + ceiling)
+    - {item_code: C-04, qty: "rooms * 45.0", unit: sqm}                   # Flooring: 45 sqm/room
+    - {item_code: C-05, qty: "rooms", unit: nos}                           # Doors+windows: 1 set/room
+
+drinking_water:
+  description: "Drinking Water Supply Scheme"
+  vars: [households, borewell_depth_m]
+  # VERIFY_RATIOS: standard NRDWP scheme norms
+  items:
+    - {item_code: DW-01, qty: "borewell_depth_m", unit: rm}               # Borewell drilling
+    - {item_code: DW-02, qty: "1", unit: nos}                             # Handpump installation
+    - {item_code: DW-03, qty: "1", unit: nos}                             # Overhead tank 10KL
+    - {item_code: DW-04, qty: "households * 0.05", unit: rm}              # Pipeline: ~50m per household (avg)
+
+sanitation_block:
+  description: "Toilet/Sanitation Block"
+  vars: [units]
+  # VERIFY_RATIOS: Swachh Bharat Mission norms
+  items:
+    - {item_code: S-02, qty: "units", unit: nos}                          # Toilet superstructure
+    - {item_code: S-01, qty: "Math.ceil(units / 4)", unit: nos}           # Septic tanks: 1 per 4 units
+    - {item_code: S-03, qty: "units", unit: nos}                          # Sanitary fittings
+    - {item_code: S-04, qty: "units", unit: nos}                          # Water supply connections
+
+community_hall:
+  description: "Community/Panchayat Hall"
+  vars: [floor_area_sqm]
+  # VERIFY_RATIOS: standard MPLADS community hall norms
+  items:
+    - {item_code: CH-01, qty: "floor_area_sqm", unit: sqm}                # RCC frame structure
+    - {item_code: CH-02, qty: "floor_area_sqm", unit: sqm}                # Flooring + finishing
+
+electrification:
+  description: "Rural Electrification (pole line)"
+  vars: [line_length_km, households]
+  # VERIFY_RATIOS: DDUGJY/RGGVY norms
+  items:
+    - {item_code: E-01, qty: "line_length_km", unit: km}                  # 11KV pole line
+    - {item_code: E-02, qty: "line_length_km * 0.8", unit: km}            # LT distribution (80% of HT length)
+    - {item_code: E-03, qty: "households", unit: nos}                     # Domestic connections

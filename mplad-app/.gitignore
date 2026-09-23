@@ -1,0 +1,7 @@
+run*.txt
+data/app.db
+data_tuning/
+__pycache__/
+node_modules/
+.next/
+*.log

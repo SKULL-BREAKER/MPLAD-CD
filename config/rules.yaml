@@ -1,0 +1,22 @@
+# config/rules.yaml
+# D7 Rules Engine Configuration
+
+# R1: Prohibited Keywords (word-boundary, case-insensitive)
+prohibited_keywords:
+  - "temple"
+  - "mosque"
+  - "masjid"
+  - "church"
+  - "gurudwara"
+  - "statue"
+  - "memorial"
+  - "office building"
+  - "pandal"
+
+# R2: Agency Spend Caps
+# Cumulative spend per agency of type TRUST or SOCIETY > cap
+trust_cap_lakhs: 200
+
+# R3: SC/ST Minimum Spend Share (percentages)
+sc_min_share: 15
+st_min_share: 7

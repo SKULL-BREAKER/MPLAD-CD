@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-09-22T16:57:21.922Z",
+  "preset": "balanced",
+  "git_sha": "95acc4926f175fcf1017e64b0883fca167ae072b",
+  "patterns": {
+    "COST_OUTLIER": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "DUPLICATE": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "TIMELINE_T1": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "TIMELINE_T2": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "SPLITTING": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "GHOST_WORK": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "CONTRACTOR_CONCENTRATION": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "GUIDELINE_VIOLATION": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "BENAMI": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    },
+    "P3_COST_INFLATION": {
+      "precision": null,
+      "recall": null,
+      "f1": null,
+      "support": 0
+    }
+  },
+  "system_precision": 0.3325242718446602,
+  "innocent_fp": 0.275609756097561,
+  "n4_fp": 0,
+  "macro_f1": 0,
+  "alert_budget": 1.3205128205128205,
+  "confusion": {
+    "flagged": {
+      "anomaly-labeled": 274,
+      "innocent-labeled": 211,
+      "unlabeled": 339
+    },
+    "unflagged": {
+      "anomaly-labeled": 135,
+      "innocent-labeled": 360,
+      "unlabeled": 1100
+    }
+  },
+  "counts": {
+    "total_works": 2419,
+    "flagged_works": 824
+  }
+}

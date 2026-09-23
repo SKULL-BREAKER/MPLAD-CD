@@ -1,0 +1,12 @@
+d1:
+  storage_floor: 0.70
+d2:
+  storage_floor: 1.0
+d3: {}
+d5:
+  storage_floor: 0.10
+d6:
+  storage_floor_km: 3.0
+ensemble:
+  contamination: 0.03
+  random_state: 42

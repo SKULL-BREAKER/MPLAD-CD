@@ -1,0 +1,7 @@
+{
+  "works_min": 2000,
+  "works_max": 4000,
+  "sanctioned_cr_min": 300,
+  "sanctioned_cr_max": 450,
+  "max_overshoot": 1.6
+}

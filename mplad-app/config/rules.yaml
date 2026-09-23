@@ -1,0 +1,19 @@
+R1:
+  prohibited_keywords:
+    - temple
+    - mosque
+    - church
+    - gurudwara
+    - statue
+    - memorial
+    - office building
+  severity: critical
+R2:
+  trust_cap: 20000000
+  action: VERIFY
+R3:
+  sc_min: 15
+  st_min: 7
+  action: VERIFY
+R4:
+  jurisdiction: critical
