@@ -393,7 +393,14 @@ export default async function Home() {
             <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: '#EF4444' }}>Fraud Investigator</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Advanced irregularity detection engine identifying shell agencies, ghost assets, duplicate sanctions, and fund anomalies.</p>
-            <div style={{ color: '#EF4444', fontWeight: 600, fontSize: '0.875rem' }}>View Fraud Investigator →</div>
+            <div style={{ color: '#EF4444', fontWeight: 600, fontSize: '0.875rem' }}>View Fraud Investigator &rarr;</div>
+          </Link>
+
+          <Link href="/upload" className="glass-card" style={{ display: 'block', borderColor: 'rgba(167, 139, 250, 0.3)' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: '#A78BFA' }}>Photo Upload (Geo-Tag)</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Test the strict EXIF geolocation requirement for evidence uploads. Ensures only authentic, geo-tagged camera photos are accepted.</p>
+            <div style={{ color: '#A78BFA', fontWeight: 600, fontSize: '0.875rem' }}>Test Photo Upload &rarr;</div>
           </Link>
         </div>
       </section>
