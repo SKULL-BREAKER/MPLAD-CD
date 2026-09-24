@@ -32,7 +32,7 @@ export default function InvestigatorDashboard() {
   return (
     <main className="main-content" style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
       <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '2.2rem', fontWeight: 800, marginBottom: '8px' }}>🔍 Investigator Dashboard</h1>
+        <h1 style={{ fontSize: '2.2rem', fontWeight: 800, marginBottom: '8px' }}> Investigator Dashboard</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
           Powered by the 10-Module Fusion Brain. Priority Audit Queue sorted by composite Risk Score.
         </p>
@@ -81,7 +81,7 @@ export default function InvestigatorDashboard() {
               <div className="glass-card" style={{ position: 'sticky', top: '20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
                   <h2 style={{ fontSize: '1.4rem' }}>Work Drill-Down: {selectedWork.id}</h2>
-                  <button className="btn" style={{ background: '#374151', fontSize: '0.8rem' }} onClick={() => alert('Exporting Audit PDF...')}>📄 Export Alert (PDF)</button>
+                  <button className="btn" style={{ background: '#374151', fontSize: '0.8rem' }} onClick={() => alert('Exporting Audit PDF...')}> Export Alert (PDF)</button>
                 </div>
 
                 <div className="grid-2" style={{ gap: '16px', marginBottom: '24px' }}>
@@ -114,21 +114,21 @@ export default function InvestigatorDashboard() {
                 <h3 style={{ fontSize: '1.1rem', marginTop: '24px', marginBottom: '12px', borderBottom: '1px solid #334155', paddingBottom: '8px' }}>Case Management</h3>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
                   <Link href={`/officer/${selectedWork.id}/cost`} className="btn" style={{ background: 'rgba(56,189,248,0.15)', border: '1px solid rgba(56,189,248,0.4)', color: '#38BDF8', flex: 1, textAlign: 'center', textDecoration: 'none' }}>
-                    📊 View Detailed Cost Analysis (V3)
+                     View Detailed Cost Analysis (V3)
                   </Link>
                 </div>
                 <div style={{ display: 'flex', gap: '12px' }}>
                   <button className="btn" style={{ background: '#10B981', flex: 1 }} onClick={() => alert('Marked as FALSE POSITIVE. AI weights will be retrained.')}>
-                    ✓ Mark False Positive
+                     Mark False Positive
                   </button>
                   <button className="btn" style={{ background: '#EF4444', flex: 1 }} onClick={() => alert('Marked as VERIFIED FRAUD. Sending to Audit queue.')}>
-                    🚨 Verify Fraud
+                     Verify Fraud
                   </button>
                 </div>
               </div>
             ) : (
               <div className="glass-card" style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '16px' }}>📊</div>
+                <div style={{ fontSize: '3rem', marginBottom: '16px' }}></div>
                 Select a project from the Priority Audit Queue to view the Fusion Brain drill-down and evidence trails.
               </div>
             )}

@@ -32,19 +32,19 @@ async function handleReject(formData) {
 function getEligibilitySignal(utility_term) {
   const lower = utility_term.toLowerCase();
   if (lower.includes('individual') || lower.includes('personal') || lower.includes('private')) {
-    return { label: '✗ Possible individual benefit — DISQUALIFIED', color: 'var(--danger)', ok: false };
+    return { label: ' Possible individual benefit — DISQUALIFIED', color: 'var(--danger)', ok: false };
   }
   if (lower.includes('drinking water') || lower.includes('road') || lower.includes('health') ||
       lower.includes('school') || lower.includes('education') || lower.includes('sanitation')) {
-    return { label: '✓ Priority sector — Eligible', color: 'var(--success)', ok: true };
+    return { label: ' Priority sector — Eligible', color: 'var(--success)', ok: true };
   }
   return { label: '~ Community public utility — Review feasibility', color: 'var(--warning)', ok: true };
 }
 
 function getCostSignal(amount) {
-  if (amount < 100_000) return { label: '✗ Below ₹1L minimum — will be rejected', color: 'var(--danger)' };
-  if (amount > 10_000_000) return { label: '⚠ High value — verify cost-reasonableness', color: 'var(--warning)' };
-  return { label: '✓ Amount within reasonable band', color: 'var(--success)' };
+  if (amount < 100_000) return { label: ' Below ₹1L minimum — will be rejected', color: 'var(--danger)' };
+  if (amount > 10_000_000) return { label: ' High value — verify cost-reasonableness', color: 'var(--warning)' };
+  return { label: ' Amount within reasonable band', color: 'var(--success)' };
 }
 
 const SECTOR_COLORS = {
@@ -99,7 +99,7 @@ export default async function AuthorityView() {
   return (
     <main className="main-content">
       <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}>⚖️ Authority Scrutiny Board</h1>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}>️ Authority Scrutiny Board</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
           Scrutinise proposals for eligibility, duplication & cost-reasonableness. Sanction or reject with canonical reason.
           All decisions are immutably audited.
@@ -206,11 +206,11 @@ export default async function AuthorityView() {
                         <form action={handleSanction}>
                           <input type="hidden" name="proposal_id" value={p.id} />
                           <input type="hidden" name="requested_amount" value={p.sanctioned_amount || 0} />
-                          <button className="btn btn-sm" style={{ background: 'var(--success)', width: '100%' }}>✓ Sanction</button>
+                          <button className="btn btn-sm" style={{ background: 'var(--success)', width: '100%' }}> Sanction</button>
                         </form>
                         <form action={handleReject}>
                           <input type="hidden" name="proposal_id" value={p.id} />
-                          <button className="btn btn-sm" style={{ background: 'var(--danger)', width: '100%' }}>✗ Reject</button>
+                          <button className="btn btn-sm" style={{ background: 'var(--danger)', width: '100%' }}> Reject</button>
                         </form>
                       </div>
                     </div>

@@ -83,7 +83,7 @@ export default async function MPView() {
       <header style={{ marginBottom: '32px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
-            <h2 style={{ fontSize: '1.6rem', fontWeight: 800 }}>🏛️ MP Workspace</h2>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: 800 }}>️ MP Workspace</h2>
             <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '4px' }}>
               Member: {member_id} · Constituency: {constituency_id} · Year: {year_val}
             </div>
@@ -133,7 +133,7 @@ export default async function MPView() {
                 <span style={{ fontSize: '0.875rem' }}><span className="sc-badge">SC</span> Scheduled Caste Areas</span>
                 <span style={{ fontSize: '0.85rem', color: scst.scMet ? 'var(--success)' : 'var(--warning)' }}>
                   {fmt(scst.scAmount)} / {fmt(scst.scTarget)} ({scst.scPct}%)
-                  {scst.scMet ? ' ✓' : ' ⚠'}
+                  {scst.scMet ? ' ' : ' '}
                 </span>
               </div>
               <div className="util-bar-wrap">
@@ -148,7 +148,7 @@ export default async function MPView() {
                 <span style={{ fontSize: '0.875rem' }}><span className="st-badge">ST</span> Scheduled Tribe Areas</span>
                 <span style={{ fontSize: '0.85rem', color: scst.stMet ? 'var(--success)' : 'var(--warning)' }}>
                   {fmt(scst.stAmount)} / {fmt(scst.stTarget)} ({scst.stPct}%)
-                  {scst.stMet ? ' ✓' : ' ⚠'}
+                  {scst.stMet ? ' ' : ' '}
                 </span>
               </div>
               <div className="util-bar-wrap">
@@ -238,7 +238,7 @@ export default async function MPView() {
             />
           </div>
           <div className="alert alert-info" style={{ fontSize: '0.8rem' }}>
-            💡 AI eligibility and duplication checks will run at the Authority scrutiny stage.
+             AI eligibility and duplication checks will run at the Authority scrutiny stage.
           </div>
           <button type="submit" className="btn">Submit Proposal →</button>
         </form>

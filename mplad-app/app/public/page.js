@@ -230,14 +230,14 @@ export default async function PublicView() {
                         <div className="util-bar" style={{ width: `${Math.min(expendPct, 100)}%`, background: color }} />
                       </div>
                       <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                        {expendPct}% expended · {['COMPLETED', 'UTILISED'].includes((w.status || '').toUpperCase()) ? '✓ Completed' : 'In Progress'}
+                        {expendPct}% expended · {['COMPLETED', 'UTILISED'].includes((w.status || '').toUpperCase()) ? ' Completed' : 'In Progress'}
                       </div>
                     </>
                   )}
 
                   {/* E1 Pipeline: Citizen Evidence Upload */}
                   <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <div className="label" style={{ marginBottom: '8px', color: '#10B981' }}>📸 Submit Field Evidence (E1 Trust Pipeline)</div>
+                    <div className="label" style={{ marginBottom: '8px', color: '#10B981' }}> Submit Field Evidence (E1 Trust Pipeline)</div>
                     <EvidenceUploadForm workId={w.id} authority="PUBLIC" action={handleUploadPublicEvidence} />
                   </div>
 
@@ -247,9 +247,9 @@ export default async function PublicView() {
                       {w.evidence.map(e => (
                         <div key={e.id} style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '8px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                           <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                            <span>{e.media_type_code === 'PHOTO' ? '📷' : '🎥'}</span>
+                            <span>{e.media_type_code === 'PHOTO' ? '' : ''}</span>
                             <span>{e.media_type_code}</span>
-                            <span>📍 {Number(e.lat || 0).toFixed(4)}, {Number(e.lon || 0).toFixed(4)}</span>
+                            <span> {Number(e.lat || 0).toFixed(4)}, {Number(e.lon || 0).toFixed(4)}</span>
                             <span>{new Date(e.created_at || new Date()).toLocaleDateString('en-IN')}</span>
                           </div>
                           {e.image_path && (

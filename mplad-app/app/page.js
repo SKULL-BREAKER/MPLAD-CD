@@ -12,17 +12,17 @@ const SECTOR_COLORS = {
 
 // ── Permissible / Non-permissible classification ───────────────────────────────
 const PERMISSIBLE = [
-  { sector: 'Drinking Water',         examples: 'Bore wells, overhead tanks, pipelines, hand pumps',        icon: '💧' },
-  { sector: 'Education',              examples: 'School buildings, libraries, labs, sports grounds',         icon: '📚' },
-  { sector: 'Healthcare & Sanitation',examples: 'PHC buildings, toilets, sanitation units, nallahs',         icon: '🏥' },
-  { sector: 'Electricity',            examples: 'Street lights, electrification, transformers',              icon: '⚡' },
-  { sector: 'Non-Conventional Energy',examples: 'Solar panels, biogas plants, wind energy units',            icon: '☀️' },
-  { sector: 'Irrigation',             examples: 'Field channels, minor irrigation, check dams',              icon: '🌾' },
-  { sector: 'Railways/Roads/Bridges', examples: 'Rural roads, culverts, bridges, footpaths',                icon: '🛣️' },
-  { sector: 'Sports',                 examples: 'Playgrounds, sports equipment, gymnasiums',                 icon: '🏅' },
-  { sector: 'Agriculture',            examples: 'Seed banks, godowns, soil testing labs',                   icon: '🌱' },
-  { sector: 'Self-Help Group',        examples: 'SHG training centres, common facility centres',             icon: '🤝' },
-  { sector: 'Urban Development',      examples: 'Community centres, parks, solid waste units',               icon: '🏙️' },
+  { sector: 'Drinking Water',         examples: 'Bore wells, overhead tanks, pipelines, hand pumps',        icon: '' },
+  { sector: 'Education',              examples: 'School buildings, libraries, labs, sports grounds',         icon: '' },
+  { sector: 'Healthcare & Sanitation',examples: 'PHC buildings, toilets, sanitation units, nallahs',         icon: '' },
+  { sector: 'Electricity',            examples: 'Street lights, electrification, transformers',              icon: '' },
+  { sector: 'Non-Conventional Energy',examples: 'Solar panels, biogas plants, wind energy units',            icon: '️' },
+  { sector: 'Irrigation',             examples: 'Field channels, minor irrigation, check dams',              icon: '' },
+  { sector: 'Railways/Roads/Bridges', examples: 'Rural roads, culverts, bridges, footpaths',                icon: '️' },
+  { sector: 'Sports',                 examples: 'Playgrounds, sports equipment, gymnasiums',                 icon: '' },
+  { sector: 'Agriculture',            examples: 'Seed banks, godowns, soil testing labs',                   icon: '' },
+  { sector: 'Self-Help Group',        examples: 'SHG training centres, common facility centres',             icon: '' },
+  { sector: 'Urban Development',      examples: 'Community centres, parks, solid waste units',               icon: '️' },
 ];
 const NON_PERMISSIBLE = [
   'Works of individual benefit (houses, individual toilets)',
@@ -218,7 +218,7 @@ export default async function Home() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <span style={{ fontSize: '0.875rem' }}><span className={cls}>{badge}</span> {label}</span>
                   <span style={{ fontSize: '0.85rem', color: met ? 'var(--success)' : 'var(--danger)', fontWeight: 700 }}>
-                    {fmt(amount)} ({pct}%) {met ? '✓ Met' : `⚠ Need ${target}%`}
+                    {fmt(amount)} ({pct}%) {met ? ' Met' : ` Need ${target}%`}
                   </span>
                 </div>
                 <div className="util-bar-wrap">
@@ -358,25 +358,25 @@ export default async function Home() {
         <h2 className="section-title">Access by Role</h2>
         <div className="grid">
           <Link href="/mp" className="glass-card" style={{ display: 'block' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>🏛️</div>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>️</div>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: 'var(--accent)' }}>Member of Parliament</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Structure work proposals from 12 canonical priority sectors. View entitlement balance and SC/ST earmarking targets.</p>
             <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>Enter MP Workspace →</div>
           </Link>
           <Link href="/authority" className="glass-card" style={{ display: 'block' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>⚖️</div>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>️</div>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: 'var(--danger)' }}>Designated Authority</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Scrutinise proposals for eligibility, duplication &amp; cost-reasonableness. Sanction or reject with one canonical reason.</p>
             <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>Enter Authority Board →</div>
           </Link>
           <Link href="/officer" className="glass-card" style={{ display: 'block' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>👷</div>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: 'var(--success)' }}>Implementing Officer</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Track execution state (SANCTIONED → IN-EXECUTION → COMPLETED → UTILISED) and append immutable geo-tagged evidence.</p>
             <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>Enter Officer Dashboard →</div>
           </Link>
           <Link href="/public" className="glass-card" style={{ display: 'block' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>🌐</div>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: '#EAB308' }}>General Public</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Read-only transparency view of all sanctioned works with sector breakdown, fund utilisation, and geo-tagged evidence.</p>
             <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>View Public Portal →</div>
@@ -392,7 +392,7 @@ export default async function Home() {
           {/* Permissible */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <span style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10B981', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}>✓ Permissible Works (12 Priority Sectors)</span>
+              <span style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10B981', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}> Permissible Works (12 Priority Sectors)</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {PERMISSIBLE.map(({ sector, examples, icon }) => {
@@ -413,25 +413,25 @@ export default async function Home() {
           {/* Non-permissible */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <span style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}>✗ Non-Permissible Works (Absolute Disqualifiers)</span>
+              <span style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}> Non-Permissible Works (Absolute Disqualifiers)</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {NON_PERMISSIBLE.map((item, i) => (
                 <div key={i} style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: '10px', padding: '10px 14px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <span style={{ color: '#EF4444', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}>✗</span>
+                  <span style={{ color: '#EF4444', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}></span>
                   <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.5 }}>{item}</p>
                 </div>
               ))}
               <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', padding: '12px 14px', marginTop: '4px' }}>
                 <p style={{ fontSize: '0.78rem', color: '#EF4444', fontWeight: 600, margin: 0, lineHeight: 1.6 }}>
-                  ⚠ Individual benefit is an ABSOLUTE DISQUALIFIER. AI eligibility support flags these at proposal stage. Authority must reject such proposals with a canonical reason.
+                   Individual benefit is an ABSOLUTE DISQUALIFIER. AI eligibility support flags these at proposal stage. Authority must reject such proposals with a canonical reason.
                 </p>
               </div>
             </div>
 
             {/* Min sanction amount guard */}
             <div style={{ marginTop: '16px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '12px', padding: '16px 18px' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#F59E0B', marginBottom: '8px' }}>⚠ Minimum Sanction Amount Guard</div>
+              <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#F59E0B', marginBottom: '8px' }}> Minimum Sanction Amount Guard</div>
               <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: 0 }}>
                 As per real MPLADS guidelines (MoSPI), <strong style={{ color: '#F59E0B' }}>no project costing less than ₹1,00,000 (₹1 lakh) shall be sanctioned.</strong> Exception: essential items like hand pumps, computers, and solar lamps may have lower individual costs but are part of larger schemes. This guard is enforced at the Authority scrutiny stage and cannot be bypassed.
               </p>

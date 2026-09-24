@@ -30,11 +30,11 @@ function pct(n) {
 }
 
 const VERDICT_META = {
-  UNJUSTIFIED_PREMIUM: { label: 'Unjustified Premium',  color: '#EF4444', bg: 'rgba(239,68,68,0.12)',  icon: '🚨' },
-  COST_REVIEW:         { label: 'Cost Review Required',  color: '#F97316', bg: 'rgba(249,115,22,0.12)', icon: '⚠️' },
-  NOT_FLAGGED:         { label: 'Price-Justified',       color: '#10B981', bg: 'rgba(16,185,129,0.10)', icon: '✅' },
-  INCONCLUSIVE:        { label: 'Inconclusive',          color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', icon: '❓' },
-  VERIFIED_CLEAN:      { label: 'Verified Clean',        color: '#10B981', bg: 'rgba(16,185,129,0.10)', icon: '✅' },
+  UNJUSTIFIED_PREMIUM: { label: 'Unjustified Premium',  color: '#EF4444', bg: 'rgba(239,68,68,0.12)',  icon: '' },
+  COST_REVIEW:         { label: 'Cost Review Required',  color: '#F97316', bg: 'rgba(249,115,22,0.12)', icon: '️' },
+  NOT_FLAGGED:         { label: 'Price-Justified',       color: '#10B981', bg: 'rgba(16,185,129,0.10)', icon: '' },
+  INCONCLUSIVE:        { label: 'Inconclusive',          color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', icon: '' },
+  VERIFIED_CLEAN:      { label: 'Verified Clean',        color: '#10B981', bg: 'rgba(16,185,129,0.10)', icon: '' },
   INSUFFICIENT_DATA:   { label: 'Insufficient Data',     color: '#64748B', bg: 'rgba(100,116,139,0.10)',icon: 'ℹ️' },
 };
 
@@ -249,7 +249,7 @@ export default function CostJustificationPage({ params }) {
     return (
       <main className="main-content" style={{ maxWidth: 1100, margin: '0 auto', padding: 24 }}>
         <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: '2rem', marginBottom: 12 }}>⚙️</div>
+          <div style={{ fontSize: '2rem', marginBottom: 12 }}>️</div>
           <div>Computing deterministic cost estimate (C1→C2→C3)…</div>
           <div style={{ fontSize: '0.8rem', color: '#475569', marginTop: 8 }}>Loading price indices + BoQ synthesis</div>
         </div>
@@ -292,7 +292,7 @@ export default function CostJustificationPage({ params }) {
               target="_blank"
               style={{ background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.2)', borderRadius: 8, padding: '8px 16px', color: 'var(--accent)', fontSize: '0.82rem', fontWeight: 600 }}
             >
-              📊 Raw JSON
+               Raw JSON
             </a>
           </div>
         </div>
@@ -343,13 +343,13 @@ export default function CostJustificationPage({ params }) {
       {/* Spec Card */}
       <div className="glass-card" style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700 }}>📐 Work Specification</h3>
+          <h3 style={{ fontSize: '1rem', fontWeight: 700 }}> Work Specification</h3>
           <button
             className="btn"
             style={{ fontSize: '0.78rem', background: 'rgba(79,70,229,0.2)', border: '1px solid rgba(79,70,229,0.4)' }}
             onClick={() => { setShowSpecForm(!showSpecForm); setSpecForm({ category: spec?.category || '', specVars: spec?.specJson || {} }); }}
           >
-            {showSpecForm ? '✕ Cancel' : '✏️ Confirm / Edit'}
+            {showSpecForm ? ' Cancel' : '️ Confirm / Edit'}
           </button>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 8 }}>
@@ -376,7 +376,7 @@ export default function CostJustificationPage({ params }) {
         </div>
         {spec?.source === 'inferred' && (
           <div style={{ fontSize: '0.8rem', color: '#F59E0B', marginTop: 4 }}>
-            ⚠️ Spec was inferred from work title. Officer confirmation overrides inference and improves estimate accuracy.
+            ️ Spec was inferred from work title. Officer confirmation overrides inference and improves estimate accuracy.
           </div>
         )}
 
@@ -412,7 +412,7 @@ export default function CostJustificationPage({ params }) {
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <button type="submit" className="btn" disabled={specSubmitting} style={{ background: '#10B981' }}>
-                {specSubmitting ? 'Saving…' : '✓ Confirm Spec'}
+                {specSubmitting ? 'Saving…' : ' Confirm Spec'}
               </button>
               <button type="button" className="btn" onClick={() => setShowSpecForm(false)} style={{ background: '#374151' }}>
                 Cancel
@@ -446,11 +446,11 @@ export default function CostJustificationPage({ params }) {
       {/* Tab nav */}
       <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '1px solid #1e293b', paddingBottom: 0 }}>
         {[
-          { id: 'waterfall', label: '📊 Cost Waterfall' },
-          { id: 'boq',       label: '📋 Itemized BoQ' },
-          { id: 'sparklines', label: '📈 Price Indices' },
-          { id: 'comparison', label: '⚖️ Three Estimates' },
-          { id: 'memo',      label: '📝 Official Memo' },
+          { id: 'waterfall', label: ' Cost Waterfall' },
+          { id: 'boq',       label: ' Itemized BoQ' },
+          { id: 'sparklines', label: ' Price Indices' },
+          { id: 'comparison', label: '️ Three Estimates' },
+          { id: 'memo',      label: ' Official Memo' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -485,7 +485,7 @@ export default function CostJustificationPage({ params }) {
             ) : (
               <div style={{ textAlign: 'center', padding: 40, color: 'var(--text-muted)' }}>
                 {data?.estimates?.norm?.error
-                  ? `⚠️ ${data.estimates.norm.error}`
+                  ? `️ ${data.estimates.norm.error}`
                   : 'Norm estimate not available — confirm spec above first.'}
               </div>
             )}
@@ -499,7 +499,7 @@ export default function CostJustificationPage({ params }) {
               <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 4 }}>Itemized Bill of Quantities</h3>
               <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                 Every line cites its SSR source. Steel/cement/labor index factors are shown transparently.
-                <span style={{ color: '#F59E0B', marginLeft: 8 }}>⚠️ BoQ ratios require civil-background verification before finale.</span>
+                <span style={{ color: '#F59E0B', marginLeft: 8 }}>️ BoQ ratios require civil-background verification before finale.</span>
               </p>
             </div>
             {boqItems.length > 0 ? (
@@ -507,7 +507,7 @@ export default function CostJustificationPage({ params }) {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
                   <thead>
                     <tr style={{ background: 'rgba(0,0,0,0.3)', color: '#94A3B8', textAlign: 'left' }}>
-                      {['Code', 'Description', 'Qty', 'Unit', 'Base Rate', '🔩 Steel ×', '🪨 Cement ×', '👷 Labor ×', 'Blended Idx', 'Terrain ×', 'Adj. Rate', 'Line Total', 'Source Ref'].map(h => (
+                      {['Code', 'Description', 'Qty', 'Unit', 'Base Rate', ' Steel ×', ' Cement ×', ' Labor ×', 'Blended Idx', 'Terrain ×', 'Adj. Rate', 'Line Total', 'Source Ref'].map(h => (
                         <th key={h} style={{ padding: '8px 10px', borderBottom: '1px solid #1e293b', whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
@@ -645,7 +645,7 @@ export default function CostJustificationPage({ params }) {
                 <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: 4 }}>Bilingual Official Memo</h3>
                 <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Auto-generated official memo for dossier inclusion.</p>
               </div>
-              <button className="btn" onClick={() => window.print()} style={{ background: 'rgba(56,189,248,0.2)', color: '#38BDF8', border: '1px solid #38BDF8' }}>🖨️ Print Memo</button>
+              <button className="btn" onClick={() => window.print()} style={{ background: 'rgba(56,189,248,0.2)', color: '#38BDF8', border: '1px solid #38BDF8' }}>️ Print Memo</button>
             </div>
             <div className="memo-print-area" style={{ background: '#fff', color: '#000', padding: '40px', borderRadius: '4px', fontFamily: 'serif' }}>
               <style>{`
@@ -710,9 +710,9 @@ export default function CostJustificationPage({ params }) {
 
       {/* Footer note */}
       <div style={{ marginTop: 20, fontSize: '0.75rem', color: '#334155', display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-        <span>📚 Source: CPWD DSR 2021 + WPI series (MoCI) + State Wage Notifications</span>
-        <span>🔒 V3 Deterministic — no flag raised by ML alone</span>
-        <span>⚠️ BoQ ratios require civil-background teammate verification before production</span>
+        <span> Source: CPWD DSR 2021 + WPI series (MoCI) + State Wage Notifications</span>
+        <span> V3 Deterministic — no flag raised by ML alone</span>
+        <span>️ BoQ ratios require civil-background teammate verification before production</span>
       </div>
     </main>
   );

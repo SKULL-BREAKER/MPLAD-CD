@@ -12,10 +12,10 @@ const NEXT_STATE = {
 };
 
 const STATE_META = {
-  SANCTIONED:    { label: 'Sanctioned',   color: '#10B981', icon: '✓', tagClass: 'sanctioned' },
-  'IN-EXECUTION': { label: 'In Execution', color: '#F59E0B', icon: '🔨', tagClass: 'executing' },
-  COMPLETED:     { label: 'Completed',    color: '#818CF8', icon: '🏁', tagClass: 'completed' },
-  UTILISED:      { label: 'Utilised',     color: '#6EE7B7', icon: '★', tagClass: 'utilised' },
+  SANCTIONED:    { label: 'Sanctioned',   color: '#10B981', icon: '', tagClass: 'sanctioned' },
+  'IN-EXECUTION': { label: 'In Execution', color: '#F59E0B', icon: '', tagClass: 'executing' },
+  COMPLETED:     { label: 'Completed',    color: '#818CF8', icon: '', tagClass: 'completed' },
+  UTILISED:      { label: 'Utilised',     color: '#6EE7B7', icon: '', tagClass: 'utilised' },
 };
 
 const SECTOR_COLORS = {
@@ -141,7 +141,7 @@ export default async function OfficerView() {
     <main className="main-content">
       {/* Header */}
       <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}>👷 Officer Execution Dashboard</h1>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}> Officer Execution Dashboard</h1>
         <p className="text-muted" style={{ fontSize: '0.9rem' }}>
           Advance work states through the canonical pipeline and append immutable geo-tagged evidence.
           All transitions are strictly linear and immutably audited.
@@ -212,7 +212,7 @@ export default async function OfficerView() {
       {/* Alert Inbox */}
       {alertsWithSLA.length > 0 && (
         <div style={{ marginBottom: '32px' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#EF4444', marginBottom: '12px' }}>⚠️ Action Required: Alert Inbox</h2>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#EF4444', marginBottom: '12px' }}>️ Action Required: Alert Inbox</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
             {alertsWithSLA.map(alert => (
               <div key={alert.id} style={{ background: 'rgba(239,68,68,0.05)', border: `1px solid ${alert.breached ? '#EF4444' : 'rgba(239,68,68,0.2)'}`, borderRadius: '8px', padding: '16px' }}>
@@ -270,7 +270,7 @@ export default async function OfficerView() {
                       Work #{w.id.slice(0, 10)}… · {w.fy}
                     </div>
                     <div style={{ fontSize: '0.75rem', color: 'rgba(56,189,248,0.7)', marginTop: '2px' }}>
-                      🏗 {w.agency_id || 'Unknown Agency'}
+                       {w.agency_id || 'Unknown Agency'}
                     </div>
                   </div>
                   <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -283,7 +283,7 @@ export default async function OfficerView() {
                 {w.risk && ['HIGH', 'CRITICAL'].includes(w.risk.tier?.toUpperCase()) && (
                   <div style={{ background: w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)', border: `1px solid ${w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: '8px', padding: '12px 16px', marginBottom: '16px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '1.1rem' }}>🤖</span>
+                      <span style={{ fontSize: '1.1rem' }}></span>
                       <strong style={{ color: w.risk.tier?.toUpperCase() === 'CRITICAL' ? '#EF4444' : '#F59E0B' }}>
                         AI Risk Assessment: {w.risk.tier}
                       </strong>
@@ -319,8 +319,8 @@ export default async function OfficerView() {
                       {w.evidence.map(e => (
                         <div key={e.id} style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                           <div style={{ display: 'flex', gap: '12px', fontSize: '0.78rem', color: 'var(--text-muted)', alignItems: 'center' }}>
-                            <span style={{ color: 'var(--accent)' }}>{e.media_type_code === 'PHOTO' ? '📷' : '🎥'} {e.media_type_code}</span>
-                            <span>📍 {Number(e.lat || 0).toFixed(5)}, {Number(e.lon || 0).toFixed(5)}</span>
+                            <span style={{ color: 'var(--accent)' }}>{e.media_type_code === 'PHOTO' ? '' : ''} {e.media_type_code}</span>
+                            <span> {Number(e.lat || 0).toFixed(5)}, {Number(e.lon || 0).toFixed(5)}</span>
                             <span style={{ background: e.capture_source === 'OFFICER' ? 'rgba(79,70,229,0.15)' : 'rgba(245,158,11,0.15)', color: e.capture_source === 'OFFICER' ? '#818CF8' : '#F59E0B', padding: '1px 6px', borderRadius: '3px', fontSize: '0.7rem' }}>
                               {e.capture_source || 'PUBLIC'}
                             </span>
@@ -348,7 +348,7 @@ export default async function OfficerView() {
                     >
                       {nextState
                         ? `${nextMeta?.icon} Advance → ${nextMeta?.label}`
-                        : '★ Fully Utilised'}
+                        : ' Fully Utilised'}
                     </button>
                   </form>
 

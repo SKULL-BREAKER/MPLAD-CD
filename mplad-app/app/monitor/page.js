@@ -17,16 +17,16 @@ const REFRESH_SEC = 30;
 
 // ── Severity / dimension config ───────────────────────────────────────────────
 const SEV_CFG = {
-  CRITICAL: { label: 'Critical', color: '#EF4444', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.30)', icon: '🔴', glow: '0 0 20px rgba(239,68,68,0.20)' },
-  HIGH:     { label: 'High',     color: '#F97316', bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.28)', icon: '🟠', glow: '0 0 16px rgba(249,115,22,0.18)' },
-  MEDIUM:   { label: 'Medium',   color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.25)', icon: '🟡', glow: '' },
-  LOW:      { label: 'Low',      color: '#38BDF8', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.20)', icon: '🔵', glow: '' },
+  CRITICAL: { label: 'Critical', color: '#EF4444', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.30)', icon: '', glow: '0 0 20px rgba(239,68,68,0.20)' },
+  HIGH:     { label: 'High',     color: '#F97316', bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.28)', icon: '', glow: '0 0 16px rgba(249,115,22,0.18)' },
+  MEDIUM:   { label: 'Medium',   color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.25)', icon: '', glow: '' },
+  LOW:      { label: 'Low',      color: '#38BDF8', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.20)', icon: '', glow: '' },
 };
 
 const DIM_CFG = {
-  PAST:    { label: 'Past',    icon: '📜', color: '#A78BFA', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.25)' },
-  PRESENT: { label: 'Present', icon: '📍', color: '#38BDF8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.25)' },
-  FUTURE:  { label: 'Future',  icon: '🔮', color: '#10B981', bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.25)' },
+  PAST:    { label: 'Past',    icon: '', color: '#A78BFA', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.25)' },
+  PRESENT: { label: 'Present', icon: '', color: '#38BDF8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.25)' },
+  FUTURE:  { label: 'Future',  icon: '', color: '#10B981', bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.25)' },
 };
 
 const CONF_CFG = {
@@ -44,15 +44,15 @@ const STATUS_CFG = {
 };
 
 const CAT_LABEL = {
-  FUND_BALANCE:        '💰 Fund Balance',    SCST_COMPLIANCE: '⚖️ SC/ST Compliance',
-  TREND_UTILISATION:   '📉 Utilisation Trend', TREND_REJECTION: '📋 Rejection Trend',
-  TREND_FUND_USAGE:    '📊 Fund Usage Trend', SCST_HISTORY:   '📜 SC/ST History',
-  STALLED_WORK:        '⏸️ Stalled Work',     UNSTARTED_WORK: '🚧 Unstarted Work',
-  DUPLICATION:         '♊ Duplication',       EVIDENCE:       '📍 Evidence',
-  EXPENDITURE:         '📉 Expenditure',      UTILISATION:    '📊 Utilisation',
-  LOW_VALUE_PROPOSAL:  '💸 Low-Value',        FUND_FORECAST:  '🔮 Fund Forecast',
-  UNDERSPEND_RISK:     '⚠️ Underspend Risk',  SCST_FORECAST:  '🔮 SC/ST Forecast',
-  STAGNATION_RISK:     '🚩 Stagnation Risk',  SECTOR_CONCENTRATION: '🎯 Sector Risk',
+  FUND_BALANCE:        ' Fund Balance',    SCST_COMPLIANCE: '️ SC/ST Compliance',
+  TREND_UTILISATION:   ' Utilisation Trend', TREND_REJECTION: ' Rejection Trend',
+  TREND_FUND_USAGE:    ' Fund Usage Trend', SCST_HISTORY:   ' SC/ST History',
+  STALLED_WORK:        '️ Stalled Work',     UNSTARTED_WORK: ' Unstarted Work',
+  DUPLICATION:         ' Duplication',       EVIDENCE:       ' Evidence',
+  EXPENDITURE:         ' Expenditure',      UTILISATION:    ' Utilisation',
+  LOW_VALUE_PROPOSAL:  ' Low-Value',        FUND_FORECAST:  ' Fund Forecast',
+  UNDERSPEND_RISK:     '️ Underspend Risk',  SCST_FORECAST:  ' SC/ST Forecast',
+  STAGNATION_RISK:     ' Stagnation Risk',  SECTOR_CONCENTRATION: ' Sector Risk',
 };
 
 // ── Mini sparkline (SVG) ──────────────────────────────────────────────────────
@@ -215,8 +215,8 @@ function YearlyTrendTable({ stats }) {
                     <span style={{ fontSize: '0.78rem', color: s.utilisationPct < 50 ? '#EF4444' : '#10B981', fontWeight: 700 }}>{s.utilisationPct}%</span>
                   </div>
                 </td>
-                <td><span style={{ color: scOk ? '#10B981' : '#EF4444', fontWeight: 700, fontSize: '0.82rem' }}>{scOk ? '✓' : '✗'} {s.scPct}%</span></td>
-                <td><span style={{ color: stOk ? '#10B981' : '#EF4444', fontWeight: 700, fontSize: '0.82rem' }}>{stOk ? '✓' : '✗'} {s.stPct}%</span></td>
+                <td><span style={{ color: scOk ? '#10B981' : '#EF4444', fontWeight: 700, fontSize: '0.82rem' }}>{scOk ? '' : ''} {s.scPct}%</span></td>
+                <td><span style={{ color: stOk ? '#10B981' : '#EF4444', fontWeight: 700, fontSize: '0.82rem' }}>{stOk ? '' : ''} {s.stPct}%</span></td>
               </tr>
             );
           })}
@@ -264,24 +264,24 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
     <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: '360px', background: '#0E1628', borderLeft: '1px solid rgba(255,255,255,0.08)', zIndex: 1000, overflowY: 'auto', padding: '24px', boxShadow: '-20px 0 60px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '0' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
         <div>
-          <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '4px' }}>⚙️ Custom Thresholds</div>
+          <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '4px' }}>️ Custom Thresholds</div>
           <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.38)' }}>Your rules — override the defaults</div>
         </div>
-        <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: '#fff', padding: '5px 10px', cursor: 'pointer', fontSize: '0.8rem' }}>✕ Close</button>
+        <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: '#fff', padding: '5px 10px', cursor: 'pointer', fontSize: '0.8rem' }}> Close</button>
       </div>
 
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: '0.7rem', color: '#818CF8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px' }}>💰 Fund Rules</div>
+        <div style={{ fontSize: '0.7rem', color: '#818CF8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px' }}> Fund Rules</div>
         {field('minSanctionAmount',      'Min Sanction Amount',   100000,  2000000, 50000, false)}
         {field('fundBalanceWarnPct',      'Balance Warning Level', 0.10,    0.50,    0.01,  true)}
         {field('fundBalanceCriticalPct',  'Balance Critical Level',0.02,    0.20,    0.01,  true)}
         {field('expenditureGapPct',       'Expenditure Gap Alert', 0.10,    0.90,    0.05,  true)}
 
-        <div style={{ fontSize: '0.7rem', color: '#F97316', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}>⏱️ Time Rules</div>
+        <div style={{ fontSize: '0.7rem', color: '#F97316', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}>️ Time Rules</div>
         {field('stalledExecutionDays',    'Stalled Execution (days)',  7,  90,  1,   false)}
         {field('unstartedSanctionDays',   'Unstarted Sanction (days)', 14, 180, 1,  false)}
 
-        <div style={{ fontSize: '0.7rem', color: '#10B981', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}>📊 Quality Rules</div>
+        <div style={{ fontSize: '0.7rem', color: '#10B981', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}> Quality Rules</div>
         {field('lowUtilisationPct',       'Low Utilisation Floor',    0.10, 0.70, 0.05, true)}
         {field('highRejectionRatePct',    'High Rejection Rate',      0.10, 0.80, 0.05, true)}
 
@@ -292,7 +292,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
 
       <div style={{ display: 'flex', gap: '10px', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
         <button onClick={() => { onChange(local); onClose(); }} style={{ flex: 1, background: '#4F46E5', color: '#fff', border: 'none', borderRadius: '8px', padding: '11px', fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer' }}>
-          ✓ Apply & Re-scan
+           Apply & Re-scan
         </button>
         <button onClick={() => setLocal({ ...THRESHOLD_DEFAULTS })} style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '11px 14px', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>
           Reset
@@ -307,7 +307,7 @@ function ForecastCards({ alerts }) {
   const future = alerts.filter(a => a.dimension === 'FUTURE');
   if (!future.length) return (
     <div style={{ padding: '32px', textAlign: 'center', color: 'rgba(255,255,255,0.28)', fontSize: '0.85rem', background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.12)', borderRadius: '12px' }}>
-      🔮 No future risks detected at current trajectory
+       No future risks detected at current trajectory
     </div>
   );
   return (
@@ -393,10 +393,10 @@ export default function MonitorPage() {
   const displayAlerts = activeTab === 'ALL' ? alerts : activeTab === 'PAST' ? pastAlerts : activeTab === 'PRESENT' ? presentAlerts : futureAlerts;
 
   const tabs = [
-    { key: 'PRESENT', label: '📍 Present',  count: presentAlerts.length, color: '#38BDF8' },
-    { key: 'FUTURE',  label: '🔮 Future',   count: futureAlerts.length,  color: '#10B981' },
-    { key: 'PAST',    label: '📜 Past',     count: pastAlerts.length,    color: '#A78BFA' },
-    { key: 'ALL',     label: '🌐 All',      count: alerts.length,        color: '#94A3B8' },
+    { key: 'PRESENT', label: ' Present',  count: presentAlerts.length, color: '#38BDF8' },
+    { key: 'FUTURE',  label: ' Future',   count: futureAlerts.length,  color: '#10B981' },
+    { key: 'PAST',    label: ' Past',     count: pastAlerts.length,    color: '#A78BFA' },
+    { key: 'ALL',     label: ' All',      count: alerts.length,        color: '#94A3B8' },
   ];
 
   return (
@@ -419,7 +419,7 @@ export default function MonitorPage() {
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(79,70,229,0.10)', border: '1px solid rgba(79,70,229,0.25)', borderRadius: '99px', padding: '4px 14px', fontSize: '0.72rem', color: '#818CF8', fontWeight: 600, marginBottom: '12px', letterSpacing: '0.5px' }}>
-                🤖 AI Monitor · Temporal Intelligence Engine · Read-Only
+                 AI Monitor · Temporal Intelligence Engine · Read-Only
               </div>
               <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-1px', lineHeight: 1.1, marginBottom: '8px' }}>
                 Project Intelligence{' '}
@@ -435,7 +435,7 @@ export default function MonitorPage() {
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38BDF8', letterSpacing: '-0.5px' }}>{countdown}s</div>
               </div>}
               <button onClick={() => setShowDrawer(true)} style={{ background: 'rgba(79,70,229,0.18)', border: '1px solid rgba(79,70,229,0.35)', borderRadius: '9px', color: '#818CF8', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
-                ⚙️ Thresholds
+                ️ Thresholds
               </button>
               <button onClick={() => scan()} disabled={loading} style={{ background: loading ? 'rgba(79,70,229,0.3)' : 'rgba(79,70,229,0.55)', border: '1px solid rgba(79,70,229,0.4)', borderRadius: '9px', color: '#fff', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '7px' }}>
                 {loading ? <span style={{ display: 'inline-block', width: '13px', height: '13px', border: '2px solid rgba(255,255,255,0.25)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> : '⟳'}
@@ -464,9 +464,9 @@ export default function MonitorPage() {
               <HealthGauge score={loading ? 0 : (summary?.healthScore ?? 0)} />
             </div>
             {[
-              { label: '📜 Past Alerts',    count: pastAlerts.length,    color: '#A78BFA', sub: 'Historical patterns' },
-              { label: '📍 Present Alerts', count: presentAlerts.length, color: '#38BDF8', sub: 'Current state' },
-              { label: '🔮 Future Risks',   count: futureAlerts.length,  color: '#10B981', sub: 'Predictive forecasts' },
+              { label: ' Past Alerts',    count: pastAlerts.length,    color: '#A78BFA', sub: 'Historical patterns' },
+              { label: ' Present Alerts', count: presentAlerts.length, color: '#38BDF8', sub: 'Current state' },
+              { label: ' Future Risks',   count: futureAlerts.length,  color: '#10B981', sub: 'Predictive forecasts' },
             ].map(({ label, count, color, sub }) => (
               <div key={label} className="stat-card">
                 <div className="stat-label" style={{ fontSize: '0.72rem' }}>{label}</div>
@@ -493,12 +493,12 @@ export default function MonitorPage() {
                   </div>
                 ) : null;
               })}
-              {alerts.length === 0 && <div style={{ padding: '8px 16px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '8px', fontSize: '0.82rem', color: '#10B981' }}>✅ Zero alerts across all dimensions</div>}
+              {alerts.length === 0 && <div style={{ padding: '8px 16px', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: '8px', fontSize: '0.82rem', color: '#10B981' }}> Zero alerts across all dimensions</div>}
             </div>
           </section>
         )}
 
-        {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>⚠ Scan failed: {error}</div>}
+        {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}> Scan failed: {error}</div>}
 
         {/* ── Tabs ── */}
         <section style={{ marginBottom: '0' }}>
@@ -543,7 +543,7 @@ export default function MonitorPage() {
               {/* FUTURE tab — forecast cards */}
               {activeTab === 'FUTURE' && (
                 <div>
-                  <h2 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '20px' }}>🔮 Predictive Forecasts</h2>
+                  <h2 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '20px' }}> Predictive Forecasts</h2>
                   <ForecastCards alerts={alerts} />
                   {futureAlerts.length > 0 && (
                     <>
@@ -559,7 +559,7 @@ export default function MonitorPage() {
               {/* PAST tab — historical table + alerts */}
               {activeTab === 'PAST' && (
                 <div>
-                  <h2 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '20px' }}>📊 Year-by-Year Performance</h2>
+                  <h2 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '20px' }}> Year-by-Year Performance</h2>
                   <div className="glass-card" style={{ marginBottom: '24px', padding: '20px' }}>
                     <YearlyTrendTable stats={insights?.yearlyStats} />
                   </div>
@@ -577,7 +577,7 @@ export default function MonitorPage() {
               {/* Empty state */}
               {displayAlerts.length === 0 && activeTab === 'PRESENT' && (
                 <div style={{ textAlign: 'center', padding: '50px 0', background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.15)', borderRadius: '14px' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>✅</div>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}></div>
                   <div style={{ fontSize: '1rem', fontWeight: 700, color: '#10B981', marginBottom: '6px' }}>Current State: All Clear</div>
                   <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.35)' }}>No present-state anomalies detected</p>
                 </div>
@@ -588,15 +588,15 @@ export default function MonitorPage() {
 
         {/* ── Scope disclosure ── */}
         <section style={{ marginTop: '48px', padding: '20px 24px', background: 'rgba(79,70,229,0.04)', border: '1px solid rgba(79,70,229,0.10)', borderRadius: '12px' }}>
-          <h3 style={{ fontSize: '0.72rem', fontWeight: 700, color: '#818CF8', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>🤖 Temporal AI Monitor — Active Checks</h3>
+          <h3 style={{ fontSize: '0.72rem', fontWeight: 700, color: '#818CF8', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}> Temporal AI Monitor — Active Checks</h3>
           <div className="grid-2" style={{ gap: '16px', fontSize: '0.75rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.7 }}>
             <div>
-              <strong style={{ color: '#A78BFA' }}>📜 Past (Historical):</strong>
+              <strong style={{ color: '#A78BFA' }}> Past (Historical):</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
                 <li>Year-over-year utilisation trend</li><li>Historical rejection rate analysis</li>
                 <li>Prior-year fund under-deployment</li><li>Recurring SC/ST earmarking failures</li>
               </ul>
-              <strong style={{ color: '#38BDF8', marginTop: '8px', display: 'block' }}>📍 Present (Current):</strong>
+              <strong style={{ color: '#38BDF8', marginTop: '8px', display: 'block' }}> Present (Current):</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
                 <li>Fund balance risk (critical/warn)</li><li>SC/ST earmarking compliance</li>
                 <li>Stalled IN-EXECUTION works</li><li>Duplicate active works</li>
@@ -605,13 +605,13 @@ export default function MonitorPage() {
               </ul>
             </div>
             <div>
-              <strong style={{ color: '#10B981' }}>🔮 Future (Predictive):</strong>
+              <strong style={{ color: '#10B981' }}> Future (Predictive):</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
                 <li>Fund exhaustion date forecast</li><li>Under-spend risk projection</li>
                 <li>SC/ST 15%/7.5% trajectory forecast</li><li>Work stagnation probability scoring</li>
                 <li>Sector concentration risk</li>
               </ul>
-              <strong style={{ color: '#F59E0B', marginTop: '8px', display: 'block' }}>⚙️ Custom Thresholds:</strong>
+              <strong style={{ color: '#F59E0B', marginTop: '8px', display: 'block' }}>️ Custom Thresholds:</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
                 <li>Officer-defined minimum sanction amount</li>
                 <li>Custom fund balance warning/critical %</li>

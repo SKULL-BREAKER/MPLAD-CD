@@ -9,12 +9,12 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 const NAV_LINKS = [
-  { href: '/',           label: 'Home',            icon: '🏠' },
-  { href: '/mp',         label: 'MP Workspace',    icon: '🏛️' },
-  { href: '/authority',  label: 'Authority Board',  icon: '⚖️' },
-  { href: '/officer',    label: 'Officer',          icon: '👷' },
-  { href: '/assets',     label: 'Asset Register',  icon: '📋' },
-  { href: '/public',     label: 'Public Portal',   icon: '🌐' },
+  { href: '/',           label: 'Home',            icon: '' },
+  { href: '/mp',         label: 'MP Workspace',    icon: '️' },
+  { href: '/authority',  label: 'Authority Board',  icon: '️' },
+  { href: '/officer',    label: 'Officer',          icon: '' },
+  { href: '/assets',     label: 'Asset Register',  icon: '' },
+  { href: '/public',     label: 'Public Portal',   icon: '' },
 ];
 
 function NavContent({ pathname, open, onClose }) {
@@ -40,7 +40,7 @@ function NavContent({ pathname, open, onClose }) {
         >
           <span className="nav-icon-wrapper">
             <span className="pulse-indicator pulse-success" />
-            🤖
+            
           </span>
           AI Monitor
         </Link>
@@ -53,7 +53,7 @@ function NavContent({ pathname, open, onClose }) {
         >
           <span className="nav-icon-wrapper">
             <span className="pulse-indicator pulse-danger" />
-            🔍
+            
           </span>
           Fraud Investigator
         </Link>

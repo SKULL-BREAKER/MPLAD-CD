@@ -6,22 +6,22 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 // Constants & Helpers
 // ─────────────────────────────────────────────────────────────────────────────
 const SEV_CFG = {
-  CRITICAL: { label: 'CRITICAL', color: '#EF4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.35)', icon: '🔴', pulse: true },
-  HIGH:     { label: 'HIGH',     color: '#F97316', bg: 'rgba(249,115,22,0.12)', border: 'rgba(249,115,22,0.30)', icon: '🟠', pulse: false },
-  MEDIUM:   { label: 'MEDIUM',   color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.25)', icon: '🟡', pulse: false },
-  LOW:      { label: 'LOW',      color: '#38BDF8', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.20)', icon: '🔵', pulse: false },
+  CRITICAL: { label: 'CRITICAL', color: '#EF4444', bg: 'rgba(239,68,68,0.12)', border: 'rgba(239,68,68,0.35)', icon: '', pulse: true },
+  HIGH:     { label: 'HIGH',     color: '#F97316', bg: 'rgba(249,115,22,0.12)', border: 'rgba(249,115,22,0.30)', icon: '', pulse: false },
+  MEDIUM:   { label: 'MEDIUM',   color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.25)', icon: '', pulse: false },
+  LOW:      { label: 'LOW',      color: '#38BDF8', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.20)', icon: '', pulse: false },
 };
 
 const MODULE_META = {
-  COST_OUTLIER:   { label: 'Cost Outlier',        icon: '💸', color: '#F59E0B' },
-  DUPLICATE:      { label: 'Duplicate Work',       icon: '♊',  color: '#A78BFA' },
-  TIMELINE:       { label: 'Timeline Violation',   icon: '⏰', color: '#EF4444' },
-  CONTRACTOR_NET: { label: 'Contractor Network',   icon: '🕸️', color: '#10B981' },
-  SPLITTING:      { label: 'Tender Splitting',     icon: '✂️', color: '#F97316' },
-  GUIDELINE:      { label: 'Guideline Breach',     icon: '📋', color: '#38BDF8' },
-  BENAMI:         { label: 'Benami Entity',        icon: '👤', color: '#EC4899' },
-  SATELLITE:      { label: 'Ghost Work 🛰️',        icon: '🛰️', color: '#8B5CF6' },
-  RISK_FUSION:    { label: 'Risk Fusion',          icon: '🧠', color: '#06B6D4' },
+  COST_OUTLIER:   { label: 'Cost Outlier',        icon: '', color: '#F59E0B' },
+  DUPLICATE:      { label: 'Duplicate Work',       icon: '',  color: '#A78BFA' },
+  TIMELINE:       { label: 'Timeline Violation',   icon: '', color: '#EF4444' },
+  CONTRACTOR_NET: { label: 'Contractor Network',   icon: '️', color: '#10B981' },
+  SPLITTING:      { label: 'Tender Splitting',     icon: '️', color: '#F97316' },
+  GUIDELINE:      { label: 'Guideline Breach',     icon: '', color: '#38BDF8' },
+  BENAMI:         { label: 'Benami Entity',        icon: '', color: '#EC4899' },
+  SATELLITE:      { label: 'Ghost Work ️',        icon: '️', color: '#8B5CF6' },
+  RISK_FUSION:    { label: 'Risk Fusion',          icon: '', color: '#06B6D4' },
 };
 
 function fmt(n) {
@@ -80,7 +80,7 @@ function SatellitePanel({ flag }) {
     <div style={{ borderRadius: 12, overflow: 'hidden', background: '#0a0a0f', border: '1px solid rgba(139,92,246,0.3)' }}>
       <div style={{ padding: '10px 16px', background: 'rgba(139,92,246,0.12)', borderBottom: '1px solid rgba(139,92,246,0.2)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ color: '#A78BFA', fontWeight: 700, fontSize: '0.85rem' }}>🛰️ Sentinel-2 Satellite Imagery</span>
+        <span style={{ color: '#A78BFA', fontWeight: 700, fontSize: '0.85rem' }}>️ Sentinel-2 Satellite Imagery</span>
         <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.7rem' }}>
           {ev.demo_mode ? '(DEMO MODE — simulated change scores)' : 'Live Sentinel-2 NDBI Index'}
         </span>
@@ -118,12 +118,12 @@ function SatellitePanel({ flag }) {
         <div style={{ position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
           background: ev.sub_type === 'GHOST_WORK' ? 'rgba(239,68,68,0.9)' : 'rgba(16,185,129,0.9)',
           borderRadius: 20, padding: '3px 10px', fontSize: '0.7rem', fontWeight: 700, color: '#fff' }}>
-          Change Score: {((ev.change_score || 0) * 100).toFixed(0)}% {ev.sub_type === 'GHOST_WORK' ? '⚠️ GHOST WORK' : '✅'}
+          Change Score: {((ev.change_score || 0) * 100).toFixed(0)}% {ev.sub_type === 'GHOST_WORK' ? '️ GHOST WORK' : ''}
         </div>
       </div>
       <div style={{ padding: '10px 16px', fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)',
         display: 'flex', gap: 16 }}>
-        <span>📍 {lat.toFixed(4)}°N, {lon.toFixed(4)}°E</span>
+        <span> {lat.toFixed(4)}°N, {lon.toFixed(4)}°E</span>
         <a href={ev.before_imagery_url || '#'} target="_blank" rel="noreferrer"
           style={{ color: '#A78BFA', textDecoration: 'none' }}>View in Copernicus →</a>
       </div>
@@ -204,7 +204,7 @@ function NetworkGraph({ districtFlags }) {
 // Factor Bar (per-module contribution breakdown)
 // ─────────────────────────────────────────────────────────────────────────────
 function FactorBar({ factor }) {
-  const meta = MODULE_META[factor.module] || { label: factor.module, icon: '⚙️', color: '#94A3B8' };
+  const meta = MODULE_META[factor.module] || { label: factor.module, icon: '️', color: '#94A3B8' };
   const maxContrib = 35; // max possible contribution
   const w = Math.min(100, (factor.contribution / maxContrib) * 100);
   return (
@@ -259,7 +259,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
                 background: verdict === 'CONFIRMED_FRAUD' ? 'rgba(239,68,68,0.15)' : 'rgba(56,189,248,0.15)',
                 color: verdict === 'CONFIRMED_FRAUD' ? '#EF4444' : '#38BDF8',
                 border: `1px solid ${verdict === 'CONFIRMED_FRAUD' ? 'rgba(239,68,68,0.3)' : 'rgba(56,189,248,0.3)'}` }}>
-                {verdict === 'CONFIRMED_FRAUD' ? '⚠️ Confirmed Fraud' : '✓ False Positive'}
+                {verdict === 'CONFIRMED_FRAUD' ? '️ Confirmed Fraud' : ' False Positive'}
               </span>
             )}
           </div>
@@ -303,7 +303,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
           textTransform: 'uppercase', letterSpacing: '0.08em' }}>Evidence Chain ({work.flags?.length || 0} flags)</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {(work.flags || []).map((f, i) => {
-            const meta = MODULE_META[f.module_code] || { icon:'⚙️', color:'#94A3B8', label: f.module_code };
+            const meta = MODULE_META[f.module_code] || { icon:'️', color:'#94A3B8', label: f.module_code };
             const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
             return (
               <div key={i} style={{ padding: '10px 14px', borderRadius: 8, background: s.bg, border: `1px solid ${s.border}` }}>
@@ -331,7 +331,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
             style={{ flex: 1, padding: '10px', borderRadius: 10, border: '1px solid rgba(239,68,68,0.4)',
               background: 'rgba(239,68,68,0.12)', color: '#EF4444', cursor: 'pointer',
               fontWeight: 700, fontSize: '0.8rem', transition: 'all 0.2s' }}>
-            ⚠️ Confirm Fraud
+            ️ Confirm Fraud
           </button>
           <button
             id={`btn-fp-${work.work_id}`}
@@ -339,7 +339,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
             style={{ flex: 1, padding: '10px', borderRadius: 10, border: '1px solid rgba(56,189,248,0.3)',
               background: 'rgba(56,189,248,0.08)', color: '#38BDF8', cursor: 'pointer',
               fontWeight: 700, fontSize: '0.8rem', transition: 'all 0.2s' }}>
-            ✓ False Positive
+             False Positive
           </button>
         </div>
       )}
@@ -453,7 +453,7 @@ export default function FraudInvestigatorPage() {
   if (loading) return (
     <div style={{ ...panelStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '3rem', marginBottom: 16, animation: 'spin 2s linear infinite' }}>🛰️</div>
+        <div style={{ fontSize: '3rem', marginBottom: 16, animation: 'spin 2s linear infinite' }}>️</div>
         <div style={{ color: '#A78BFA', fontSize: '1.1rem', fontWeight: 600 }}>Running Fraud Detection Engines…</div>
         <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginTop: 8 }}>Analysing all 10 modules</div>
       </div>
@@ -464,7 +464,7 @@ export default function FraudInvestigatorPage() {
     <div style={{ ...panelStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ textAlign: 'center', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
         borderRadius: 16, padding: 32 }}>
-        <div style={{ fontSize: '2rem', marginBottom: 12 }}>❌</div>
+        <div style={{ fontSize: '2rem', marginBottom: 12 }}></div>
         <div style={{ color: '#EF4444', fontWeight: 600, marginBottom: 8 }}>Scan Error</div>
         <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', marginBottom: 16 }}>{error}</div>
         <button onClick={runScan} style={{ padding: '8px 20px', borderRadius: 8, background: 'rgba(239,68,68,0.2)',
@@ -492,7 +492,7 @@ export default function FraudInvestigatorPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10,
                 background: 'linear-gradient(135deg, #7C3AED, #EC4899)', display: 'flex',
-                alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}>🔍</div>
+                alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}></div>
               <div>
                 <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800,
                   background: 'linear-gradient(90deg, #A78BFA, #EC4899)', WebkitBackgroundClip: 'text',
@@ -517,13 +517,13 @@ export default function FraudInvestigatorPage() {
               style={{ padding: '8px 18px', borderRadius: 10, border: '1px solid rgba(167,139,250,0.4)',
                 background: 'rgba(167,139,250,0.12)', color: '#A78BFA', cursor: 'pointer',
                 fontWeight: 600, fontSize: '0.8rem' }}>
-              {scanning ? '⏳ Scanning…' : '↻ Re-scan'}
+              {scanning ? ' Scanning…' : '↻ Re-scan'}
             </button>
             <button id="btn-export-csv" onClick={exportCSV} disabled={exporting}
               style={{ padding: '8px 18px', borderRadius: 10, border: '1px solid rgba(16,185,129,0.4)',
                 background: 'rgba(16,185,129,0.12)', color: '#10B981', cursor: 'pointer',
                 fontWeight: 600, fontSize: '0.8rem' }}>
-              {exporting ? '⏳' : '⬇️ Export CSV'}
+              {exporting ? '' : '⬇️ Export CSV'}
             </button>
           </div>
         </div>
@@ -531,15 +531,15 @@ export default function FraudInvestigatorPage() {
         {/* ── Summary KPIs ────────────────────────────────────────────────── */}
         {summary && (
           <div style={{ display: 'flex', gap: 12, marginBottom: 24, flexWrap: 'wrap' }}>
-            <KpiCard icon="📋" label="Total Works" value={summary.total_works} color="#38BDF8" />
-            <KpiCard icon="🚨" label="Flagged Works" value={summary.flagged_works}
+            <KpiCard icon="" label="Total Works" value={summary.total_works} color="#38BDF8" />
+            <KpiCard icon="" label="Flagged Works" value={summary.flagged_works}
               sub={`${Math.round((summary.flagged_works/Math.max(summary.total_works,1))*100)}% of total`}
               color="#F97316" />
-            <KpiCard icon="🔴" label="Critical" value={summary.critical_works} color="#EF4444" />
-            <KpiCard icon="🟠" label="High Risk" value={summary.high_works} color="#F97316" />
-            <KpiCard icon="📊" label="Avg Risk Score" value={`${summary.avg_risk}/100`} color="#A78BFA" />
-            <KpiCard icon="🚩" label="Total Flags" value={summary.total_flags} color="#F59E0B" />
-            <KpiCard icon="🏙️" label="District Flags" value={summary.district_flags} color="#10B981" />
+            <KpiCard icon="" label="Critical" value={summary.critical_works} color="#EF4444" />
+            <KpiCard icon="" label="High Risk" value={summary.high_works} color="#F97316" />
+            <KpiCard icon="" label="Avg Risk Score" value={`${summary.avg_risk}/100`} color="#A78BFA" />
+            <KpiCard icon="" label="Total Flags" value={summary.total_flags} color="#F59E0B" />
+            <KpiCard icon="️" label="District Flags" value={summary.district_flags} color="#10B981" />
           </div>
         )}
 
@@ -585,7 +585,7 @@ export default function FraudInvestigatorPage() {
           <div style={{ width: 380, flexShrink: 0, maxHeight: 'calc(100vh - 320px)', overflowY: 'auto' }}>
             {filteredWorks.length === 0 && (
               <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: 40 }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: 12 }}>✅</div>
+                <div style={{ fontSize: '2.5rem', marginBottom: 12 }}></div>
                 No works match the current filters.
               </div>
             )}
@@ -618,13 +618,13 @@ export default function FraudInvestigatorPage() {
                           <span style={{ fontSize: '0.62rem', padding: '1px 6px', borderRadius: 10,
                             background: verdict === 'CONFIRMED_FRAUD' ? 'rgba(239,68,68,0.2)' : 'rgba(56,189,248,0.2)',
                             color: verdict === 'CONFIRMED_FRAUD' ? '#EF4444' : '#38BDF8', flexShrink: 0 }}>
-                            {verdict === 'CONFIRMED_FRAUD' ? '⚠️' : '✓'}
+                            {verdict === 'CONFIRMED_FRAUD' ? '️' : ''}
                           </span>
                         )}
                       </div>
                       <div style={{ display: 'flex', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
                         {(work.factors || []).slice(0, 3).map((f, i) => {
-                          const m = MODULE_META[f.module] || { icon:'⚙️', color:'#94A3B8' };
+                          const m = MODULE_META[f.module] || { icon:'️', color:'#94A3B8' };
                           return (
                             <span key={i} style={{ fontSize: '0.62rem', color: m.color, padding: '1px 5px',
                               borderRadius: 6, background: `${m.color}18`, border: `1px solid ${m.color}30` }}>
@@ -657,7 +657,7 @@ export default function FraudInvestigatorPage() {
               />
             ) : (
               <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.25)', padding: 60 }}>
-                <div style={{ fontSize: '3rem', marginBottom: 12 }}>👈</div>
+                <div style={{ fontSize: '3rem', marginBottom: 12 }}></div>
                 Select a work from the list to view details
               </div>
             )}
@@ -668,11 +668,11 @@ export default function FraudInvestigatorPage() {
                 border: '1px solid rgba(16,185,129,0.15)', padding: 20 }}>
                 <h3 style={{ margin: '0 0 16px', fontSize: '0.85rem', color: '#10B981',
                   textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  🏙️ District-Level Flags ({districtFlags.length})
+                  ️ District-Level Flags ({districtFlags.length})
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {districtFlags.slice(0, 8).map((f, i) => {
-                    const meta = MODULE_META[f.module_code] || { icon:'⚙️', color:'#94A3B8', label: f.module_code };
+                    const meta = MODULE_META[f.module_code] || { icon:'️', color:'#94A3B8', label: f.module_code };
                     const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
                     return (
                       <div key={i} style={{ padding: '10px 14px', borderRadius: 8, background: s.bg, border: `1px solid ${s.border}` }}>

@@ -140,10 +140,10 @@ export default async function AssetRegister() {
                       <td><span className={`tag ${(a.status || '').toUpperCase() === 'UTILISED' ? 'utilised' : 'completed'}`}>{a.status}</span></td>
                       <td style={{ fontSize: '0.85rem' }}>
                         {a.evidence && a.evidence.length > 0
-                          ? <span style={{ color: 'var(--success)' }}>📍 {a.evidence.length} records</span>
+                          ? <span style={{ color: 'var(--success)' }}> {a.evidence.length} records</span>
                           : <span style={{ color: 'var(--text-muted)' }}>None</span>}
                       </td>
-                      <td>{(a.status || '').toUpperCase() === 'UTILISED' ? <span style={{ color: 'var(--success)', fontWeight: 600 }}>✓ Yes</span> : <span style={{ color: 'var(--text-muted)' }}>Pending</span>}</td>
+                      <td>{(a.status || '').toUpperCase() === 'UTILISED' ? <span style={{ color: 'var(--success)', fontWeight: 600 }}> Yes</span> : <span style={{ color: 'var(--text-muted)' }}>Pending</span>}</td>
                     </tr>
                   );
                 })}

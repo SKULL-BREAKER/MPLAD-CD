@@ -57,8 +57,8 @@ export async function POST(request) {
       flag_id: record.flag_id,
       verdict,
       message: verdict === 'CONFIRMED_FRAUD'
-        ? '✅ Marked as confirmed fraud. This case will be escalated.'
-        : '🔵 Marked as false positive. Model will learn from this.',
+        ? ' Marked as confirmed fraud. This case will be escalated.'
+        : ' Marked as false positive. Model will learn from this.',
     });
   } catch (err) {
     console.error('[fraud/feedback] Error:', err);

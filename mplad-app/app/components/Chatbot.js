@@ -66,7 +66,7 @@ export default function Chatbot({ role }) {
           fontSize: '24px'
         }}
       >
-        {isOpen ? '✕' : '💬'}
+        {isOpen ? '' : ''}
       </button>
 
       {/* Chat Window */}
