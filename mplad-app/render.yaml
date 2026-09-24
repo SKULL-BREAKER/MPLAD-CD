@@ -1,12 +1,12 @@
 services:
   - type: web
     name: prahari-demo
-    env: docker
+    env: node
     plan: free
     region: singapore
     rootDir: mplad-app
-    dockerfilePath: ./Dockerfile
-    healthCheckPath: /api/overview
+    buildCommand: "npm install && npx prisma generate && npm run build"
+    startCommand: "npm run start"
     envVars:
       - key: PORT
-        value: 8000
+        value: 3000

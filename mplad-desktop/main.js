@@ -155,13 +155,13 @@ function buildMenu() {
     {
       label: 'Navigate',
       submenu: [
-        { label: '🏠 Home Dashboard', accelerator: 'CmdOrCtrl+H', click: () => mainWindow?.loadURL(NEXT_URL + '/') },
-        { label: '🏛️ MP Workspace', click: () => mainWindow?.loadURL(NEXT_URL + '/mp') },
-        { label: '⚖️ Authority Board', click: () => mainWindow?.loadURL(NEXT_URL + '/authority') },
-        { label: '👷 Officer Dashboard', click: () => mainWindow?.loadURL(NEXT_URL + '/officer') },
-        { label: '🤖 AI Monitor', click: () => mainWindow?.loadURL(NEXT_URL + '/monitor') },
+        { label: ' Home Dashboard', accelerator: 'CmdOrCtrl+H', click: () => mainWindow?.loadURL(NEXT_URL + '/') },
+        { label: '️ MP Workspace', click: () => mainWindow?.loadURL(NEXT_URL + '/mp') },
+        { label: '️ Authority Board', click: () => mainWindow?.loadURL(NEXT_URL + '/authority') },
+        { label: ' Officer Dashboard', click: () => mainWindow?.loadURL(NEXT_URL + '/officer') },
+        { label: ' AI Monitor', click: () => mainWindow?.loadURL(NEXT_URL + '/monitor') },
         { type: 'separator' },
-        { label: '🌐 Public Portal', click: () => mainWindow?.loadURL(NEXT_URL + '/public') },
+        { label: ' Public Portal', click: () => mainWindow?.loadURL(NEXT_URL + '/public') },
       ],
     },
     {
