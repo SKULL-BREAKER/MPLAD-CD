@@ -381,6 +381,20 @@ export default async function Home() {
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Read-only transparency view of all sanctioned works with sector breakdown, fund utilisation, and geo-tagged evidence.</p>
             <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>View Public Portal →</div>
           </Link>
+
+          <Link href="/monitor" className="glass-card" style={{ display: 'block', borderColor: 'rgba(16, 185, 129, 0.3)' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: '#10B981' }}>AI Monitor</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Real-time ML corroboration of asset progression, geospatial variance tracking, and timeline estimation for ongoing projects.</p>
+            <div style={{ color: '#10B981', fontWeight: 600, fontSize: '0.875rem' }}>View AI Monitor →</div>
+          </Link>
+
+          <Link href="/fraud" className="glass-card" style={{ display: 'block', borderColor: 'rgba(239, 68, 68, 0.3)' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
+            <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: '#EF4444' }}>Fraud Investigator</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Advanced irregularity detection engine identifying shell agencies, ghost assets, duplicate sanctions, and fund anomalies.</p>
+            <div style={{ color: '#EF4444', fontWeight: 600, fontSize: '0.875rem' }}>View Fraud Investigator →</div>
+          </Link>
         </div>
       </section>
 
