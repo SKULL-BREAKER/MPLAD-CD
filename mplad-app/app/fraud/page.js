@@ -488,7 +488,7 @@ export default function FraudInvestigatorPage() {
       <div style={{ textAlign: 'center' }}>
         <div className="spinner" style={{ marginBottom: 16 }}></div>
         <div style={{ color: '#A78BFA', fontSize: '1.1rem', fontWeight: 600 }}>Running Fraud Detection Engines…</div>
-        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 8 }}>Analysing all 10 modules</div>
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 8 }}>Analysing across all AI risk dimensions</div>
       </div>
     </main>
   );
