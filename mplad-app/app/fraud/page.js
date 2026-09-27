@@ -636,7 +636,7 @@ export default function FraudInvestigatorPage() {
                 feedbackMap={feedbackMap}
               />
             ) : (
-              <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.25)', padding: 60 }}>
+              <div style={{ textAlign: 'center', color: 'rgba(42, 58, 49, 0.1)', padding: 60 }}>
                 <div style={{ fontSize: '3rem', marginBottom: 12 }}></div>
                 Select a work from the list to view details
               </div>

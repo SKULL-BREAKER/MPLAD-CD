@@ -87,7 +87,7 @@ function HealthGauge({ score }) {
           strokeDasharray={C} strokeDashoffset={offset} transform="rotate(-90 58 58)"
           style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1), stroke 0.6s ease' }} />
         <text x="58" y="54" textAnchor="middle" fill={color} fontSize="24" fontWeight="800" fontFamily="Inter,sans-serif">{score}</text>
-        <text x="58" y="70" textAnchor="middle" fill="rgba(255,255,255,0.38)" fontSize="9" fontFamily="Inter,sans-serif">HEALTH SCORE</text>
+        <text x="58" y="70" textAnchor="middle" fill='var(--text-muted)' fontSize="9" fontFamily="Inter,sans-serif">HEALTH SCORE</text>
       </svg>
     </div>
   );
@@ -127,7 +127,7 @@ function AlertCard({ alert }) {
           </span>
         </div>
         {/* Detail */}
-        <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.58)', lineHeight: 1.6, margin: 0 }}>{alert.detail}</p>
+        <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>{alert.detail}</p>
         
         {/* WHY FLAGGED Evidence Card */}
         {alert.evidence_json && (
@@ -135,7 +135,7 @@ function AlertCard({ alert }) {
             <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '6px', letterSpacing: '0.5px' }}>WHY FLAGGED (EVIDENCE)</div>
             <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '0.78rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
               {Object.entries(typeof alert.evidence_json === 'string' ? JSON.parse(alert.evidence_json) : alert.evidence_json).map(([k, v]) => (
-                <li key={k}><strong style={{ color: 'rgba(255,255,255,0.85)' }}>{k.replace(/_/g, ' ')}:</strong> {typeof v === 'object' ? JSON.stringify(v) : v}</li>
+                <li key={k}><strong style={{ color: 'var(--text-muted)' }}>{k.replace(/_/g, ' ')}:</strong> {typeof v === 'object' ? JSON.stringify(v) : v}</li>
               ))}
             </ul>
           </div>
@@ -145,9 +145,9 @@ function AlertCard({ alert }) {
         {alert.affectedIds?.length > 0 && (
           <div style={{ marginTop: '12px', display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
             {alert.affectedIds.slice(0, 3).map(id => (
-              <code key={id} style={{ background: 'rgba(0,0,0,0.28)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '4px', padding: '1px 7px', fontSize: '0.66rem', color: 'rgba(255,255,255,0.38)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{id}</code>
+              <code key={id} style={{ background: 'rgba(0,0,0,0.28)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '4px', padding: '1px 7px', fontSize: '0.66rem', color: 'var(--text-muted)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>{id}</code>
             ))}
-            {alert.affectedIds.length > 3 && <span style={{ fontSize: '0.66rem', color: 'rgba(255,255,255,0.28)', alignSelf: 'center' }}>+{alert.affectedIds.length - 3} more</span>}
+            {alert.affectedIds.length > 3 && <span style={{ fontSize: '0.66rem', color: 'rgba(42, 58, 49, 0.1)', alignSelf: 'center' }}>+{alert.affectedIds.length - 3} more</span>}
           </div>
         )}
       </div>
@@ -160,7 +160,7 @@ function DimPanel({ dim, alerts }) {
   const [open, setOpen] = useState(true);
   const dc = DIM_CFG[dim];
   if (!alerts.length) return (
-    <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: '0.82rem', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '10px', marginBottom: '16px' }}>
+    <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(42, 58, 49, 0.1)', fontSize: '0.82rem', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '10px', marginBottom: '16px' }}>
       {dc.icon} No {dc.label} alerts
     </div>
   );
@@ -254,7 +254,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
       <input type="range" min={min} max={max} step={step} value={local[key]}
         onChange={e => setLocal(l => ({ ...l, [key]: Number(e.target.value) }))}
         style={{ width: '100%', accentColor: '#4F46E5', cursor: 'pointer' }} />
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', marginTop: '2px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: 'rgba(42, 58, 49, 0.1)', marginTop: '2px' }}>
         <span>{isPct ? `${Math.round(min * 100)}%` : `₹${Number(min).toLocaleString('en-IN')}`}</span>
         <span>{isPct ? `${Math.round(max * 100)}%` : `₹${Number(max).toLocaleString('en-IN')}`}</span>
       </div>
@@ -265,7 +265,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
         <div>
           <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '4px' }}>️ Custom Thresholds</div>
-          <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.38)' }}>Your rules — override the defaults</div>
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Your rules — override the defaults</div>
         </div>
         <button onClick={onClose} style={{ background: 'rgba(42, 58, 49, 0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: 'var(--text-main)', padding: '5px 10px', cursor: 'pointer', fontSize: '0.8rem' }}> Close</button>
       </div>
@@ -306,7 +306,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
 function ForecastCards({ alerts }) {
   const future = alerts.filter(a => a.dimension === 'FUTURE');
   if (!future.length) return (
-    <div style={{ padding: '32px', textAlign: 'center', color: 'rgba(255,255,255,0.28)', fontSize: '0.85rem', background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.12)', borderRadius: '12px' }}>
+    <div style={{ padding: '32px', textAlign: 'center', color: 'rgba(42, 58, 49, 0.1)', fontSize: '0.85rem', background: 'rgba(16,185,129,0.04)', border: '1px solid rgba(16,185,129,0.12)', borderRadius: '12px' }}>
        No future risks detected at current trajectory
     </div>
   );
@@ -324,7 +324,7 @@ function ForecastCards({ alerts }) {
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>{a.detail}</p>
             <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '0.62rem', color: cc.color, fontWeight: 700 }}>◉ {cc.label}</span>
-              <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.25)' }}>· {CAT_LABEL[a.category] || a.category}</span>
+              <span style={{ fontSize: '0.62rem', color: 'rgba(42, 58, 49, 0.1)' }}>· {CAT_LABEL[a.category] || a.category}</span>
             </div>
           </div>
         );
@@ -507,7 +507,7 @@ export default function MonitorPage() {
               <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
                 background: activeTab === t.key ? `rgba(${t.key === 'PAST' ? '167,139,250' : t.key === 'PRESENT' ? '56,189,248' : t.key === 'FUTURE' ? '16,185,129' : '148,163,184'},0.12)` : 'none',
                 border: 'none', borderBottom: activeTab === t.key ? `2px solid ${t.color}` : '2px solid transparent',
-                borderRadius: '0', color: activeTab === t.key ? t.color : 'rgba(255,255,255,0.38)',
+                borderRadius: '0', color: activeTab === t.key ? t.color : 'var(--text-muted)',
                 padding: '10px 18px', fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '7px', transition: 'all 0.2s', whiteSpace: 'nowrap',
               }}>
@@ -589,7 +589,7 @@ export default function MonitorPage() {
         {/* ── Scope disclosure ── */}
         <section style={{ marginTop: '48px', padding: '20px 24px', background: 'rgba(79,70,229,0.04)', border: '1px solid rgba(79,70,229,0.10)', borderRadius: '12px' }}>
           <h3 style={{ fontSize: '0.72rem', fontWeight: 700, color: '#818CF8', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}> Temporal AI Monitor — Active Checks</h3>
-          <div className="grid-2" style={{ gap: '16px', fontSize: '0.75rem', color: 'rgba(255,255,255,0.38)', lineHeight: 1.7 }}>
+          <div className="grid-2" style={{ gap: '16px', fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.7 }}>
             <div>
               <strong style={{ color: '#A78BFA' }}> Past (Historical):</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
