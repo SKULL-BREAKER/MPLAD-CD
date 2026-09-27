@@ -247,15 +247,17 @@ img { max-width: 100%; }
   display: none;
 }
 
-/* ── GLASS CARD ─────────────────────────────────────────────────────────────── */
+/* ── GLASS CARD (Claymorphism) ─────────────────────────────────────────────────────────────── */
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  background: var(--surface-2);
+  border: 1px solid rgba(255,255,255,0.02);
+  border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    10px 10px 20px rgba(0, 0, 0, 0.4),
+    -8px -8px 16px rgba(255, 255, 255, 0.02),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.06),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.4);
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   position: relative;
   z-index: 1;
@@ -263,25 +265,38 @@ img { max-width: 100%; }
 
 .glass-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-  border-color: rgba(255,255,255,0.12);
+  box-shadow: 
+    14px 14px 28px rgba(0, 0, 0, 0.45),
+    -8px -8px 16px rgba(255, 255, 255, 0.03),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.08),
+    inset -4px -4px 8px rgba(0, 0, 0, 0.5);
+  border-color: rgba(255,255,255,0.05);
 }
 
-/* ── STAT CARD ──────────────────────────────────────────────────────────────── */
+/* ── STAT CARD (Claymorphism) ──────────────────────────────────────────────────────────────── */
 .stat-card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
+  background: var(--surface-2);
+  border: 1px solid rgba(255,255,255,0.02);
+  border-radius: 20px;
   padding: 20px 24px;
   position: relative;
   overflow: hidden;
   z-index: 1;
+  box-shadow: 
+    8px 8px 16px rgba(0, 0, 0, 0.35),
+    -6px -6px 12px rgba(255, 255, 255, 0.02),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.05),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  box-shadow: 
+    10px 10px 20px rgba(0, 0, 0, 0.4),
+    -6px -6px 12px rgba(255, 255, 255, 0.03),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.07),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.45);
 }
 
 .stat-card::before {
@@ -371,15 +386,20 @@ img { max-width: 100%; }
   font-weight: 700;
 }
 
-/* ── BUTTONS ─────────────────────────────────────────────────────────────────── */
+/* ── BUTTONS (Claymorphism) ─────────────────────────────────────────────────────────────────── */
 .btn {
   background: var(--primary);
   color: #fff;
   border: none;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 600;
   font-size: 0.875rem;
+  box-shadow: 
+    4px 4px 8px rgba(0, 0, 0, 0.3),
+    -2px -2px 6px rgba(255, 255, 255, 0.05),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3);
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
   letter-spacing: 0.2px;
   display: inline-flex;
@@ -389,11 +409,20 @@ img { max-width: 100%; }
 
 .btn:hover {
   background: var(--primary-hover);
-  box-shadow: 0 4px 20px rgba(79,70,229,0.4);
+  box-shadow: 
+    6px 6px 12px rgba(0, 0, 0, 0.4),
+    -2px -2px 6px rgba(255, 255, 255, 0.06),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.25),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
   transform: translateY(-1px);
 }
 
-.btn:active { transform: scale(0.97) translateY(0); }
+.btn:active { 
+  transform: scale(0.97) translateY(0); 
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.4),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.1);
+}
 .btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; transform: none; }
 
 .btn-sm { padding: 6px 14px; font-size: 0.8rem; border-radius: 6px; }
