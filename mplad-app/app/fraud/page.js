@@ -508,25 +508,8 @@ export default function FraudInvestigatorPage() {
     <main className="main-content">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-start',
           marginBottom: 24, flexWrap: 'wrap', gap: 16 }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10,
-                background: 'linear-gradient(135deg, #7C3AED, #EC4899)', display: 'flex',
-                alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem' }}></div>
-              <div>
-                <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800,
-                  background: 'linear-gradient(90deg, #A78BFA, #EC4899)', WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent' }}>
-                  MPLADS Fraud Investigator
-                </h1>
-                <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  AI-Powered 10-Module Fraud Detection Engine · Decision Support Only
-                </p>
-              </div>
-            </div>
-          </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {summary && (
               <div className="glass-card" style={{ padding: '6px 14px', borderRadius: 20, fontSize: '0.72rem',
