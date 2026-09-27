@@ -222,8 +222,10 @@ function FactorBar({ factor }) {
           background: meta.color, transition: 'width 0.6s ease',
           boxShadow: `0 0 6px ${meta.color}` }} />
       </div>
-      <p style={{ margin: '4px 0 0', fontSize: '0.68rem', color: 'var(--text-muted)',
-        fontStyle: 'italic', lineHeight: 1.4 }}>{factor.message?.slice(0, 120)}</p>
+      {factor.message && factor.message !== 'No detailed message provided' && factor.message !== 'null' && (
+        <p style={{ margin: '4px 0 0', fontSize: '0.68rem', color: 'var(--text-muted)',
+          fontStyle: 'italic', lineHeight: 1.4 }}>{factor.message.slice(0, 120)}</p>
+      )}
     </div>
   );
 }
@@ -237,7 +239,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
   const verdict = feedbackMap[work.work_id];
 
   return (
-    <div className="glass-card" style={{
+    <div className="clay-card" style={{
       padding: '20px 24px',
       boxShadow: sev.color === '#EF4444' ? `0 0 30px rgba(239,68,68,0.12)` : undefined,
     }}>
@@ -290,9 +292,9 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
         <div style={{ marginBottom: 20 }}>
           <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)',
             textTransform: 'uppercase', letterSpacing: '0.08em' }}>Contractor Network Graph</h3>
-          <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
-            <NetworkGraph districtFlags={districtFlags} />
-          </div>
+            <div className="clay-card" style={{ padding: 0, overflow: 'hidden' }}>
+              <NetworkGraph districtFlags={districtFlags} />
+            </div>
         </div>
       )}
 
@@ -305,16 +307,24 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
             const meta = MODULE_META[f.module_code] || { icon:'️', color:'#94A3B8', label: f.module_code };
             const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
             return (
-              <div key={i} style={{ padding: '10px 14px', borderRadius: 8, background: s.bg, border: `1px solid ${s.border}` }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <span style={{ fontSize: '0.75rem', color: meta.color, fontWeight: 600 }}>
+              <div key={i} className="clay-card" style={{ padding: '12px 16px', marginBottom: 8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <span style={{ fontSize: '0.75rem', color: meta.color, fontWeight: 700 }}>
                     {meta.icon} {meta.label}
                   </span>
-                  <span style={{ fontSize: '0.7rem', color: s.color }}>{f.severity}</span>
+                  <span style={{ fontSize: '0.7rem', color: s.color, fontWeight: 700 }}>{f.severity}</span>
                 </div>
-                <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
-                  {f.evidence?.message || (f.evidence ? JSON.stringify(f.evidence).slice(0, 200) : 'No evidence provided')}
-                </p>
+                {f.evidence?.message ? (
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
+                    {f.evidence.message}
+                  </div>
+                ) : f.evidence ? (
+                  <pre style={{ margin: 0, fontSize: '0.65rem', background: 'rgba(42, 58, 49, 0.05)', padding: '8px 10px', borderRadius: 6, overflowX: 'auto', color: 'var(--text-main)', border: '1px solid var(--border-color)', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                    {JSON.stringify(f.evidence, null, 2)}
+                  </pre>
+                ) : (
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>No evidence provided</div>
+                )}
               </div>
             );
           })}
@@ -327,17 +337,17 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
           <button
             id={`btn-confirm-${work.work_id}`}
             onClick={() => onFeedback(work.work_id, 'CONFIRMED_FRAUD')}
-            style={{ flex: 1, padding: '10px', borderRadius: 10, border: '1px solid rgba(239,68,68,0.4)',
-              background: 'rgba(239,68,68,0.12)', color: '#EF4444', cursor: 'pointer',
-              fontWeight: 700, fontSize: '0.8rem', transition: 'all 0.2s' }}>
+            className="btn"
+            style={{ flex: 1, padding: '10px', background: 'var(--danger)', color: '#fff', cursor: 'pointer',
+              fontWeight: 700, fontSize: '0.8rem', transition: 'all 0.2s', border: 'none' }}>
             ️ Confirm Fraud
           </button>
           <button
             id={`btn-fp-${work.work_id}`}
             onClick={() => onFeedback(work.work_id, 'FALSE_POSITIVE')}
-            style={{ flex: 1, padding: '10px', borderRadius: 10, border: '1px solid rgba(56,189,248,0.3)',
-              background: 'rgba(56,189,248,0.08)', color: '#38BDF8', cursor: 'pointer',
-              fontWeight: 700, fontSize: '0.8rem', transition: 'all 0.2s' }}>
+            className="btn"
+            style={{ flex: 1, padding: '10px', background: 'var(--primary)', color: '#fff', cursor: 'pointer',
+              fontWeight: 700, fontSize: '0.8rem', transition: 'all 0.2s', border: 'none' }}>
              False Positive
           </button>
         </div>
