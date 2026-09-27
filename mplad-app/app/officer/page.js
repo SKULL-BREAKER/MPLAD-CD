@@ -81,7 +81,7 @@ async function handleUploadEvidence(formData) {
 }
 
 export default async function OfficerView() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const token = cookieStore.get('officer_token')?.value;
   if (!token) redirect('/login');
   
