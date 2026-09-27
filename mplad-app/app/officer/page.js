@@ -6,6 +6,7 @@ import EvidenceUploadForm from '../components/EvidenceUploadForm';
 import { cookies } from 'next/headers';
 import { verifyToken } from '../../lib/auth';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 // Canonical state transition chain
 const NEXT_STATE = {
@@ -268,63 +269,65 @@ export default async function OfficerView() {
             return (
               <div key={w.id} className="glass-card">
                 {/* Work header */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
-                      <span className="sector-badge" style={{ color, background: `${color}15`, border: `1px solid ${color}25` }}>
-                        {sector}
-                      </span>
-                      <span className={`tag ${meta.tagClass}`}>{w.status}</span>
-                      {isSC && <span className="sc-badge">SC</span>}
-                      {isST && <span className="st-badge">ST</span>}
+                <Link href={`/work/${w.id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                        <span className="sector-badge" style={{ color, background: `${color}15`, border: `1px solid ${color}25` }}>
+                          {sector}
+                        </span>
+                        <span className={`tag ${meta.tagClass}`}>{w.status}</span>
+                        {isSC && <span className="sc-badge">SC</span>}
+                        {isST && <span className="st-badge">ST</span>}
+                      </div>
+                      <div className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '4px' }}>
+                        Locality: {w.area_type}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+                        Work #{w.id.slice(0, 10)}… · {w.fy}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: 'rgba(56,189,248,0.7)', marginTop: '2px' }}>
+                         {w.agency_id || 'Unknown Agency'}
+                      </div>
                     </div>
-                    <div className="text-muted" style={{ fontSize: '0.85rem', marginBottom: '4px' }}>
-                      Locality: {w.area_type}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontFamily: 'monospace' }}>
-                      Work #{w.id.slice(0, 10)}… · {w.fy}
-                    </div>
-                    <div style={{ fontSize: '0.75rem', color: 'rgba(56,189,248,0.7)', marginTop: '2px' }}>
-                       {w.agency_id || 'Unknown Agency'}
+                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div className="label">Sanctioned</div>
+                      <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--success)' }}>{fmt(w.sanctioned_amount)}</div>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                    <div className="label">Sanctioned</div>
-                    <div style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--success)' }}>{fmt(w.sanctioned_amount)}</div>
-                  </div>
-                </div>
 
-                {/* AI Monitoring Dashboard (Injected Risk Profile) */}
-                {w.risk && ['HIGH', 'CRITICAL'].includes(w.risk.tier?.toUpperCase()) && (
-                  <div style={{ background: w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)', border: `1px solid ${w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: '8px', padding: '12px 16px', marginBottom: '16px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '1.1rem' }}></span>
-                      <strong style={{ color: w.risk.tier?.toUpperCase() === 'CRITICAL' ? '#EF4444' : '#F59E0B' }}>
-                        AI Risk Assessment: {w.risk.tier}
-                      </strong>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(Score: {Number(w.risk.risk_score || 0).toFixed(2)})</span>
+                  {/* AI Monitoring Dashboard (Injected Risk Profile) */}
+                  {w.risk && ['HIGH', 'CRITICAL'].includes(w.risk.tier?.toUpperCase()) && (
+                    <div style={{ background: w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)', border: `1px solid ${w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: '8px', padding: '12px 16px', marginBottom: '16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '1.1rem' }}></span>
+                        <strong style={{ color: w.risk.tier?.toUpperCase() === 'CRITICAL' ? '#EF4444' : '#F59E0B' }}>
+                          AI Risk Assessment: {w.risk.tier}
+                        </strong>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(Score: {Number(w.risk.risk_score || 0).toFixed(2)})</span>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {w.detections.map((d, i) => (
+                          <div key={i} style={{ fontSize: '0.8rem', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                            <span style={{ color: 'var(--text-muted)' }}>[{d.detector}]</span>
+                            <span>{(d.evidence_json || '').substring(0, 100)}...</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {w.detections.map((d, i) => (
-                        <div key={i} style={{ fontSize: '0.8rem', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                          <span style={{ color: 'var(--text-muted)' }}>[{d.detector}]</span>
-                          <span>{(d.evidence_json || '').substring(0, 100)}...</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Expenditure bar */}
-                <div style={{ marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '5px' }}>
-                    <span>Expended: {fmt(w.expenditure || 0)}</span>
-                    <span>{expendPct}%</span>
+                  {/* Expenditure bar */}
+                  <div style={{ marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '5px' }}>
+                      <span>Expended: {fmt(w.expenditure || 0)}</span>
+                      <span>{expendPct}%</span>
+                    </div>
+                    <div className="util-bar-wrap">
+                      <div className="util-bar" style={{ width: `${expendPct}%`, background: color }} />
+                    </div>
                   </div>
-                  <div className="util-bar-wrap">
-                    <div className="util-bar" style={{ width: `${expendPct}%`, background: color }} />
-                  </div>
-                </div>
+                </Link>
 
                 {/* Evidence already appended */}
                 {w.evidence.length > 0 && (

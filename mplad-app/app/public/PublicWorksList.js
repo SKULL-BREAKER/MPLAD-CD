@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import EvidenceUploadForm from '../components/EvidenceUploadForm';
+import Link from 'next/link';
 
 export default function PublicWorksList({ works, SECTOR_COLORS, action }) {
   const [search, setSearch] = useState('');
@@ -66,45 +67,47 @@ export default function PublicWorksList({ works, SECTOR_COLORS, action }) {
             const expendPct = w.sanctioned_amount > 0 ? Math.round(((w.expenditure || 0) / w.sanctioned_amount) * 100) : 0;
             return (
               <div key={w.id} className="glass-card">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                  <span className="sector-badge" style={{ color, background: `${color}15`, border: `1px solid ${color}25` }}>
-                    {sector}
-                  </span>
-                  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                    {isSC && <span className="sc-badge">SC</span>}
-                    {isST && <span className="st-badge">ST</span>}
-                    <span className={`tag ${stateTag(w.status)}`}>{w.status}</span>
-                  </div>
-                </div>
-
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '10px' }}>
-                  Locality: {w.area_type}
-                  &nbsp;·&nbsp;Year: {w.fy}
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                  <div>
-                    <div className="label">Sanctioned</div>
-                    <div style={{ fontWeight: 700, fontSize: '1rem' }}>{fmt(w.sanctioned_amount || 0)}</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div className="label">Expended</div>
-                    <div style={{ fontWeight: 700, fontSize: '1rem', color: expendPct > 0 ? 'var(--success)' : 'var(--text-muted)' }}>
-                      {fmt(w.expenditure || 0)}
+                <Link href={`/work/${w.id}`} style={{ display: 'block', textDecoration: 'none', color: 'inherit', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                    <span className="sector-badge" style={{ color, background: `${color}15`, border: `1px solid ${color}25` }}>
+                      {sector}
+                    </span>
+                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                      {isSC && <span className="sc-badge">SC</span>}
+                      {isST && <span className="st-badge">ST</span>}
+                      <span className={`tag ${stateTag(w.status)}`}>{w.status}</span>
                     </div>
                   </div>
-                </div>
 
-                {w.sanctioned_amount > 0 && (
-                  <>
-                    <div className="util-bar-wrap">
-                      <div className="util-bar" style={{ width: `${Math.min(expendPct, 100)}%`, background: color }} />
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '10px' }}>
+                    Locality: {w.area_type}
+                    &nbsp;·&nbsp;Year: {w.fy}
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+                    <div>
+                      <div className="label">Sanctioned</div>
+                      <div style={{ fontWeight: 700, fontSize: '1rem' }}>{fmt(w.sanctioned_amount || 0)}</div>
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                      {expendPct}% expended · {['COMPLETED', 'UTILISED'].includes((w.status || '').toUpperCase()) ? ' Completed' : 'In Progress'}
+                    <div style={{ textAlign: 'right' }}>
+                      <div className="label">Expended</div>
+                      <div style={{ fontWeight: 700, fontSize: '1rem', color: expendPct > 0 ? 'var(--success)' : 'var(--text-muted)' }}>
+                        {fmt(w.expenditure || 0)}
+                      </div>
                     </div>
-                  </>
-                )}
+                  </div>
+
+                  {w.sanctioned_amount > 0 && (
+                    <>
+                      <div className="util-bar-wrap">
+                        <div className="util-bar" style={{ width: `${Math.min(expendPct, 100)}%`, background: color }} />
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                        {expendPct}% expended · {['COMPLETED', 'UTILISED'].includes((w.status || '').toUpperCase()) ? ' Completed' : 'In Progress'}
+                      </div>
+                    </>
+                  )}
+                </Link>
 
                 {/* E1 Pipeline: Citizen Evidence Upload */}
                 <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>

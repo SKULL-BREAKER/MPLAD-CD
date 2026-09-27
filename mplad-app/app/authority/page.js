@@ -1,6 +1,7 @@
 import db from '../../lib/db';
 import { sanctionProposal, rejectProposal } from '../../lib/modules/scrutiny';
 import { revalidatePath } from 'next/cache';
+import Link from 'next/link';
 
 // ── Server Actions (module-level — no closures) ───────────────────────────────
 async function handleSanction(formData) {
@@ -187,7 +188,7 @@ export default async function AuthorityView() {
                 return (
                   <div key={p.id} className="glass-card">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                      <div style={{ flex: 1 }}>
+                      <Link href={`/work/${p.id}`} style={{ flex: 1, textDecoration: 'none', color: 'inherit' }}>
                         <span className="sector-badge" style={{ color, background: `${color}15`, border: `1px solid ${color}25`, marginBottom: '8px', display: 'inline-flex' }}>
                           {p.category}
                         </span>
@@ -201,7 +202,7 @@ export default async function AuthorityView() {
                         <div style={{ fontWeight: 700, color: 'var(--accent)', fontSize: '1.05rem' }}>
                           {fmt(p.sanctioned_amount || 0)}
                         </div>
-                      </div>
+                      </Link>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flexShrink: 0 }}>
                         <form action={handleSanction}>
                           <input type="hidden" name="proposal_id" value={p.id} />
@@ -246,7 +247,7 @@ export default async function AuthorityView() {
                 const isSC = w.area_type?.toUpperCase().includes('SC-');
                 const isST = w.area_type?.toUpperCase().includes('ST-');
                 return (
-                  <div key={w.id} className="glass-card" style={{ padding: '16px' }}>
+                  <Link href={`/work/${w.id}`} key={w.id} className="glass-card" style={{ display: 'block', padding: '16px', textDecoration: 'none', color: 'inherit' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                       <span className="sector-badge" style={{ color, background: `${color}15`, border: `1px solid ${color}25`, fontSize: '0.7rem' }}>
                         {sector}
@@ -266,7 +267,7 @@ export default async function AuthorityView() {
                         <div className="util-bar" style={{ width: `${Math.min(Math.round(((w.expenditure || 0) / w.sanctioned_amount) * 100), 100)}%`, background: color }} />
                       </div>
                     )}
-                  </div>
+                  </Link>
                 );
               })}
             </div>

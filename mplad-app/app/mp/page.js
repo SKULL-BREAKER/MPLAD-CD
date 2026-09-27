@@ -2,6 +2,7 @@ import db from '../../lib/db';
 import { getEntitlementBalance, getSCSTUtilisation } from '../../lib/modules/entitlement';
 import { structureProposal } from '../../lib/modules/proposal';
 import { revalidatePath } from 'next/cache';
+import Link from 'next/link';
 
 // ── 12 Canonical MPLADS Priority Sectors ─────────────────────────────────────
 const PRIORITY_SECTORS = [
@@ -174,7 +175,7 @@ export default async function MPView() {
               const isSC = p.area_type?.toUpperCase().includes('SC-');
               const isST = p.area_type?.toUpperCase().includes('ST-');
               return (
-                <div key={p.id} className="glass-card">
+                <Link href={`/work/${p.id}`} key={p.id} className="glass-card" style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                     <span className="sector-badge" style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
                       {p.category}
@@ -189,7 +190,7 @@ export default async function MPView() {
                   <div className="label">Requested Amount</div>
                   <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--accent)' }}>₹{p.sanctioned_amount?.toLocaleString() || 0}</div>
                   <div style={{ marginTop: '10px', fontSize: '0.72rem', color: 'var(--text-muted)' }}>{p.id.slice(0, 12)}…</div>
-                </div>
+                </Link>
               );
             })}
           </div>
