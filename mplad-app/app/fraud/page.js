@@ -271,9 +271,9 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
   const verdict = feedbackMap[work.work_id];
 
   return (
-    <div className="clay-card" style={{
+    <div className="glass-card" style={{
       padding: '20px 24px',
-      boxShadow: sev.color === '#EF4444' ? `0 0 30px rgba(239,68,68,0.12)` : undefined,
+      
     }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
@@ -324,7 +324,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
         <div style={{ marginBottom: 20 }}>
           <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)',
             textTransform: 'uppercase', letterSpacing: '0.08em' }}>Contractor Network Graph</h3>
-            <div className="clay-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
               <NetworkGraph districtFlags={districtFlags} />
             </div>
         </div>
@@ -339,7 +339,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
             const meta = MODULE_META[f.module_code] || { icon:'️', color:'#94A3B8', label: f.module_code };
             const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
             return (
-              <div key={i} className="clay-card" style={{ padding: '12px 16px', marginBottom: 8 }}>
+              <div key={i} className="glass-card" style={{ padding: '12px 16px', marginBottom: 8 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: '0.75rem', color: meta.color, fontWeight: 700 }}>
                     {meta.icon} {meta.label}
