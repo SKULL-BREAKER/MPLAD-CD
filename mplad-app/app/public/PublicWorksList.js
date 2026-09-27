@@ -2,8 +2,16 @@
 import { useState } from 'react';
 import EvidenceUploadForm from '../components/EvidenceUploadForm';
 
-export default function PublicWorksList({ works, SECTOR_COLORS, stateTag, action }) {
+export default function PublicWorksList({ works, SECTOR_COLORS, action }) {
   const [search, setSearch] = useState('');
+
+  const stateTag = (s) => {
+    const map = {
+      'SANCTIONED': 'sanctioned', 'IN-EXECUTION': 'executing',
+      'COMPLETED': 'completed', 'UTILISED': 'utilised',
+    };
+    return map[(s || '').toUpperCase()] || 'proposed';
+  };
 
   const filteredWorks = works.filter(w => {
     if (!search) return true;

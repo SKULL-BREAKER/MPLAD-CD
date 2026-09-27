@@ -182,7 +182,7 @@ export default async function PublicView() {
       )}
 
       {/* Works List */}
-      <PublicWorksList works={works} SECTOR_COLORS={SECTOR_COLORS} stateTag={stateTag} action={handleUploadPublicEvidence} />
+      <PublicWorksList works={works} SECTOR_COLORS={SECTOR_COLORS} action={handleUploadPublicEvidence} />
 
       <div style={{ marginTop: '40px', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
         This is a read-only transparency portal. For RTI queries about fund utilisation, contact the District Authority.
