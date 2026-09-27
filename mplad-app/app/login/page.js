@@ -41,16 +41,16 @@ export default function Login() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0F172A', padding: '20px' }}>
-      <div style={{ background: '#1E293B', padding: '40px', borderRadius: '16px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', width: '100%', maxWidth: '400px', border: '1px solid #334155' }}>
+    <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', padding: '20px' }}>
+      <div className="glass-card" style={{ width: '100%', maxWidth: '400px', padding: '40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-          <h1 style={{ color: 'white', fontSize: '1.8rem', fontWeight: 800, margin: '0 0 10px 0' }}>Officer Login</h1>
-          <p style={{ color: '#94A3B8', margin: 0, fontSize: '0.9rem' }}>Access your secure district surveillance dashboard.</p>
+          <h1 style={{ color: 'var(--text-main)', fontSize: '1.8rem', fontWeight: 800, margin: '0 0 10px 0' }}>Officer Login</h1>
+          <p style={{ color: 'var(--text-muted)', margin: 0, fontSize: '0.9rem' }}>Access your secure district surveillance dashboard.</p>
         </div>
 
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <label style={{ display: 'block', color: '#CBD5E1', marginBottom: '8px', fontSize: '0.9rem', fontWeight: 600 }}>District / Officer ID</label>
+            <label style={{ display: 'block', color: 'var(--text-main)', marginBottom: '8px', fontSize: '0.9rem', fontWeight: 600 }}>District / Officer ID</label>
             <input 
               type="text" 
               placeholder="e.g. CONST-101" 
@@ -61,34 +61,29 @@ export default function Login() {
                 width: '100%',
                 padding: '12px 16px',
                 borderRadius: '8px',
-                border: '1px solid #334155',
-                background: '#0F172A',
-                color: 'white',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-color)',
+                color: 'var(--text-main)',
                 fontSize: '1rem',
                 outline: 'none',
                 boxSizing: 'border-box'
               }}
             />
-            <p style={{ color: '#64748B', fontSize: '0.75rem', marginTop: '6px' }}>Hint: Type any ID to automatically generate a profile.</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '6px' }}>Hint: Type any ID to automatically generate a profile.</p>
           </div>
 
           {error && <div style={{ color: '#EF4444', fontSize: '0.85rem', textAlign: 'center' }}>{error}</div>}
 
           <button 
             type="submit" 
+            className="btn btn-primary"
             disabled={loading || !officerId}
             style={{
               width: '100%',
               padding: '14px',
-              background: '#4F46E5',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
               fontSize: '1rem',
               fontWeight: 'bold',
-              cursor: loading || !officerId ? 'not-allowed' : 'pointer',
               opacity: loading || !officerId ? 0.7 : 1,
-              transition: 'background 0.2s'
             }}
           >
             {loading ? 'Authenticating...' : 'Secure Login'}
