@@ -45,7 +45,7 @@ function RiskGauge({ score, size = 80 }) {
   const color = scoreColor(score);
   return (
     <svg width={size} height={size} style={{ display: 'block' }}>
-      <circle cx={size/2} cy={size/2} r={size/2-8} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="7" />
+      <circle cx={size/2} cy={size/2} r={size/2-8} fill="none" stroke='rgba(42, 58, 49, 0.05)' strokeWidth="7" />
       <circle cx={size/2} cy={size/2} r={size/2-8} fill="none" stroke={color} strokeWidth="7"
         strokeDasharray={`${dash} ${C}`} strokeLinecap="round"
         transform={`rotate(-90 ${size/2} ${size/2})`}
@@ -103,7 +103,7 @@ function SatellitePanel({ flag }) {
           : 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)' }}>  // real: different
           <div style={{ position: 'absolute', bottom: 8, right: 8, fontSize: '0.65rem',
             color: ev.sub_type === 'GHOST_WORK' ? '#fca5a5' : '#15803d',
-            background: 'rgba(255,255,255,0.7)', borderRadius: 4, padding: '2px 6px' }}>
+            background: 'var(--text-main)', borderRadius: 4, padding: '2px 6px' }}>
             AFTER COMPLETION
           </div>
         </div>
@@ -117,7 +117,7 @@ function SatellitePanel({ flag }) {
         {/* Change score badge */}
         <div style={{ position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
           background: ev.sub_type === 'GHOST_WORK' ? 'rgba(239,68,68,0.9)' : 'rgba(16,185,129,0.9)',
-          borderRadius: 20, padding: '3px 10px', fontSize: '0.7rem', fontWeight: 700, color: '#fff' }}>
+          borderRadius: 20, padding: '3px 10px', fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-main)' }}>
           Change Score: {((ev.change_score || 0) * 100).toFixed(0)}% {ev.sub_type === 'GHOST_WORK' ? '️ GHOST WORK' : ''}
         </div>
       </div>
@@ -148,7 +148,7 @@ function NetworkGraph({ districtFlags }) {
       f => f.module_code === 'CONTRACTOR_NET' && f.evidence?.sub_type === 'CONCENTRATION'
     );
     if (concentrationFlags.length === 0) {
-      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      ctx.fillStyle = 'rgba(42, 58, 49, 0.1)';
       ctx.font = '13px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('No contractor network data available yet.', W/2, H/2);
@@ -189,7 +189,7 @@ function NetworkGraph({ districtFlags }) {
       ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.stroke();
       ctx.fillStyle = color; ctx.font = `bold ${r > 14 ? 9 : 7}px sans-serif`;
       ctx.fillText(n.label, n.x, n.y + 1);
-      ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '7px sans-serif';
+      ctx.fillStyle = 'var(--text-main)'; ctx.font = '7px sans-serif';
       ctx.fillText(`${n.share}%`, n.x, n.y + 12);
     }
   }, [districtFlags]);
@@ -262,7 +262,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
               </span>
             )}
           </div>
-          <p style={{ margin: '6px 0 0', fontSize: '0.78rem', color: 'rgba(255,255,255,0.45)' }}>
+          <p style={{ margin: '6px 0 0', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
             Risk Score: <strong style={{ color: scoreColor(work.risk_score) }}>{work.risk_score}/100</strong>
             &nbsp;·&nbsp; {work.module_count} module{work.module_count !== 1 ? 's' : ''} flagged
           </p>
@@ -489,8 +489,8 @@ export default function FraudInvestigatorPage() {
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {summary && (
               <div style={{ padding: '6px 14px', borderRadius: 20, fontSize: '0.72rem',
-                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-                color: 'rgba(255,255,255,0.4)' }}>
+                background: 'rgba(42, 58, 49, 0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                color: 'var(--text-muted)' }}>
                 Scanned in {summary.scan_ms}ms
               </div>
             )}
@@ -528,19 +528,19 @@ export default function FraudInvestigatorPage() {
         <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
           <input id="search-works" placeholder="Search work ID…" value={searchQ}
             onChange={e => setSearchQ(e.target.value)}
-            style={{ padding: '8px 14px', borderRadius: 8, background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none', minWidth: 180,
+            style={{ padding: '8px 14px', borderRadius: 8, background: 'rgba(42, 58, 49, 0.05)',
+              border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-main)', outline: 'none', minWidth: 180,
               fontSize: '0.8rem' }} />
           {['ALL','CRITICAL','HIGH','MEDIUM','LOW'].map(s => (
             <button key={s} id={`filter-sev-${s}`} onClick={() => setFilterSev(s)}
               style={{ padding: '6px 14px', borderRadius: 20, fontSize: '0.75rem', cursor: 'pointer',
                 fontWeight: filterSev === s ? 700 : 400,
                 background: filterSev === s
-                  ? (SEV_CFG[s]?.bg || 'rgba(255,255,255,0.12)')
-                  : 'rgba(255,255,255,0.04)',
-                color: filterSev === s ? (SEV_CFG[s]?.color || '#fff') : 'rgba(255,255,255,0.4)',
+                  ? (SEV_CFG[s]?.bg || 'rgba(42, 58, 49, 0.1)')
+                  : 'rgba(42, 58, 49, 0.05)',
+                color: filterSev === s ? (SEV_CFG[s]?.color || '#fff') : 'var(--text-muted)',
                 border: filterSev === s
-                  ? `1px solid ${SEV_CFG[s]?.border || 'rgba(255,255,255,0.2)'}`
+                  ? `1px solid ${SEV_CFG[s]?.border || 'rgba(42, 58, 49, 0.1)'}`
                   : '1px solid rgba(255,255,255,0.08)' }}>
               {s}
             </button>
@@ -563,7 +563,7 @@ export default function FraudInvestigatorPage() {
           {/* Work list */}
           <div style={{ width: 380, flexShrink: 0, maxHeight: 'calc(100vh - 320px)', overflowY: 'auto' }}>
             {filteredWorks.length === 0 && (
-              <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', padding: 40 }}>
+              <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 40 }}>
                 <div style={{ fontSize: '2.5rem', marginBottom: 12 }}></div>
                 No works match the current filters.
               </div>
@@ -613,7 +613,7 @@ export default function FraudInvestigatorPage() {
                           );
                         })}
                         {(work.factors?.length || 0) > 3 && (
-                          <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.3)' }}>
+                          <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)' }}>
                             +{work.factors.length - 3}
                           </span>
                         )}
@@ -662,7 +662,7 @@ export default function FraudInvestigatorPage() {
                           </span>
                           <span style={{ fontSize: '0.7rem', color: s.color, fontWeight: 700 }}>{f.severity}</span>
                         </div>
-                        <p style={{ margin: 0, fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+                        <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
                           {f.evidence?.message}
                         </p>
                       </div>

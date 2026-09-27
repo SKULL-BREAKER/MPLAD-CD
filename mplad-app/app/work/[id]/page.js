@@ -250,7 +250,7 @@ export default async function WorkDetailsPage({ params }) {
               {work.lat && work.lon ? (
                  <div style={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                    <div style={{ fontSize: '2rem' }}>📍</div>
-                   <div style={{ fontSize: '0.75rem', fontWeight: 600, background: 'rgba(255,255,255,0.8)', padding: '2px 6px', borderRadius: '4px', marginTop: '-8px' }}>
+                   <div style={{ fontSize: '0.75rem', fontWeight: 600, background: 'var(--text-main)', padding: '2px 6px', borderRadius: '4px', marginTop: '-8px' }}>
                      {work.lat.toFixed(4)}, {work.lon.toFixed(4)}
                    </div>
                  </div>

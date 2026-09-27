@@ -141,14 +141,14 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           <video ref={videoRef} autoPlay playsInline style={{ width: '100%', display: 'block' }}></video>
           <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
           <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '10px' }}>
-             <button type="button" onClick={takePhoto} style={{ background: '#10B981', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>📸 Take Photo</button>
-             <button type="button" onClick={cancelCamera} style={{ background: '#EF4444', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+             <button type="button" onClick={takePhoto} style={{ background: '#10B981', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>📸 Take Photo</button>
+             <button type="button" onClick={cancelCamera} style={{ background: '#EF4444', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
           </div>
         </div>
       ) : photoPreview ? (
         <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
           <img src={photoPreview} alt="Preview" style={{ width: '100%', borderRadius: '8px', display: 'block' }} />
-          <button type="button" onClick={cancelCamera} style={{ position: 'absolute', top: '5px', right: '5px', background: '#EF4444', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>Remove</button>
+          <button type="button" onClick={cancelCamera} style={{ position: 'absolute', top: '5px', right: '5px', background: '#EF4444', color: 'var(--text-main)', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>Remove</button>
           
           <input 
             type="file" 
@@ -176,7 +176,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
             onChange={handleFileChange}
             style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} 
           />
-          <button type="button" onClick={startCamera} style={{ background: '#3B82F6', color: '#fff', border: 'none', padding: '6px 12px', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer' }}>
+          <button type="button" onClick={startCamera} style={{ background: '#3B82F6', color: 'var(--text-main)', border: 'none', padding: '6px 12px', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer' }}>
             📷 Live Camera
           </button>
         </div>
@@ -201,7 +201,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           className="btn" 
           disabled={!coords || geoLocating} 
           title={!coords ? "Select a photo or allow location first" : ""}
-          style={{ background: coords ? '#10B981' : '#374151', color: '#fff', padding: '6px 12px', fontSize: '0.75rem', opacity: coords && !geoLocating ? 1 : 0.5, cursor: coords && !geoLocating ? 'pointer' : 'not-allowed' }}
+          style={{ background: coords ? '#10B981' : '#374151', color: 'var(--text-main)', padding: '6px 12px', fontSize: '0.75rem', opacity: coords && !geoLocating ? 1 : 0.5, cursor: coords && !geoLocating ? 'pointer' : 'not-allowed' }}
         >
           Upload Evidence
         </button>

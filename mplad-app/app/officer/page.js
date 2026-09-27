@@ -203,8 +203,8 @@ export default async function OfficerView() {
                   flex: 1,
                   textAlign: 'center',
                   padding: '14px 10px',
-                  background: count > 0 ? `${meta.color}15` : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${count > 0 ? meta.color + '35' : 'rgba(255,255,255,0.06)'}`,
+                  background: count > 0 ? `${meta.color}15` : 'rgba(42, 58, 49, 0.05)',
+                  border: `1px solid ${count > 0 ? meta.color + '35' : 'rgba(42, 58, 49, 0.05)'}`,
                   borderRadius: i === 0 ? '10px 0 0 10px' : i === arr.length - 1 ? '0 10px 10px 0' : '0',
                   borderLeft: i > 0 ? 'none' : undefined,
                 }}>
@@ -239,7 +239,7 @@ export default async function OfficerView() {
                   </span>
                 </div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Work ID: {alert.work_id}</div>
-                <div style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '4px', color: 'rgba(255,255,255,0.7)' }}>
+                <div style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '4px', color: 'var(--text-main)' }}>
                   {alert.title} · {(alert.evidence_json || '').substring(0, 80)}...
                 </div>
                 <button className="btn" style={{ width: '100%', marginTop: '12px', background: 'rgba(239,68,68,0.1)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', fontSize: '0.75rem', padding: '6px' }}>
@@ -331,7 +331,7 @@ export default async function OfficerView() {
 
                 {/* Evidence already appended */}
                 {w.evidence.length > 0 && (
-                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px' }}>
+                  <div style={{ background: 'rgba(42, 58, 49, 0.05)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px' }}>
                     <div className="label" style={{ marginBottom: '8px' }}>Evidence ({w.evidence.length} record{w.evidence.length !== 1 ? 's' : ''})</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {w.evidence.map(e => (

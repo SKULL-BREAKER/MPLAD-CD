@@ -57,7 +57,7 @@ const CAT_LABEL = {
 
 // ── Mini sparkline (SVG) ──────────────────────────────────────────────────────
 function Sparkline({ data, color = '#38BDF8', width = 80, height = 32 }) {
-  if (!data || data.length < 2) return <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '0.7rem' }}>—</span>;
+  if (!data || data.length < 2) return <span style={{ color: 'rgba(42, 58, 49, 0.1)', fontSize: '0.7rem' }}>—</span>;
   const max = Math.max(...data, 1);
   const min = Math.min(...data);
   const range = max - min || 1;
@@ -82,7 +82,7 @@ function HealthGauge({ score }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
       <svg width="130" height="130" viewBox="0 0 116 116" style={{ filter: `drop-shadow(0 0 14px ${color}55)` }}>
-        <circle cx="58" cy="58" r="52" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="10" />
+        <circle cx="58" cy="58" r="52" fill="none" stroke='rgba(42, 58, 49, 0.05)' strokeWidth="10" />
         <circle cx="58" cy="58" r="52" fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={offset} transform="rotate(-90 58 58)"
           style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1), stroke 0.6s ease' }} />
@@ -118,7 +118,7 @@ function AlertCard({ alert }) {
             {sc.icon} {sc.label}
           </span>
           {/* Category */}
-          <span style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.4)', borderRadius: '4px', padding: '1px 7px', fontSize: '0.6rem', letterSpacing: '0.4px' }}>
+          <span style={{ background: 'rgba(42, 58, 49, 0.05)', color: 'var(--text-muted)', borderRadius: '4px', padding: '1px 7px', fontSize: '0.6rem', letterSpacing: '0.4px' }}>
             {CAT_LABEL[alert.category] || alert.category}
           </span>
           {/* Confidence */}
@@ -132,8 +132,8 @@ function AlertCard({ alert }) {
         {/* WHY FLAGGED Evidence Card */}
         {alert.evidence_json && (
           <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderLeft: `3px solid ${sc.color}`, borderRadius: '4px' }}>
-            <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'rgba(255,255,255,0.7)', marginBottom: '6px', letterSpacing: '0.5px' }}>WHY FLAGGED (EVIDENCE)</div>
-            <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.5 }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '6px', letterSpacing: '0.5px' }}>WHY FLAGGED (EVIDENCE)</div>
+            <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '0.78rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
               {Object.entries(typeof alert.evidence_json === 'string' ? JSON.parse(alert.evidence_json) : alert.evidence_json).map(([k, v]) => (
                 <li key={k}><strong style={{ color: 'rgba(255,255,255,0.85)' }}>{k.replace(/_/g, ' ')}:</strong> {typeof v === 'object' ? JSON.stringify(v) : v}</li>
               ))}
@@ -160,7 +160,7 @@ function DimPanel({ dim, alerts }) {
   const [open, setOpen] = useState(true);
   const dc = DIM_CFG[dim];
   if (!alerts.length) return (
-    <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: '0.82rem', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', marginBottom: '16px' }}>
+    <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: '0.82rem', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '10px', marginBottom: '16px' }}>
       {dc.icon} No {dc.label} alerts
     </div>
   );
@@ -170,7 +170,7 @@ function DimPanel({ dim, alerts }) {
         <span style={{ fontSize: '1rem' }}>{dc.icon}</span>
         <span style={{ fontWeight: 700, color: dc.color, fontSize: '0.9rem' }}>{dc.label} Alerts</span>
         <span style={{ background: dc.bg, border: `1px solid ${dc.border}`, color: dc.color, borderRadius: '99px', padding: '1px 10px', fontSize: '0.72rem', fontWeight: 800 }}>{alerts.length}</span>
-        <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' }}>{open ? '▲' : '▼'}</span>
+        <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: 'var(--text-muted)' }}>{open ? '▲' : '▼'}</span>
       </button>
       {open && <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>{alerts.map(a => <AlertCard key={a.id} alert={a} />)}</div>}
     </div>
@@ -179,7 +179,7 @@ function DimPanel({ dim, alerts }) {
 
 // ── Yearly trend row ──────────────────────────────────────────────────────────
 function YearlyTrendTable({ stats }) {
-  if (!stats || !stats.length) return <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.82rem' }}>No historical year data found.</p>;
+  if (!stats || !stats.length) return <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem' }}>No historical year data found.</p>;
   const fundData   = stats.map(s => s.fundUsagePct);
   const utilData   = stats.map(s => s.utilisationPct);
   const scData     = stats.map(s => s.scPct);
@@ -201,7 +201,7 @@ function YearlyTrendTable({ stats }) {
                 <td>{s.proposals}</td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ flex: 1, height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '99px', overflow: 'hidden', minWidth: '60px' }}>
+                    <div style={{ flex: 1, height: '6px', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '99px', overflow: 'hidden', minWidth: '60px' }}>
                       <div style={{ height: '100%', width: `${Math.min(s.fundUsagePct, 100)}%`, background: s.fundUsagePct >= 60 ? '#10B981' : '#F59E0B', borderRadius: '99px', transition: 'width 0.6s ease' }} />
                     </div>
                     <span style={{ fontSize: '0.78rem', color: s.fundUsagePct < 60 ? '#F59E0B' : '#10B981', fontWeight: 700 }}>{s.fundUsagePct}%</span>
@@ -209,7 +209,7 @@ function YearlyTrendTable({ stats }) {
                 </td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <div style={{ flex: 1, height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '99px', overflow: 'hidden', minWidth: '60px' }}>
+                    <div style={{ flex: 1, height: '6px', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '99px', overflow: 'hidden', minWidth: '60px' }}>
                       <div style={{ height: '100%', width: `${Math.min(s.utilisationPct, 100)}%`, background: s.utilisationPct >= 50 ? '#10B981' : '#EF4444', borderRadius: '99px', transition: 'width 0.6s ease' }} />
                     </div>
                     <span style={{ fontSize: '0.78rem', color: s.utilisationPct < 50 ? '#EF4444' : '#10B981', fontWeight: 700 }}>{s.utilisationPct}%</span>
@@ -224,15 +224,15 @@ function YearlyTrendTable({ stats }) {
       </table>
       <div style={{ display: 'flex', gap: '32px', marginTop: '16px', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fund Usage Trend</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fund Usage Trend</span>
           <Sparkline data={fundData} color="#38BDF8" width={100} height={36} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Utilisation Trend</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Utilisation Trend</span>
           <Sparkline data={utilData} color="#10B981" width={100} height={36} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>SC Earmarking</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>SC Earmarking</span>
           <Sparkline data={scData} color="#A78BFA" width={100} height={36} />
         </div>
       </div>
@@ -246,7 +246,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
   const field = (key, label, min, max, step, isPct) => (
     <div key={key} style={{ marginBottom: '16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-        <label style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.55)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{label}</label>
+        <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{label}</label>
         <span style={{ fontSize: '0.82rem', color: '#38BDF8', fontWeight: 700 }}>
           {isPct ? `${Math.round(local[key] * 100)}%` : `₹${Number(local[key]).toLocaleString('en-IN')}`}
         </span>
@@ -267,7 +267,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
           <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '4px' }}>️ Custom Thresholds</div>
           <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.38)' }}>Your rules — override the defaults</div>
         </div>
-        <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: '#fff', padding: '5px 10px', cursor: 'pointer', fontSize: '0.8rem' }}> Close</button>
+        <button onClick={onClose} style={{ background: 'rgba(42, 58, 49, 0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: 'var(--text-main)', padding: '5px 10px', cursor: 'pointer', fontSize: '0.8rem' }}> Close</button>
       </div>
 
       <div style={{ flex: 1 }}>
@@ -285,16 +285,16 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
         {field('lowUtilisationPct',       'Low Utilisation Floor',    0.10, 0.70, 0.05, true)}
         {field('highRejectionRatePct',    'High Rejection Rate',      0.10, 0.80, 0.05, true)}
 
-        <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '8px', padding: '10px 14px', marginTop: '16px', fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>
+        <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '8px', padding: '10px 14px', marginTop: '16px', fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
           <strong style={{ color: '#EF4444' }}>Note:</strong> SC 15% and ST 7.5% earmarking thresholds are MPLADS statutory requirements and cannot be overridden.
         </div>
       </div>
 
       <div style={{ display: 'flex', gap: '10px', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-        <button onClick={() => { onChange(local); onClose(); }} style={{ flex: 1, background: '#4F46E5', color: '#fff', border: 'none', borderRadius: '8px', padding: '11px', fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer' }}>
+        <button onClick={() => { onChange(local); onClose(); }} style={{ flex: 1, background: '#4F46E5', color: 'var(--text-main)', border: 'none', borderRadius: '8px', padding: '11px', fontWeight: 700, fontSize: '0.875rem', cursor: 'pointer' }}>
            Apply & Re-scan
         </button>
-        <button onClick={() => setLocal({ ...THRESHOLD_DEFAULTS })} style={{ background: 'rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.6)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '11px 14px', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>
+        <button onClick={() => setLocal({ ...THRESHOLD_DEFAULTS })} style={{ background: 'rgba(42, 58, 49, 0.05)', color: 'var(--text-main)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '11px 14px', fontWeight: 600, fontSize: '0.8rem', cursor: 'pointer' }}>
           Reset
         </button>
       </div>
@@ -321,7 +321,7 @@ function ForecastCards({ alerts }) {
               <span style={{ fontSize: '1.3rem' }}>{sc.icon}</span>
               <span style={{ fontWeight: 700, fontSize: '0.88rem', color: sc.color, flex: 1 }}>{a.title}</span>
             </div>
-            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: 0 }}>{a.detail}</p>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>{a.detail}</p>
             <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ fontSize: '0.62rem', color: cc.color, fontWeight: 700 }}>◉ {cc.label}</span>
               <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.25)' }}>· {CAT_LABEL[a.category] || a.category}</span>
@@ -425,19 +425,19 @@ export default function MonitorPage() {
                 Project Intelligence{' '}
                 <span style={{ background: 'linear-gradient(to right, #818CF8, #38BDF8, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Monitor</span>
               </h1>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', maxWidth: '540px', lineHeight: 1.6 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: '540px', lineHeight: 1.6 }}>
                 Analyses <span style={{ color: '#A78BFA' }}>historical patterns</span>, <span style={{ color: '#38BDF8' }}>current state</span>, and <span style={{ color: '#10B981' }}>future projections</span> — with your custom officer-defined thresholds.
               </p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
               {!loading && <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', marginBottom: '2px' }}>Next scan</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '2px' }}>Next scan</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38BDF8', letterSpacing: '-0.5px' }}>{countdown}s</div>
               </div>}
               <button onClick={() => setShowDrawer(true)} style={{ background: 'rgba(79,70,229,0.18)', border: '1px solid rgba(79,70,229,0.35)', borderRadius: '9px', color: '#818CF8', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
                 ️ Thresholds
               </button>
-              <button onClick={() => scan()} disabled={loading} style={{ background: loading ? 'rgba(79,70,229,0.3)' : 'rgba(79,70,229,0.55)', border: '1px solid rgba(79,70,229,0.4)', borderRadius: '9px', color: '#fff', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '7px' }}>
+              <button onClick={() => scan()} disabled={loading} style={{ background: loading ? 'rgba(79,70,229,0.3)' : 'rgba(79,70,229,0.55)', border: '1px solid rgba(79,70,229,0.4)', borderRadius: '9px', color: 'var(--text-main)', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '7px' }}>
                 {loading ? <span style={{ display: 'inline-block', width: '13px', height: '13px', border: '2px solid rgba(255,255,255,0.25)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> : '⟳'}
                 {loading ? 'Scanning…' : 'Re-scan'}
               </button>
@@ -450,7 +450,7 @@ export default function MonitorPage() {
           <div style={{ background: stCfg.bg, border: `1px solid ${stCfg.border}`, borderRadius: '12px', padding: '14px 20px', display: 'flex', alignItems: 'center', gap: '12px', animation: stCfg.pulse ? 'status-pulse 2s ease-in-out infinite' : 'none' }}>
             <div style={{ width: '9px', height: '9px', borderRadius: '50%', background: stCfg.color, flexShrink: 0, boxShadow: `0 0 8px ${stCfg.color}` }} />
             <span style={{ fontWeight: 700, fontSize: '0.88rem', color: stCfg.color, letterSpacing: '0.4px' }}>{stCfg.label}</span>
-            {summary && <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.75rem', marginLeft: 'auto' }}>
+            {summary && <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginLeft: 'auto' }}>
               {new Date(summary.scannedAt).toLocaleTimeString('en-IN')} · {summary.scanDurationMs}ms · Scan #{scanCount}
               {insights?.overallTrend && <> · Trend: <span style={{ color: insights.overallTrend === 'IMPROVING' ? '#10B981' : '#F97316', fontWeight: 700 }}>{insights.overallTrend}</span></>}
             </span>}
@@ -519,7 +519,7 @@ export default function MonitorPage() {
 
           {/* ── Tab content ── */}
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '60px 0', color: 'rgba(255,255,255,0.3)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--text-muted)' }}>
               <div style={{ fontSize: '2.5rem', animation: 'spin 1.5s linear infinite', display: 'inline-block', marginBottom: '14px' }}>⟳</div>
               <p style={{ fontSize: '0.88rem' }}>Running temporal AI scan — past, present & future…</p>
             </div>
@@ -565,7 +565,7 @@ export default function MonitorPage() {
                   </div>
                   <h2 className="section-title" style={{ fontSize: '0.9rem', marginBottom: '16px' }}>Historical Alerts</h2>
                   {pastAlerts.length === 0 ? (
-                    <div style={{ padding: '24px', textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '0.82rem', background: 'rgba(255,255,255,0.02)', borderRadius: '10px' }}>No historical issues found</div>
+                    <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.82rem', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '10px' }}>No historical issues found</div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
                       {pastAlerts.map(a => <AlertCard key={a.id} alert={a} />)}
@@ -579,7 +579,7 @@ export default function MonitorPage() {
                 <div style={{ textAlign: 'center', padding: '50px 0', background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.15)', borderRadius: '14px' }}>
                   <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}></div>
                   <div style={{ fontSize: '1rem', fontWeight: 700, color: '#10B981', marginBottom: '6px' }}>Current State: All Clear</div>
-                  <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.35)' }}>No present-state anomalies detected</p>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>No present-state anomalies detected</p>
                 </div>
               )}
             </>

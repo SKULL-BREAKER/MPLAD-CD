@@ -184,7 +184,7 @@ export default async function PublicView() {
       {/* Works List */}
       <PublicWorksList works={works} SECTOR_COLORS={SECTOR_COLORS} action={handleUploadPublicEvidence} />
 
-      <div style={{ marginTop: '40px', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+      <div style={{ marginTop: '40px', padding: '16px', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '10px', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
         This is a read-only transparency portal. For RTI queries about fund utilisation, contact the District Authority.
         All evidence records are immutable and geo-verified.
       </div>

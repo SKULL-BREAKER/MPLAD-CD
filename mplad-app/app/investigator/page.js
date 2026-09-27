@@ -52,7 +52,7 @@ export default function InvestigatorDashboard() {
                 style={{ 
                   cursor: 'pointer', 
                   borderLeft: `4px solid ${getRiskColor(work.aiAnalysis.level)}`,
-                  background: selectedWork?.id === work.id ? 'rgba(255,255,255,0.05)' : ''
+                  background: selectedWork?.id === work.id ? 'rgba(42, 58, 49, 0.05)' : ''
                 }}
                 onClick={() => setSelectedWork(work)}
               >

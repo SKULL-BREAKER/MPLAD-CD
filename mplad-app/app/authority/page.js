@@ -140,7 +140,7 @@ export default async function AuthorityView() {
         {/* State distribution badges */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '20px' }}>
           {Object.entries(stateDist).map(([state, count]) => (
-            <div key={state} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '8px 14px', fontSize: '0.82rem' }}>
+            <div key={state} style={{ background: 'rgba(42, 58, 49, 0.05)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '8px 14px', fontSize: '0.82rem' }}>
               <span className={`tag ${stateTagClass(state)}`} style={{ marginRight: '8px' }}>{state}</span>
               <strong>{count}</strong> work{count !== 1 ? 's' : ''}
             </div>
@@ -158,7 +158,7 @@ export default async function AuthorityView() {
                 return (
                   <div key={sector} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ width: '140px', fontSize: '0.8rem', flexShrink: 0 }}>{sector}</span>
-                    <div style={{ flex: 1, background: 'rgba(255,255,255,0.05)', borderRadius: '99px', height: '6px', overflow: 'hidden' }}>
+                    <div style={{ flex: 1, background: 'rgba(42, 58, 49, 0.05)', borderRadius: '99px', height: '6px', overflow: 'hidden' }}>
                       <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '99px' }} />
                     </div>
                     <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', width: '80px', textAlign: 'right' }}>{fmt(data.amount)}</span>
@@ -217,7 +217,7 @@ export default async function AuthorityView() {
                     </div>
 
                     {/* AI Support */}
-                    <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '10px 12px' }}>
+                    <div style={{ background: 'rgba(42, 58, 49, 0.05)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '10px 12px' }}>
                       <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 700, marginBottom: '6px', letterSpacing: '0.5px' }}>
                         AI SUPPORT (READ-ONLY)
                       </div>

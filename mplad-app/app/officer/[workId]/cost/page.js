@@ -514,9 +514,9 @@ export default function CostJustificationPage({ params }) {
                   </thead>
                   <tbody>
                     {boqItems.map((item, idx) => (
-                      <tr key={idx} style={{ borderBottom: '1px solid #0f172a', background: idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)', transition: 'background 0.1s' }}
+                      <tr key={idx} style={{ borderBottom: '1px solid #0f172a', background: idx % 2 === 0 ? 'transparent' : 'rgba(42, 58, 49, 0.05)', transition: 'background 0.1s' }}
                         onMouseEnter={e => e.currentTarget.style.background = 'rgba(56,189,248,0.05)'}
-                        onMouseLeave={e => e.currentTarget.style.background = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)'}
+                        onMouseLeave={e => e.currentTarget.style.background = idx % 2 === 0 ? 'transparent' : 'rgba(42, 58, 49, 0.05)'}
                       >
                         <td style={{ padding: '7px 10px', color: '#38BDF8', fontWeight: 600, fontFamily: 'monospace', whiteSpace: 'nowrap' }}>{item.item_code}</td>
                         <td style={{ padding: '7px 10px', maxWidth: 180 }}>{item.description}</td>

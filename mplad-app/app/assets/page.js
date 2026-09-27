@@ -163,7 +163,7 @@ export default async function AssetRegister() {
         )}
       </section>
 
-      <div style={{ marginTop: '40px', padding: '20px', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
+      <div style={{ marginTop: '40px', padding: '20px', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '12px', fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
         <strong style={{ color: 'var(--text-main)' }}>Transparency Note:</strong> This register is a read-only public view.
         All data is derived from the immutable audit trail. Evidence records include geo-coordinates captured at time of verification.
         Works funded by SC/ST earmarked funds are tagged accordingly per MPLADS transparency guidelines.
