@@ -77,11 +77,11 @@ function SatellitePanel({ flag }) {
   };
 
   return (
-    <div style={{ borderRadius: 12, overflow: 'hidden', background: '#0a0a0f', border: '1px solid rgba(139,92,246,0.3)' }}>
-      <div style={{ padding: '10px 16px', background: 'rgba(139,92,246,0.12)', borderBottom: '1px solid rgba(139,92,246,0.2)',
+    <div className="glass-card" style={{ borderRadius: 12, overflow: 'hidden', padding: 0 }}>
+      <div style={{ padding: '10px 16px', background: 'rgba(139,92,246,0.12)', borderBottom: '1px solid var(--border-color)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span style={{ color: '#A78BFA', fontWeight: 700, fontSize: '0.85rem' }}>️ Sentinel-2 Satellite Imagery</span>
-        <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.7rem' }}>
+        <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>
           {ev.demo_mode ? '(DEMO MODE — simulated change scores)' : 'Live Sentinel-2 NDBI Index'}
         </span>
       </div>
@@ -100,20 +100,20 @@ function SatellitePanel({ flag }) {
         {/* After panel — same color (ghost work = no change) */}
         <div style={{ ...afterStyle, background: ev.sub_type === 'GHOST_WORK'
           ? 'linear-gradient(135deg, #1a2a1a 0%, #2d4a2d 100%)'  // ghost: identical
-          : 'linear-gradient(135deg, #1a1a2e 0%, #4a3a1a 100%)' }}>  // real: different
+          : 'linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)' }}>  // real: different
           <div style={{ position: 'absolute', bottom: 8, right: 8, fontSize: '0.65rem',
-            color: ev.sub_type === 'GHOST_WORK' ? '#fca5a5' : '#86efac',
-            background: 'rgba(0,0,0,0.7)', borderRadius: 4, padding: '2px 6px' }}>
+            color: ev.sub_type === 'GHOST_WORK' ? '#fca5a5' : '#15803d',
+            background: 'rgba(255,255,255,0.7)', borderRadius: 4, padding: '2px 6px' }}>
             AFTER COMPLETION
           </div>
         </div>
         {/* Divider line */}
         <div style={{ position: 'absolute', top: 0, left: `${split}%`, width: 2, height: '100%',
-          background: '#fff', boxShadow: '0 0 8px rgba(255,255,255,0.8)', pointerEvents: 'none' }} />
+          background: '#fff', boxShadow: '0 0 8px rgba(0,0,0,0.2)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', top: '50%', left: `${split}%`, transform: 'translate(-50%, -50%)',
           width: 28, height: 28, borderRadius: '50%', background: '#fff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 0 12px rgba(255,255,255,0.8)', pointerEvents: 'none', fontSize: '0.75rem' }}>↔</div>
+          boxShadow: '0 0 12px rgba(0,0,0,0.2)', pointerEvents: 'none', color: '#000', fontSize: '0.75rem' }}>↔</div>
         {/* Change score badge */}
         <div style={{ position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
           background: ev.sub_type === 'GHOST_WORK' ? 'rgba(239,68,68,0.9)' : 'rgba(16,185,129,0.9)',
@@ -121,11 +121,11 @@ function SatellitePanel({ flag }) {
           Change Score: {((ev.change_score || 0) * 100).toFixed(0)}% {ev.sub_type === 'GHOST_WORK' ? '️ GHOST WORK' : ''}
         </div>
       </div>
-      <div style={{ padding: '10px 16px', fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)',
+      <div style={{ padding: '10px 16px', fontSize: '0.72rem', color: 'var(--text-muted)',
         display: 'flex', gap: 16 }}>
         <span> {lat.toFixed(4)}°N, {lon.toFixed(4)}°E</span>
         <a href={ev.before_imagery_url || '#'} target="_blank" rel="noreferrer"
-          style={{ color: '#A78BFA', textDecoration: 'none' }}>View in Copernicus →</a>
+          style={{ color: '#8B5CF6', textDecoration: 'none', fontWeight: 600 }}>View in Copernicus →</a>
       </div>
     </div>
   );
@@ -213,16 +213,16 @@ function FactorBar({ factor }) {
         <span style={{ fontSize: '0.75rem', color: meta.color, fontWeight: 600 }}>
           {meta.icon} {meta.label}
         </span>
-        <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.5)' }}>
+        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
           +{factor.contribution} pts ({factor.severity})
         </span>
       </div>
-      <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 4, height: 6 }}>
+      <div style={{ background: 'rgba(42,58,49,0.08)', borderRadius: 4, height: 6 }}>
         <div style={{ width: `${w}%`, height: '100%', borderRadius: 4,
           background: meta.color, transition: 'width 0.6s ease',
           boxShadow: `0 0 6px ${meta.color}` }} />
       </div>
-      <p style={{ margin: '4px 0 0', fontSize: '0.68rem', color: 'rgba(255,255,255,0.35)',
+      <p style={{ margin: '4px 0 0', fontSize: '0.68rem', color: 'var(--text-muted)',
         fontStyle: 'italic', lineHeight: 1.4 }}>{factor.message?.slice(0, 120)}</p>
     </div>
   );
@@ -237,17 +237,16 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
   const verdict = feedbackMap[work.work_id];
 
   return (
-    <div style={{
-      background: 'rgba(14,14,30,0.95)', border: `1px solid ${sev.border}`,
-      borderRadius: 16, padding: '20px 24px',
-      boxShadow: sev.color === '#EF4444' ? `0 0 30px rgba(239,68,68,0.12)` : 'none',
+    <div className="glass-card" style={{
+      padding: '20px 24px',
+      boxShadow: sev.color === '#EF4444' ? `0 0 30px rgba(239,68,68,0.12)` : undefined,
     }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
         <RiskGauge score={work.risk_score} size={80} />
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-            <h2 style={{ margin: 0, fontSize: '1.1rem', color: '#fff', fontWeight: 700 }}>
+            <h2 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-main)', fontWeight: 700 }}>
               Work #{work.work_id}
             </h2>
             <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: '0.72rem', fontWeight: 700,
@@ -272,7 +271,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
 
       {/* Factor breakdown */}
       <div style={{ marginBottom: 20 }}>
-        <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)',
+        <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)',
           textTransform: 'uppercase', letterSpacing: '0.08em' }}>Risk Factor Breakdown</h3>
         {(work.factors || []).map((f, i) => <FactorBar key={i} factor={f} />)}
       </div>
@@ -280,7 +279,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
       {/* Satellite verifier */}
       {satFlag && (
         <div style={{ marginBottom: 20 }}>
-          <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)',
+          <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)',
             textTransform: 'uppercase', letterSpacing: '0.08em' }}>Satellite Verification</h3>
           <SatellitePanel flag={satFlag} />
         </div>
@@ -289,9 +288,9 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
       {/* Contractor network */}
       {districtFlags.filter(f => f.module_code === 'CONTRACTOR_NET').length > 0 && (
         <div style={{ marginBottom: 20 }}>
-          <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)',
+          <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)',
             textTransform: 'uppercase', letterSpacing: '0.08em' }}>Contractor Network Graph</h3>
-          <div style={{ background: '#070712', borderRadius: 12, border: '1px solid rgba(16,185,129,0.2)', overflow: 'hidden' }}>
+          <div className="glass-card" style={{ padding: 0, overflow: 'hidden' }}>
             <NetworkGraph districtFlags={districtFlags} />
           </div>
         </div>
@@ -299,7 +298,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
 
       {/* All flags */}
       <div style={{ marginBottom: 20 }}>
-        <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)',
+        <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)',
           textTransform: 'uppercase', letterSpacing: '0.08em' }}>Evidence Chain ({work.flags?.length || 0} flags)</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {(work.flags || []).map((f, i) => {
@@ -313,7 +312,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
                   </span>
                   <span style={{ fontSize: '0.7rem', color: s.color }}>{f.severity}</span>
                 </div>
-                <p style={{ margin: 0, fontSize: '0.72rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.5 }}>
+                <p style={{ margin: 0, fontSize: '0.72rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
                   {f.evidence?.message || (f.evidence ? JSON.stringify(f.evidence).slice(0, 200) : 'No evidence provided')}
                 </p>
               </div>
@@ -350,14 +349,13 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Summary KPI cards
 // ─────────────────────────────────────────────────────────────────────────────
-function KpiCard({ label, value, sub, color = '#38BDF8', icon }) {
+function KpiCard({ label, value, sub, color = 'var(--text-main)', icon }) {
   return (
-    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 14,
-      border: '1px solid rgba(255,255,255,0.08)', padding: '18px 22px', minWidth: 140 }}>
+    <div className="stat-card" style={{ minWidth: 140 }}>
       <div style={{ fontSize: '1.4rem', marginBottom: 4 }}>{icon}</div>
-      <div style={{ fontSize: '1.8rem', fontWeight: 800, color, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', marginTop: 4 }}>{label}</div>
-      {sub && <div style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>{sub}</div>}
+      <div className="stat-value" style={{ color: color !== '#38BDF8' ? color : 'var(--text-main)' }}>{value}</div>
+      <div className="stat-label" style={{ marginTop: 4 }}>{label}</div>
+      {sub && <div className="stat-sub">{sub}</div>}
     </div>
   );
 }
@@ -441,49 +439,32 @@ export default function FraudInvestigatorPage() {
     return true;
   });
 
-  const panelStyle = {
-    fontFamily: "'Inter', 'Segoe UI', sans-serif",
-    background: 'linear-gradient(135deg, #060611 0%, #0d0d20 50%, #080812 100%)',
-    minHeight: '100vh',
-    color: '#fff',
-    padding: '24px',
-  };
+  // Replaced with globals.css classes
 
   // ── Loading / Error states ────────────────────────────────────────────────
   if (loading) return (
-    <div style={{ ...panelStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+    <main className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '3rem', marginBottom: 16, animation: 'spin 2s linear infinite' }}>️</div>
+        <div className="spinner" style={{ marginBottom: 16 }}></div>
         <div style={{ color: '#A78BFA', fontSize: '1.1rem', fontWeight: 600 }}>Running Fraud Detection Engines…</div>
-        <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginTop: 8 }}>Analysing all 10 modules</div>
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginTop: 8 }}>Analysing all 10 modules</div>
       </div>
-    </div>
+    </main>
   );
 
   if (error) return (
-    <div style={{ ...panelStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <div style={{ textAlign: 'center', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)',
-        borderRadius: 16, padding: 32 }}>
+    <main className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <div className="alert alert-error" style={{ textAlign: 'center', padding: 32 }}>
         <div style={{ fontSize: '2rem', marginBottom: 12 }}></div>
-        <div style={{ color: '#EF4444', fontWeight: 600, marginBottom: 8 }}>Scan Error</div>
-        <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.8rem', marginBottom: 16 }}>{error}</div>
-        <button onClick={runScan} style={{ padding: '8px 20px', borderRadius: 8, background: 'rgba(239,68,68,0.2)',
-          border: '1px solid rgba(239,68,68,0.4)', color: '#EF4444', cursor: 'pointer' }}>Retry</button>
+        <div style={{ color: 'var(--danger)', fontWeight: 600, marginBottom: 8 }}>Scan Error</div>
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: 16 }}>{error}</div>
+        <button className="btn btn-danger btn-sm" onClick={runScan}>Retry</button>
       </div>
-    </div>
+    </main>
   );
 
   return (
-    <div style={panelStyle}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
-        ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
-        button:hover { opacity: 0.85; }
-      `}</style>
-
+    <main className="main-content">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
@@ -499,7 +480,7 @@ export default function FraudInvestigatorPage() {
                   WebkitTextFillColor: 'transparent' }}>
                   MPLADS Fraud Investigator
                 </h1>
-                <p style={{ margin: 0, fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>
+                <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   AI-Powered 10-Module Fraud Detection Engine · Decision Support Only
                 </p>
               </div>
@@ -564,16 +545,14 @@ export default function FraudInvestigatorPage() {
               {s}
             </button>
           ))}
-          <select id="filter-module" value={filterMod} onChange={e => setFilterMod(e.target.value)}
-            style={{ padding: '7px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none',
-              fontSize: '0.8rem', cursor: 'pointer' }}>
-            <option value="ALL" style={{ background: '#1a1a2e', color: '#fff' }}>All Modules</option>
+          <select className="select-field" id="filter-module" value={filterMod} onChange={e => setFilterMod(e.target.value)}
+            style={{ width: 'auto', display: 'inline-block' }}>
+            <option value="ALL">All Modules</option>
             {Object.entries(MODULE_META).map(([k, m]) => (
-              <option key={k} value={k} style={{ background: '#1a1a2e', color: '#fff' }}>{m.icon} {m.label}</option>
+              <option key={k} value={k}>{m.icon} {m.label}</option>
             ))}
           </select>
-          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>
+          <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
             Showing {filteredWorks.length} works
           </span>
         </div>
@@ -598,15 +577,16 @@ export default function FraudInvestigatorPage() {
                   onClick={() => setSelectedWork(work)}
                   style={{
                     padding: '14px 16px', borderRadius: 12, marginBottom: 8, cursor: 'pointer',
-                    background: isActive ? sev.bg : 'rgba(255,255,255,0.02)',
-                    border: `1px solid ${isActive ? sev.border : 'rgba(255,255,255,0.06)'}`,
+                    background: isActive ? sev.bg : 'var(--surface-2)',
+                    border: `1px solid ${isActive ? sev.border : 'var(--border-color)'}`,
                     transition: 'all 0.2s',
-                    boxShadow: isActive && work.severity === 'CRITICAL' ? `0 0 20px rgba(239,68,68,0.15)` : 'none',
+                    boxShadow: isActive ? 'inset 2px 2px 6px rgba(0,0,0,0.05)' : 'none',
+                    color: 'var(--text-main)'
                   }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: isActive ? '#fff' : 'rgba(255,255,255,0.7)',
+                        <span style={{ fontSize: '0.78rem', fontWeight: 700, color: isActive ? sev.color : 'var(--text-main)',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {sev.icon} {work.work_id}
                         </span>

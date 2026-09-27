@@ -22,12 +22,15 @@ export async function runFraudEngine(options = {}) {
   const flagMap = {};
   for (const dr of detectionResults) {
     if (!flagMap[dr.work_id]) flagMap[dr.work_id] = [];
+    
+    // Parse evidence JSON
+    let evidence = null;
+    try { evidence = dr.evidence_json ? JSON.parse(dr.evidence_json) : null; } catch(e) {}
+    
     flagMap[dr.work_id].push({
-      category: dr.detector,
+      module_code: dr.detector, // Changed from category to module_code
       severity: dr.tier,
-      reason: dr.evidence_json ? JSON.stringify(dr.evidence_json) : '',
-      confidence: 'HIGH',
-      detail: dr.evidence_json ? JSON.stringify(dr.evidence_json) : '',
+      evidence: evidence || { message: dr.evidence_json },
     });
   }
 
@@ -38,14 +41,35 @@ export async function runFraudEngine(options = {}) {
     workMap[w.id] = w;
   }
 
-  const perWork = risks.map(r => ({
-    work_id: r.work_id,
-    risk_score: r.risk_score || 0,
-    severity: r.tier || 'LOW',
-    flags: flagMap[r.work_id] || [],
-    timestamp: r.updated_at,
-    work_details: workMap[r.work_id] || null,
-  }));
+  const perWork = risks.map(r => {
+    // Convert 0-1 to 0-100
+    const rawScore = r.risk_score || 0;
+    const score100 = rawScore <= 1 ? Math.round(rawScore * 100) : Math.round(rawScore);
+    
+    const flags = flagMap[r.work_id] || [];
+    
+    // Mock factors based on flags for the UI
+    const factors = flags.map(f => ({
+        module: f.module_code,
+        contribution: f.severity === 'CRITICAL' ? 35 : f.severity === 'HIGH' ? 25 : f.severity === 'MEDIUM' ? 15 : 5,
+        severity: f.severity,
+        message: f.evidence?.message || f.evidence?.detail || 'No detailed message provided'
+    }));
+
+    // Sort factors by contribution
+    factors.sort((a,b) => b.contribution - a.contribution);
+
+    return {
+      work_id: r.work_id,
+      risk_score: score100,
+      severity: r.tier || 'LOW',
+      module_count: flags.length,
+      flags,
+      factors,
+      timestamp: r.updated_at,
+      work_details: workMap[r.work_id] || null,
+    };
+  });
 
   const summary = {
     total_works:    works.length,

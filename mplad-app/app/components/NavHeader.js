@@ -28,32 +28,6 @@ function NavContent({ pathname, open, onClose }) {
           </Link>
         </li>
       ))}
-      <li>
-        <Link
-          href="/monitor"
-          className={`nav-special-link nav-monitor ${pathname === '/monitor' ? 'nav-active' : ''}`}
-          onClick={onClose}
-        >
-          <span className="nav-icon-wrapper">
-            <span className="pulse-indicator pulse-success" />
-            
-          </span>
-          AI Monitor
-        </Link>
-      </li>
-      <li>
-        <Link
-          href="/fraud"
-          className={`nav-special-link nav-fraud ${pathname === '/fraud' ? 'nav-active' : ''}`}
-          onClick={onClose}
-        >
-          <span className="nav-icon-wrapper">
-            <span className="pulse-indicator pulse-danger" />
-            
-          </span>
-          Fraud Investigator
-        </Link>
-      </li>
     </ul>
   );
 }
