@@ -54,10 +54,10 @@ async function submitProposal(formData) {
 
 // ── Sector colour map ─────────────────────────────────────────────────────────
 const SECTOR_COLORS = {
-  'Drinking Water': '#0EA5E9', 'Education': '#8B5CF6', 'Electricity': '#F59E0B',
-  'Non-Conventional Energy': '#10B981', 'Healthcare & Sanitation': '#EF4444',
-  'Irrigation': '#14B8A6', 'Railways/Roads/Bridges': '#6B7280', 'Sports': '#F97316',
-  'Agriculture': '#84CC16', 'Self-Help Group': '#EC4899', 'Urban Development': '#38BDF8',
+  'Drinking Water': '#0EA5E9', 'Education': '#8B5CF6', 'Electricity': '#C48F37',
+  'Non-Conventional Energy': '#10B981', 'Healthcare & Sanitation': '#C55A5A',
+  'Irrigation': '#14B8A6', 'Railways/Roads/Bridges': '#6B7280', 'Sports': '#D97746',
+  'Agriculture': '#84CC16', 'Self-Help Group': '#EC4899', 'Urban Development': '#62A4B0',
   'Other': '#94A3B8',
 };
 

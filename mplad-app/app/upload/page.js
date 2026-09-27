@@ -24,7 +24,7 @@ export default function PhotoUploadDemo() {
       </div>
 
       <div style={{ marginTop: '48px', padding: '24px', background: 'rgba(56,189,248,0.05)', borderRadius: '12px', border: '1px solid rgba(56,189,248,0.1)' }}>
-        <h3 style={{ fontSize: '1rem', color: '#38BDF8', marginBottom: '12px' }}>How this works</h3>
+        <h3 style={{ fontSize: '1rem', color: '#62A4B0', marginBottom: '12px' }}>How this works</h3>
         <ul style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: 1.7, paddingLeft: '20px' }}>
           <li>The browser uses <code>exifr</code> to parse the file locally before it is ever sent to the server.</li>
           <li>We check for <code>GPSLatitude</code> and <code>GPSLongitude</code> tags within the EXIF metadata.</li>

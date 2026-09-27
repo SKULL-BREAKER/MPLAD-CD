@@ -17,16 +17,16 @@ const NEXT_STATE = {
 
 const STATE_META = {
   SANCTIONED:    { label: 'Sanctioned',   color: '#10B981', icon: '', tagClass: 'sanctioned' },
-  'IN-EXECUTION': { label: 'In Execution', color: '#F59E0B', icon: '', tagClass: 'executing' },
+  'IN-EXECUTION': { label: 'In Execution', color: '#C48F37', icon: '', tagClass: 'executing' },
   COMPLETED:     { label: 'Completed',    color: '#818CF8', icon: '', tagClass: 'completed' },
   UTILISED:      { label: 'Utilised',     color: '#6EE7B7', icon: '', tagClass: 'utilised' },
 };
 
 const SECTOR_COLORS = {
-  'Drinking Water': '#0EA5E9', 'Education': '#8B5CF6', 'Electricity': '#F59E0B',
-  'Non-Conventional Energy': '#10B981', 'Healthcare & Sanitation': '#EF4444',
-  'Irrigation': '#14B8A6', 'Railways/Roads/Bridges': '#6B7280', 'Sports': '#F97316',
-  'Agriculture': '#84CC16', 'Self-Help Group': '#EC4899', 'Urban Development': '#38BDF8',
+  'Drinking Water': '#0EA5E9', 'Education': '#8B5CF6', 'Electricity': '#C48F37',
+  'Non-Conventional Energy': '#10B981', 'Healthcare & Sanitation': '#C55A5A',
+  'Irrigation': '#14B8A6', 'Railways/Roads/Bridges': '#6B7280', 'Sports': '#D97746',
+  'Agriculture': '#84CC16', 'Self-Help Group': '#EC4899', 'Urban Development': '#62A4B0',
   'Other': '#94A3B8',
 };
 
@@ -161,7 +161,7 @@ export default async function OfficerView() {
             Surveillance & Execution Dashboard for District: {officer.district_id}
           </p>
         </div>
-        <a href="/login" style={{ padding: '8px 16px', background: 'rgba(239,68,68,0.1)', color: '#EF4444', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}>Logout</a>
+        <a href="/login" style={{ padding: '8px 16px', background: 'rgba(239,68,68,0.1)', color: '#C55A5A', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}>Logout</a>
       </header>
 
       {/* Pipeline Stats */}
@@ -228,13 +228,13 @@ export default async function OfficerView() {
       {/* Alert Inbox */}
       {alertsWithSLA.length > 0 && (
         <div style={{ marginBottom: '32px' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#EF4444', marginBottom: '12px' }}>️ Action Required: Alert Inbox</h2>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#C55A5A', marginBottom: '12px' }}>️ Action Required: Alert Inbox</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
             {alertsWithSLA.map(alert => (
-              <div key={alert.id} style={{ background: 'rgba(239,68,68,0.05)', border: `1px solid ${alert.breached ? '#EF4444' : 'rgba(239,68,68,0.2)'}`, borderRadius: '8px', padding: '16px' }}>
+              <div key={alert.id} style={{ background: 'rgba(239,68,68,0.05)', border: `1px solid ${alert.breached ? '#C55A5A' : 'rgba(239,68,68,0.2)'}`, borderRadius: '8px', padding: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontWeight: 800, color: alert.severity === 'CRITICAL' ? '#EF4444' : '#F97316' }}>{alert.severity} ALERT</span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: alert.breached ? '#EF4444' : '#10B981', background: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: '4px' }}>
+                  <span style={{ fontWeight: 800, color: alert.severity === 'CRITICAL' ? '#C55A5A' : '#D97746' }}>{alert.severity} ALERT</span>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: alert.breached ? '#C55A5A' : '#10B981', background: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: '4px' }}>
                     {alert.breached ? `BREACHED BY ${Math.abs(alert.daysLeft)}d` : `${alert.daysLeft}d left`}
                   </span>
                 </div>
@@ -242,7 +242,7 @@ export default async function OfficerView() {
                 <div style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '4px', color: 'var(--text-main)' }}>
                   {alert.title} · {(alert.evidence_json || '').substring(0, 80)}...
                 </div>
-                <button className="btn" style={{ width: '100%', marginTop: '12px', background: 'rgba(239,68,68,0.1)', color: '#EF4444', border: '1px solid rgba(239,68,68,0.3)', fontSize: '0.75rem', padding: '6px' }}>
+                <button className="btn" style={{ width: '100%', marginTop: '12px', background: 'rgba(239,68,68,0.1)', color: '#C55A5A', border: '1px solid rgba(239,68,68,0.3)', fontSize: '0.75rem', padding: '6px' }}>
                   Review & Verdict
                 </button>
               </div>
@@ -301,7 +301,7 @@ export default async function OfficerView() {
                     <div style={{ background: w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)', border: `1px solid ${w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: '8px', padding: '12px 16px', marginBottom: '16px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                         <span style={{ fontSize: '1.1rem' }}></span>
-                        <strong style={{ color: w.risk.tier?.toUpperCase() === 'CRITICAL' ? '#EF4444' : '#F59E0B' }}>
+                        <strong style={{ color: w.risk.tier?.toUpperCase() === 'CRITICAL' ? '#C55A5A' : '#C48F37' }}>
                           AI Risk Assessment: {w.risk.tier}
                         </strong>
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(Score: {Number(w.risk.risk_score || 0).toFixed(2)})</span>
@@ -339,7 +339,7 @@ export default async function OfficerView() {
                           <div style={{ display: 'flex', gap: '12px', fontSize: '0.78rem', color: 'var(--text-muted)', alignItems: 'center' }}>
                             <span style={{ color: 'var(--accent)' }}>{e.media_type_code === 'PHOTO' ? '' : ''} {e.media_type_code}</span>
                             <span> {Number(e.lat || 0).toFixed(5)}, {Number(e.lon || 0).toFixed(5)}</span>
-                            <span style={{ background: e.capture_source === 'OFFICER' ? 'rgba(79,70,229,0.15)' : 'rgba(245,158,11,0.15)', color: e.capture_source === 'OFFICER' ? '#818CF8' : '#F59E0B', padding: '1px 6px', borderRadius: '3px', fontSize: '0.7rem' }}>
+                            <span style={{ background: e.capture_source === 'OFFICER' ? 'rgba(79,70,229,0.15)' : 'rgba(245,158,11,0.15)', color: e.capture_source === 'OFFICER' ? '#818CF8' : '#C48F37', padding: '1px 6px', borderRadius: '3px', fontSize: '0.7rem' }}>
                               {e.capture_source || 'PUBLIC'}
                             </span>
                             <span>{new Date(e.created_at || new Date()).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</span>

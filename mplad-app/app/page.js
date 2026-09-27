@@ -3,10 +3,10 @@ import db from '../lib/db';
 
 // ── Sector colour map ──────────────────────────────────────────────────────────
 const SECTOR_COLORS = {
-  'Drinking Water': '#0EA5E9', 'Education': '#8B5CF6', 'Electricity': '#F59E0B',
-  'Non-Conventional Energy': '#10B981', 'Healthcare & Sanitation': '#EF4444',
-  'Irrigation': '#14B8A6', 'Railways/Roads/Bridges': '#6B7280', 'Sports': '#F97316',
-  'Agriculture': '#84CC16', 'Self-Help Group': '#EC4899', 'Urban Development': '#38BDF8',
+  'Drinking Water': '#0EA5E9', 'Education': '#8B5CF6', 'Electricity': '#C48F37',
+  'Non-Conventional Energy': '#10B981', 'Healthcare & Sanitation': '#C55A5A',
+  'Irrigation': '#14B8A6', 'Railways/Roads/Bridges': '#6B7280', 'Sports': '#D97746',
+  'Agriculture': '#84CC16', 'Self-Help Group': '#EC4899', 'Urban Development': '#62A4B0',
   'Other': '#94A3B8',
 };
 
@@ -426,17 +426,17 @@ export default async function Home() {
           {/* Non-permissible */}
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
-              <span style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}> Non-Permissible Works (Absolute Disqualifiers)</span>
+              <span style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#C55A5A', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}> Non-Permissible Works (Absolute Disqualifiers)</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {NON_PERMISSIBLE.map((item, i) => (
                 <div key={i} style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: '10px', padding: '10px 14px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                  <span style={{ color: '#EF4444', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}></span>
+                  <span style={{ color: '#C55A5A', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}></span>
                   <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>{item}</p>
                 </div>
               ))}
               <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', padding: '12px 14px', marginTop: '4px' }}>
-                <p style={{ fontSize: '0.78rem', color: '#EF4444', fontWeight: 600, margin: 0, lineHeight: 1.6 }}>
+                <p style={{ fontSize: '0.78rem', color: '#C55A5A', fontWeight: 600, margin: 0, lineHeight: 1.6 }}>
                    Individual benefit is an ABSOLUTE DISQUALIFIER. AI eligibility support flags these at proposal stage. Authority must reject such proposals with a canonical reason.
                 </p>
               </div>
@@ -444,9 +444,9 @@ export default async function Home() {
 
             {/* Min sanction amount guard */}
             <div style={{ marginTop: '16px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '12px', padding: '16px 18px' }}>
-              <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#F59E0B', marginBottom: '8px' }}> Minimum Sanction Amount Guard</div>
+              <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#C48F37', marginBottom: '8px' }}> Minimum Sanction Amount Guard</div>
               <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
-                As per real MPLADS guidelines (MoSPI), <strong style={{ color: '#F59E0B' }}>no project costing less than ₹1,00,000 (₹1 lakh) shall be sanctioned.</strong> Exception: essential items like hand pumps, computers, and solar lamps may have lower individual costs but are part of larger schemes. This guard is enforced at the Authority scrutiny stage and cannot be bypassed.
+                As per real MPLADS guidelines (MoSPI), <strong style={{ color: '#C48F37' }}>no project costing less than ₹1,00,000 (₹1 lakh) shall be sanctioned.</strong> Exception: essential items like hand pumps, computers, and solar lamps may have lower individual costs but are part of larger schemes. This guard is enforced at the Authority scrutiny stage and cannot be bypassed.
               </p>
             </div>
           </div>

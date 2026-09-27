@@ -23,9 +23,9 @@ export default function InvestigatorDashboard() {
   }, []);
 
   const getRiskColor = (level) => {
-    if (level === 'CRITICAL') return '#EF4444';
-    if (level === 'HIGH') return '#F97316';
-    if (level === 'MEDIUM') return '#F59E0B';
+    if (level === 'CRITICAL') return '#C55A5A';
+    if (level === 'HIGH') return '#D97746';
+    if (level === 'MEDIUM') return '#C48F37';
     return '#10B981';
   };
 
@@ -101,7 +101,7 @@ export default function InvestigatorDashboard() {
                 {selectedWork.aiAnalysis.factors.length > 0 ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {selectedWork.aiAnalysis.factors.map((flag, idx) => (
-                      <div key={idx} style={{ background: 'rgba(239, 68, 68, 0.1)', borderLeft: '3px solid #EF4444', padding: '12px', borderRadius: '4px' }}>
+                      <div key={idx} style={{ background: 'rgba(239, 68, 68, 0.1)', borderLeft: '3px solid #C55A5A', padding: '12px', borderRadius: '4px' }}>
                         <div style={{ fontWeight: 600, color: '#FCA5A5', marginBottom: '4px', fontSize: '0.9rem' }}>{flag.module} (+{flag.severity} risk)</div>
                         <div style={{ fontSize: '0.85rem' }}>{flag.detail}</div>
                       </div>
@@ -113,7 +113,7 @@ export default function InvestigatorDashboard() {
 
                 <h3 style={{ fontSize: '1.1rem', marginTop: '24px', marginBottom: '12px', borderBottom: '1px solid #334155', paddingBottom: '8px' }}>Case Management</h3>
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                  <Link href={`/officer/${selectedWork.id}/cost`} className="btn" style={{ background: 'rgba(56,189,248,0.15)', border: '1px solid rgba(56,189,248,0.4)', color: '#38BDF8', flex: 1, textAlign: 'center', textDecoration: 'none' }}>
+                  <Link href={`/officer/${selectedWork.id}/cost`} className="btn" style={{ background: 'rgba(56,189,248,0.15)', border: '1px solid rgba(56,189,248,0.4)', color: '#62A4B0', flex: 1, textAlign: 'center', textDecoration: 'none' }}>
                      View Detailed Cost Analysis (V3)
                   </Link>
                 </div>
@@ -121,7 +121,7 @@ export default function InvestigatorDashboard() {
                   <button className="btn" style={{ background: '#10B981', flex: 1 }} onClick={() => alert('Marked as FALSE POSITIVE. AI weights will be retrained.')}>
                      Mark False Positive
                   </button>
-                  <button className="btn" style={{ background: '#EF4444', flex: 1 }} onClick={() => alert('Marked as VERIFIED FRAUD. Sending to Audit queue.')}>
+                  <button className="btn" style={{ background: '#C55A5A', flex: 1 }} onClick={() => alert('Marked as VERIFIED FRAUD. Sending to Audit queue.')}>
                      Verify Fraud
                   </button>
                 </div>

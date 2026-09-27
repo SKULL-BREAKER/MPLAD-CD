@@ -4,7 +4,7 @@ import { runDetectionEngines } from '../../../lib/modules/fusionBrain';
 
 export async function GET() {
   try {
-    const risks = await db.workRisk.findMany();
+    const risks = await db.workRisk.findMany({ take: 100 });
     const works = await db.work.findMany({ take: 100 });
 
     const analyzedWorks = works.map(w => {

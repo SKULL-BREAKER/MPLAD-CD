@@ -17,30 +17,30 @@ const REFRESH_SEC = 30;
 
 // ── Severity / dimension config ───────────────────────────────────────────────
 const SEV_CFG = {
-  CRITICAL: { label: 'Critical', color: '#EF4444', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.30)', icon: '', glow: '0 0 20px rgba(239,68,68,0.20)' },
-  HIGH:     { label: 'High',     color: '#F97316', bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.28)', icon: '', glow: '0 0 16px rgba(249,115,22,0.18)' },
-  MEDIUM:   { label: 'Medium',   color: '#F59E0B', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.25)', icon: '', glow: '' },
-  LOW:      { label: 'Low',      color: '#38BDF8', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.20)', icon: '', glow: '' },
+  CRITICAL: { label: 'Critical', color: '#C55A5A', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.30)', icon: '', glow: 'none' },
+  HIGH:     { label: 'High',     color: '#D97746', bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.28)', icon: '', glow: '0 0 16px rgba(249,115,22,0.18)' },
+  MEDIUM:   { label: 'Medium',   color: '#C48F37', bg: 'rgba(245,158,11,0.10)', border: 'rgba(245,158,11,0.25)', icon: '', glow: '' },
+  LOW:      { label: 'Low',      color: '#62A4B0', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.20)', icon: '', glow: '' },
 };
 
 const DIM_CFG = {
   PAST:    { label: 'Past',    icon: '', color: '#A78BFA', bg: 'rgba(167,139,250,0.12)', border: 'rgba(167,139,250,0.25)' },
-  PRESENT: { label: 'Present', icon: '', color: '#38BDF8', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.25)' },
+  PRESENT: { label: 'Present', icon: '', color: '#62A4B0', bg: 'rgba(56,189,248,0.12)',  border: 'rgba(56,189,248,0.25)' },
   FUTURE:  { label: 'Future',  icon: '', color: '#10B981', bg: 'rgba(16,185,129,0.12)',  border: 'rgba(16,185,129,0.25)' },
 };
 
 const CONF_CFG = {
   HIGH:   { label: 'High confidence',   color: '#10B981' },
-  MEDIUM: { label: 'Medium confidence', color: '#F59E0B' },
+  MEDIUM: { label: 'Medium confidence', color: '#C48F37' },
   LOW:    { label: 'Low confidence',    color: '#94A3B8' },
 };
 
 const STATUS_CFG = {
-  CRITICAL: { label: 'CRITICAL ISSUES DETECTED',    color: '#EF4444', bg: 'rgba(239,68,68,0.12)',  border: 'rgba(239,68,68,0.30)',  pulse: true  },
-  WARNING:  { label: 'WARNING — ACTION REQUIRED',    color: '#F97316', bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.28)', pulse: true  },
-  CAUTION:  { label: 'CAUTION — MINOR ISSUES',       color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.22)', pulse: false },
+  CRITICAL: { label: 'CRITICAL ISSUES DETECTED',    color: '#C55A5A', bg: 'rgba(239,68,68,0.12)',  border: 'rgba(239,68,68,0.30)',  pulse: true  },
+  WARNING:  { label: 'WARNING — ACTION REQUIRED',    color: '#D97746', bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.28)', pulse: true  },
+  CAUTION:  { label: 'CAUTION — MINOR ISSUES',       color: '#C48F37', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.22)', pulse: false },
   HEALTHY:  { label: 'ALL SYSTEMS HEALTHY',          color: '#10B981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.22)', pulse: false },
-  LOADING:  { label: 'SCANNING ALL DIMENSIONS…',    color: '#38BDF8', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.22)', pulse: true  },
+  LOADING:  { label: 'SCANNING ALL DIMENSIONS…',    color: '#62A4B0', bg: 'rgba(56,189,248,0.08)', border: 'rgba(56,189,248,0.22)', pulse: true  },
 };
 
 const CAT_LABEL = {
@@ -56,7 +56,7 @@ const CAT_LABEL = {
 };
 
 // ── Mini sparkline (SVG) ──────────────────────────────────────────────────────
-function Sparkline({ data, color = '#38BDF8', width = 80, height = 32 }) {
+function Sparkline({ data, color = '#62A4B0', width = 80, height = 32 }) {
   if (!data || data.length < 2) return <span style={{ color: 'rgba(42, 58, 49, 0.1)', fontSize: '0.7rem' }}>—</span>;
   const max = Math.max(...data, 1);
   const min = Math.min(...data);
@@ -76,12 +76,12 @@ function Sparkline({ data, color = '#38BDF8', width = 80, height = 32 }) {
 
 // ── Health gauge ──────────────────────────────────────────────────────────────
 function HealthGauge({ score }) {
-  const color = score >= 80 ? '#10B981' : score >= 60 ? '#F59E0B' : score >= 40 ? '#F97316' : '#EF4444';
+  const color = score >= 80 ? '#10B981' : score >= 60 ? '#C48F37' : score >= 40 ? '#D97746' : '#C55A5A';
   const C = 2 * Math.PI * 52;
   const offset = C * (1 - score / 100);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-      <svg width="130" height="130" viewBox="0 0 116 116" style={{ filter: `drop-shadow(0 0 14px ${color}55)` }}>
+      <svg width="130" height="130" viewBox="0 0 116 116" style={{ filter: 'none' }}>
         <circle cx="58" cy="58" r="52" fill="none" stroke='rgba(42, 58, 49, 0.05)' strokeWidth="10" />
         <circle cx="58" cy="58" r="52" fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
           strokeDasharray={C} strokeDashoffset={offset} transform="rotate(-90 58 58)"
@@ -140,7 +140,7 @@ function AlertCard({ alert }) {
   const dc = DIM_CFG[alert.dimension] || DIM_CFG.PRESENT;
   const cc = CONF_CFG[alert.confidence] || CONF_CFG.MEDIUM;
   return (
-    <div className="clay-card" style={{ padding: "14px 18px", position: "relative", overflow: "hidden", animation: "fadeIn 0.3s ease forwards", marginBottom: "16px" }}>
+    <div className="glass-card" style={{ padding: "14px 18px", position: "relative", overflow: "hidden", animation: "fadeIn 0.3s ease forwards", marginBottom: "16px" }}>
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px', background: sc.color, borderRadius: '3px 0 0 3px' }} />
       <div style={{ paddingLeft: '8px' }}>
         {/* Header row */}
@@ -231,27 +231,27 @@ function YearlyTrendTable({ stats }) {
             const scOk = s.scPct >= 15, stOk = s.stPct >= 7.5;
             return (
               <tr key={s.year}>
-                <td style={{ fontWeight: 700, color: '#38BDF8' }}>{s.year}</td>
+                <td style={{ fontWeight: 700, color: '#62A4B0' }}>{s.year}</td>
                 <td>{s.works}</td>
                 <td>{s.proposals}</td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{ flex: 1, height: '6px', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '99px', overflow: 'hidden', minWidth: '60px' }}>
-                      <div style={{ height: '100%', width: `${Math.min(s.fundUsagePct, 100)}%`, background: s.fundUsagePct >= 60 ? '#10B981' : '#F59E0B', borderRadius: '99px', transition: 'width 0.6s ease' }} />
+                      <div style={{ height: '100%', width: `${Math.min(s.fundUsagePct, 100)}%`, background: s.fundUsagePct >= 60 ? '#10B981' : '#C48F37', borderRadius: '99px', transition: 'width 0.6s ease' }} />
                     </div>
-                    <span style={{ fontSize: '0.78rem', color: s.fundUsagePct < 60 ? '#F59E0B' : '#10B981', fontWeight: 700 }}>{s.fundUsagePct}%</span>
+                    <span style={{ fontSize: '0.78rem', color: s.fundUsagePct < 60 ? '#C48F37' : '#10B981', fontWeight: 700 }}>{s.fundUsagePct}%</span>
                   </div>
                 </td>
                 <td>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{ flex: 1, height: '6px', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '99px', overflow: 'hidden', minWidth: '60px' }}>
-                      <div style={{ height: '100%', width: `${Math.min(s.utilisationPct, 100)}%`, background: s.utilisationPct >= 50 ? '#10B981' : '#EF4444', borderRadius: '99px', transition: 'width 0.6s ease' }} />
+                      <div style={{ height: '100%', width: `${Math.min(s.utilisationPct, 100)}%`, background: s.utilisationPct >= 50 ? '#10B981' : '#C55A5A', borderRadius: '99px', transition: 'width 0.6s ease' }} />
                     </div>
-                    <span style={{ fontSize: '0.78rem', color: s.utilisationPct < 50 ? '#EF4444' : '#10B981', fontWeight: 700 }}>{s.utilisationPct}%</span>
+                    <span style={{ fontSize: '0.78rem', color: s.utilisationPct < 50 ? '#C55A5A' : '#10B981', fontWeight: 700 }}>{s.utilisationPct}%</span>
                   </div>
                 </td>
-                <td><span style={{ color: scOk ? '#10B981' : '#EF4444', fontWeight: 700, fontSize: '0.82rem' }}>{scOk ? '' : ''} {s.scPct}%</span></td>
-                <td><span style={{ color: stOk ? '#10B981' : '#EF4444', fontWeight: 700, fontSize: '0.82rem' }}>{stOk ? '' : ''} {s.stPct}%</span></td>
+                <td><span style={{ color: scOk ? '#10B981' : '#C55A5A', fontWeight: 700, fontSize: '0.82rem' }}>{scOk ? '' : ''} {s.scPct}%</span></td>
+                <td><span style={{ color: stOk ? '#10B981' : '#C55A5A', fontWeight: 700, fontSize: '0.82rem' }}>{stOk ? '' : ''} {s.stPct}%</span></td>
               </tr>
             );
           })}
@@ -260,7 +260,7 @@ function YearlyTrendTable({ stats }) {
       <div style={{ display: 'flex', gap: '32px', marginTop: '16px', flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Fund Usage Trend</span>
-          <Sparkline data={fundData} color="#38BDF8" width={100} height={36} />
+          <Sparkline data={fundData} color="#62A4B0" width={100} height={36} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Utilisation Trend</span>
@@ -282,7 +282,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
     <div key={key} style={{ marginBottom: '16px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
         <label style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.4px' }}>{label}</label>
-        <span style={{ fontSize: '0.82rem', color: '#38BDF8', fontWeight: 700 }}>
+        <span style={{ fontSize: '0.82rem', color: '#62A4B0', fontWeight: 700 }}>
           {isPct ? `${Math.round(local[key] * 100)}%` : `₹${Number(local[key]).toLocaleString('en-IN')}`}
         </span>
       </div>
@@ -312,7 +312,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
         {field('fundBalanceCriticalPct',  'Balance Critical Level',0.02,    0.20,    0.01,  true)}
         {field('expenditureGapPct',       'Expenditure Gap Alert', 0.10,    0.90,    0.05,  true)}
 
-        <div style={{ fontSize: '0.7rem', color: '#F97316', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}>️ Time Rules</div>
+        <div style={{ fontSize: '0.7rem', color: '#D97746', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}>️ Time Rules</div>
         {field('stalledExecutionDays',    'Stalled Execution (days)',  7,  90,  1,   false)}
         {field('unstartedSanctionDays',   'Unstarted Sanction (days)', 14, 180, 1,  false)}
 
@@ -321,7 +321,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
         {field('highRejectionRatePct',    'High Rejection Rate',      0.10, 0.80, 0.05, true)}
 
         <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '8px', padding: '10px 14px', marginTop: '16px', fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-          <strong style={{ color: '#EF4444' }}>Note:</strong> SC 15% and ST 7.5% earmarking thresholds are MPLADS statutory requirements and cannot be overridden.
+          <strong style={{ color: '#C55A5A' }}>Note:</strong> SC 15% and ST 7.5% earmarking thresholds are MPLADS statutory requirements and cannot be overridden.
         </div>
       </div>
 
@@ -428,7 +428,7 @@ export default function MonitorPage() {
   const displayAlerts = activeTab === 'ALL' ? alerts : activeTab === 'PAST' ? pastAlerts : activeTab === 'PRESENT' ? presentAlerts : futureAlerts;
 
   const tabs = [
-    { key: 'PRESENT', label: ' Present',  count: presentAlerts.length, color: '#38BDF8' },
+    { key: 'PRESENT', label: ' Present',  count: presentAlerts.length, color: '#62A4B0' },
     { key: 'FUTURE',  label: ' Future',   count: futureAlerts.length,  color: '#10B981' },
     { key: 'PAST',    label: ' Past',     count: pastAlerts.length,    color: '#A78BFA' },
     { key: 'ALL',     label: ' All',      count: alerts.length,        color: '#94A3B8' },
@@ -458,16 +458,16 @@ export default function MonitorPage() {
               </div>
               <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-1px', lineHeight: 1.1, marginBottom: '8px' }}>
                 Project Intelligence{' '}
-                <span style={{ background: 'linear-gradient(to right, #818CF8, #38BDF8, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Monitor</span>
+                <span style={{ background: 'linear-gradient(to right, #818CF8, #62A4B0, #10B981)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Monitor</span>
               </h1>
               <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: '540px', lineHeight: 1.6 }}>
-                Analyses <span style={{ color: '#A78BFA' }}>historical patterns</span>, <span style={{ color: '#38BDF8' }}>current state</span>, and <span style={{ color: '#10B981' }}>future projections</span> — with your custom officer-defined thresholds.
+                Analyses <span style={{ color: '#A78BFA' }}>historical patterns</span>, <span style={{ color: '#62A4B0' }}>current state</span>, and <span style={{ color: '#10B981' }}>future projections</span> — with your custom officer-defined thresholds.
               </p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
               {!loading && <div style={{ textAlign: 'right' }}>
                 <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '2px' }}>Next scan</div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38BDF8', letterSpacing: '-0.5px' }}>{countdown}s</div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#62A4B0', letterSpacing: '-0.5px' }}>{countdown}s</div>
               </div>}
               <button onClick={() => setShowDrawer(true)} style={{ background: 'rgba(79,70,229,0.18)', border: '1px solid rgba(79,70,229,0.35)', borderRadius: '9px', color: '#818CF8', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
                 ️ Thresholds
@@ -487,7 +487,7 @@ export default function MonitorPage() {
             <span style={{ fontWeight: 700, fontSize: '0.88rem', color: stCfg.color, letterSpacing: '0.4px' }}>{stCfg.label}</span>
             {summary && <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginLeft: 'auto' }}>
               {new Date(summary.scannedAt).toLocaleTimeString('en-IN')} · {summary.scanDurationMs}ms · Scan #{scanCount}
-              {insights?.overallTrend && <> · Trend: <span style={{ color: insights.overallTrend === 'IMPROVING' ? '#10B981' : '#F97316', fontWeight: 700 }}>{insights.overallTrend}</span></>}
+              {insights?.overallTrend && <> · Trend: <span style={{ color: insights.overallTrend === 'IMPROVING' ? '#10B981' : '#D97746', fontWeight: 700 }}>{insights.overallTrend}</span></>}
             </span>}
           </div>
         </section>
@@ -500,7 +500,7 @@ export default function MonitorPage() {
             </div>
             {[
               { label: ' Past Alerts',    count: pastAlerts.length,    color: '#A78BFA', sub: 'Historical patterns' },
-              { label: ' Present Alerts', count: presentAlerts.length, color: '#38BDF8', sub: 'Current state' },
+              { label: ' Present Alerts', count: presentAlerts.length, color: '#62A4B0', sub: 'Current state' },
               { label: ' Future Risks',   count: futureAlerts.length,  color: '#10B981', sub: 'Predictive forecasts' },
             ].map(({ label, count, color, sub }) => (
               <div key={label} className="stat-card">
@@ -631,7 +631,7 @@ export default function MonitorPage() {
                 <li>Year-over-year utilisation trend</li><li>Historical rejection rate analysis</li>
                 <li>Prior-year fund under-deployment</li><li>Recurring SC/ST earmarking failures</li>
               </ul>
-              <strong style={{ color: '#38BDF8', marginTop: '8px', display: 'block' }}> Present (Current):</strong>
+              <strong style={{ color: '#62A4B0', marginTop: '8px', display: 'block' }}> Present (Current):</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
                 <li>Fund balance risk (critical/warn)</li><li>SC/ST earmarking compliance</li>
                 <li>Stalled IN-EXECUTION works</li><li>Duplicate active works</li>
@@ -646,7 +646,7 @@ export default function MonitorPage() {
                 <li>SC/ST 15%/7.5% trajectory forecast</li><li>Work stagnation probability scoring</li>
                 <li>Sector concentration risk</li>
               </ul>
-              <strong style={{ color: '#F59E0B', marginTop: '8px', display: 'block' }}>️ Custom Thresholds:</strong>
+              <strong style={{ color: '#C48F37', marginTop: '8px', display: 'block' }}>️ Custom Thresholds:</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
                 <li>Officer-defined minimum sanction amount</li>
                 <li>Custom fund balance warning/critical %</li>

@@ -142,13 +142,13 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
           <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '10px' }}>
              <button type="button" onClick={takePhoto} style={{ background: '#10B981', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>📸 Take Photo</button>
-             <button type="button" onClick={cancelCamera} style={{ background: '#EF4444', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+             <button type="button" onClick={cancelCamera} style={{ background: '#C55A5A', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
           </div>
         </div>
       ) : photoPreview ? (
         <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
           <img src={photoPreview} alt="Preview" style={{ width: '100%', borderRadius: '8px', display: 'block' }} />
-          <button type="button" onClick={cancelCamera} style={{ position: 'absolute', top: '5px', right: '5px', background: '#EF4444', color: 'var(--text-main)', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>Remove</button>
+          <button type="button" onClick={cancelCamera} style={{ position: 'absolute', top: '5px', right: '5px', background: '#C55A5A', color: 'var(--text-main)', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>Remove</button>
           
           <input 
             type="file" 
@@ -192,7 +192,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
             Location Verified ({coords.lat.toFixed(4)}, {coords.lng.toFixed(4)})
           </span>
         ) : (
-           <span style={{ fontSize: '0.75rem', color: '#EF4444', padding: '6px 12px' }}>
+           <span style={{ fontSize: '0.75rem', color: '#C55A5A', padding: '6px 12px' }}>
              A geotagged photo or device location is required.
            </span>
         )}
@@ -206,7 +206,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           Upload Evidence
         </button>
       </div>
-      {locationError && <div style={{ color: '#EF4444', fontSize: '0.7rem' }}>{locationError}</div>}
+      {locationError && <div style={{ color: '#C55A5A', fontSize: '0.7rem' }}>{locationError}</div>}
     </form>
   );
 }

@@ -10,9 +10,9 @@
   --text-main: #2A3A31; /* DEEP GROUNDING FOREST */
   --text-muted: #5E7065;
   --accent: #2A3A31;
-  --danger: #EF4444;
+  --danger: #C55A5A;
   --success: #10B981;
-  --warning: #F59E0B;
+  --warning: #C48F37;
   --border-color: rgba(42, 58, 49, 0.1);
   --glass-bg: #FDFBF7;
   --glass-border: rgba(42, 58, 49, 0.1);
@@ -20,15 +20,15 @@
   /* Sector colour tokens */
   --sector-water: #0EA5E9;
   --sector-education: #8B5CF6;
-  --sector-electricity: #F59E0B;
+  --sector-electricity: #C48F37;
   --sector-energy: #10B981;
-  --sector-health: #EF4444;
+  --sector-health: #C55A5A;
   --sector-irrigation: #14B8A6;
   --sector-roads: #6B7280;
-  --sector-sports: #F97316;
+  --sector-sports: #D97746;
   --sector-agriculture: #84CC16;
   --sector-shg: #EC4899;
-  --sector-urban: #38BDF8;
+  --sector-urban: #62A4B0;
   --sector-other: #94A3B8;
 
   /* SC/ST tokens */
@@ -182,8 +182,8 @@ img { max-width: 100%; }
 }
 
 .pulse-danger {
-  background: #EF4444;
-  box-shadow: 0 0 6px #EF4444;
+  background: #C55A5A;
+  box-shadow: 0 0 6px #C55A5A;
 }
 
 .nav-actions {
@@ -331,8 +331,8 @@ img { max-width: 100%; }
   transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.util-bar.warn   { background: linear-gradient(to right, var(--warning), #F97316); }
-.util-bar.danger { background: linear-gradient(to right, var(--danger), #F97316); }
+.util-bar.warn   { background: linear-gradient(to right, var(--warning), #D97746); }
+.util-bar.danger { background: linear-gradient(to right, var(--danger), #D97746); }
 
 /* ── SECTOR BADGE ────────────────────────────────────────────────────────────── */
 .sector-badge {
