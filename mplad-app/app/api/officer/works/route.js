@@ -13,7 +13,7 @@ export async function GET(request) {
 
   const { constituency_id } = payload;
 
-  const works = await db.work.findMany({
+  const works = await db.work.findMany({ take: 100,
     where: { district_id: constituency_id },
     include: {
       comments: { orderBy: { created_at: 'desc' }, take: 5 },

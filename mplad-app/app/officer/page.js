@@ -90,7 +90,7 @@ export default async function OfficerView() {
   if (!officer) redirect('/login');
 
   // Include COMPLETED so officer can advance to UTILISED; include full evidence
-  const works = await db.work.findMany({
+  const works = await db.work.findMany({ take: 100,
     where: { 
       status: { in: ['SANCTIONED', 'IN-EXECUTION', 'COMPLETED', 'sanctioned', 'in-execution', 'completed'] },
       district_id: officer.district_id 

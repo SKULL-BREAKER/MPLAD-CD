@@ -57,7 +57,7 @@ const SECTOR_COLORS = {
 };
 
 export default async function AuthorityView() {
-  const allWorks = await db.work.findMany({
+  const allWorks = await db.work.findMany({ take: 100,
     orderBy: { id: 'asc' },
   });
 

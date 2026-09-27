@@ -34,7 +34,7 @@ function mad(arr, med) { return median(arr.map(v => Math.abs(v - med))); }
 async function getPeerEstimate(work, category) {
   const wtype = work.category || category || '';
   // Find peers: same utility type
-  const peers = await db.work.findMany({
+  const peers = await db.work.findMany({ take: 100,
     where: {
       id: { not: work.id },
       category: wtype,

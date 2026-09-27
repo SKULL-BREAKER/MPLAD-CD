@@ -69,7 +69,7 @@ export default async function MPView() {
   const [balanceData, scst, proposals] = await Promise.all([
     getEntitlementBalance(member_id, year_val),
     getSCSTUtilisation(member_id, year_val),
-    db.work.findMany({
+    db.work.findMany({ take: 100,
       where: { mp_id: member_id, fy: year_val, status: 'PROPOSED' },
       orderBy: { id: 'asc' },
     }),

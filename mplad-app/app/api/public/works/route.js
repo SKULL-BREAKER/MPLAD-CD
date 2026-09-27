@@ -15,7 +15,7 @@ export async function GET(request) {
   if (state) where.status = state;
 
   const [works, total] = await Promise.all([
-    db.work.findMany({
+    db.work.findMany({ take: 100,
       where,
       orderBy: [{ fy: 'desc' }],
       skip,
@@ -25,7 +25,7 @@ export async function GET(request) {
   ]);
 
   // Summary stats for public dashboard
-  const allWorks = await db.work.findMany({
+  const allWorks = await db.work.findMany({ take: 100,
     select: {
       status: true,
       sanctioned_amount: true,

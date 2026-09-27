@@ -57,7 +57,7 @@ export const metadata = {
 };
 
 export default async function PublicView() {
-  const works = await db.work.findMany({
+  const works = await db.work.findMany({ take: 100,
     where: { status: { in: ['SANCTIONED', 'IN-EXECUTION', 'COMPLETED', 'UTILISED', 'sanctioned', 'in-execution', 'completed', 'utilised'] } },
     orderBy: { id: 'asc' },
   });

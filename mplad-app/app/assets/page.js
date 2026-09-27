@@ -15,7 +15,7 @@ export const metadata = {
 
 export default async function AssetRegister() {
   // Completed and Utilised works = public durable community assets
-  const assets = await db.work.findMany({
+  const assets = await db.work.findMany({ take: 100,
     where: { status: { in: ['COMPLETED', 'UTILISED', 'completed', 'utilised'] } },
     orderBy: { id: 'desc' },
   }).catch(() => []);

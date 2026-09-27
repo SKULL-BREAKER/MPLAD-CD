@@ -38,7 +38,7 @@ const NON_PERMISSIBLE = [
 export default async function Home() {
   // ── Fetch all data for scheme-level dashboard ──────────────────────────────
   const [works, fundFlows, mps, agencies] = await Promise.all([
-    db.work.findMany(),
+    db.work.findMany({ take: 100 }),
     db.fundFlow.findMany(),
     db.mp.findMany(),
     db.agency.findMany(),
