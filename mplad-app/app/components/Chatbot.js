@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 export default function Chatbot({ role }) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: `Hello! I am the MPLADS AI Assistant (${role} mode). Ask me about projects.` }
+    { sender: 'bot', text: `Hello! I am LUDO, your AI Assistant (${role} mode). Ask me about projects.` }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,10 +63,10 @@ export default function Chatbot({ role }) {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          fontSize: '24px'
+          overflow: 'hidden'
         }}
       >
-        {isOpen ? '' : ''}
+        {isOpen ? '✕' : <img src="/ludo_logo.png" alt="LUDO AI" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />}
       </button>
 
       {/* Chat Window */}
@@ -96,7 +96,10 @@ export default function Chatbot({ role }) {
             justifyContent: 'space-between',
             alignItems: 'center'
           }}>
-            <span>MPLADS AI {role === 'officer' ? '(Secure)' : '(Public)'}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <img src="/ludo_logo.png" alt="LUDO" style={{ width: '24px', height: '24px', borderRadius: '50%' }} />
+              <span>LUDO AI {role === 'officer' ? '(Secure)' : '(Public)'}</span>
+            </div>
             <span style={{ fontSize: '12px', background: 'rgba(0,0,0,0.2)', padding: '2px 8px', borderRadius: '12px' }}>
               {role === 'officer' ? 'Full Access' : 'Read Only'}
             </span>

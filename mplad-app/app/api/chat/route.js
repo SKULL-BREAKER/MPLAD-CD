@@ -45,11 +45,11 @@ export async function POST(request) {
     }
     // Improved conversational matching
     if (msg === 'hi' || msg === 'hello' || msg.includes('hello ') || msg.includes('hi ')) {
-      return NextResponse.json({ reply: `Hello! I am the MPLADS AI Assistant. You are in ${role === 'officer' ? 'Full Access (Officer)' : 'Read-Only (Public)'} mode. How can I help you today?` });
+      return NextResponse.json({ reply: `Hello! I am LUDO, your AI Assistant. You are in ${role === 'officer' ? 'Full Access (Officer)' : 'Read-Only (Public)'} mode. How can I help you today?` });
     } else if (msg.includes('how are you')) {
       return NextResponse.json({ reply: `I'm functioning perfectly and ready to help you analyze MPLADS data!` });
     } else if (msg.includes('who are you')) {
-      return NextResponse.json({ reply: `I am PRAHARI, your AI Assistant for monitoring and analyzing MPLADS project data.` });
+      return NextResponse.json({ reply: `I am LUDO, your AI Assistant for monitoring and analyzing MPLADS project data.` });
     } else if (msg.includes('help')) {
       return NextResponse.json({ reply: `I can help you query the database! Try asking me to "show top 5 works", "show completed works", or "show works in sc/st areas".` });
     }
