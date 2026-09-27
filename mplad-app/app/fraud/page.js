@@ -522,7 +522,7 @@ export default function FraudInvestigatorPage() {
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             {summary && (
-              <div style={{ padding: '6px 14px', borderRadius: 20, fontSize: '0.72rem',
+              <div className="glass-card" style={{ padding: '6px 14px', borderRadius: 20, fontSize: '0.72rem',
                 background: 'rgba(42, 58, 49, 0.05)', border: '1px solid rgba(255,255,255,0.1)',
                 color: 'var(--text-muted)' }}>
                 Scanned in {summary.scan_ms}ms
@@ -569,9 +569,8 @@ export default function FraudInvestigatorPage() {
               fontSize: '0.8rem' }} />
           {['ALL','CRITICAL','HIGH','MEDIUM','LOW'].map(s => (
             <button key={s} id={`filter-sev-${s}`} onClick={() => setFilterSev(s)}
-              style={{ padding: '6px 14px', borderRadius: 20, fontSize: '0.75rem', cursor: 'pointer',
+              className="glass-card" style={{ padding: '6px 14px', borderRadius: 20, fontSize: '0.75rem', cursor: 'pointer',
                 fontWeight: filterSev === s ? 700 : 400,
-                className: "glass-card",
                 background: 'var(--surface-2)',
                 color: filterSev === s ? (SEV_CFG[s]?.color || 'var(--text-main)') : 'var(--text-muted)',
                 border: filterSev === s
@@ -611,9 +610,7 @@ export default function FraudInvestigatorPage() {
               return (
                 <div key={work.work_id} id={`work-item-${work.work_id}`}
                   onClick={() => setSelectedWork(work)}
-                  style={{
-                    padding: '14px 16px', borderRadius: 12, marginBottom: 8, cursor: 'pointer',
-                    className: "glass-card",
+                  className="glass-card" style={{ padding: '14px 16px', borderRadius: 12, marginBottom: 8, cursor: 'pointer',
                     background: 'var(--surface-2)',
                     border: isActive ? `2px solid ${sev.color}` : `2px solid transparent`,
                     transition: 'all 0.2s',
