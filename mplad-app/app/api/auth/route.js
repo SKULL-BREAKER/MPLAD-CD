@@ -1,42 +1,47 @@
 import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
 import db from '../../../lib/db';
 import { signToken } from '../../../lib/auth';
 
 // POST /api/auth — Officer login
 export async function POST(request) {
   try {
-    const body = await request.json();
-    const { username, password } = body;
+    const { officerId } = await request.json();
 
-    if (!username || !password) {
-      return NextResponse.json({ error: 'Username and password are required' }, { status: 400 });
+    if (!officerId) {
+      return NextResponse.json({ error: 'Officer ID is required' }, { status: 400 });
     }
 
-    const officer = await db.officer.findUnique({ where: { username } });
+    // Attempt to find officer by ID
+    let officer = await db.user.findUnique({ where: { id: officerId } });
+    
+    // If it doesn't exist, magically create one for demo purposes, 
+    // assuming the officerId they typed IS the district ID they surveil.
     if (!officer) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
-    }
-
-    const valid = await bcrypt.compare(password, officer.password_hash);
-    if (!valid) {
-      return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+      officer = await db.user.create({
+        data: {
+          id: officerId,
+          role: 'OFFICER',
+          name: `Nodal Officer (${officerId})`,
+          district_id: officerId,
+          trust_score: 100,
+        }
+      });
     }
 
     const token = await signToken({
-      officer_id: officer.officer_id,
-      username: officer.username,
-      display_name: officer.display_name,
-      constituency_id: officer.constituency_id,
+      officer_id: officer.id,
+      name: officer.name,
+      district_id: officer.district_id,
+      role: officer.role
     });
 
     return NextResponse.json({
       token,
       officer: {
-        officer_id: officer.officer_id,
-        username: officer.username,
-        display_name: officer.display_name,
-        constituency_id: officer.constituency_id,
+        id: officer.id,
+        name: officer.name,
+        district_id: officer.district_id,
+        role: officer.role,
       },
     });
   } catch (err) {

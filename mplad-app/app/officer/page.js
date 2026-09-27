@@ -3,6 +3,9 @@ import { updateExecutionState, appendEvidence } from '../../lib/modules/executio
 import { revalidatePath } from 'next/cache';
 import Chatbot from '../components/Chatbot';
 import EvidenceUploadForm from '../components/EvidenceUploadForm';
+import { cookies } from 'next/headers';
+import { verifyToken } from '../../lib/auth';
+import { redirect } from 'next/navigation';
 
 // Canonical state transition chain
 const NEXT_STATE = {
@@ -78,9 +81,19 @@ async function handleUploadEvidence(formData) {
 }
 
 export default async function OfficerView() {
+  const cookieStore = cookies();
+  const token = cookieStore.get('officer_token')?.value;
+  if (!token) redirect('/login');
+  
+  const officer = await verifyToken(token);
+  if (!officer) redirect('/login');
+
   // Include COMPLETED so officer can advance to UTILISED; include full evidence
   const works = await db.work.findMany({
-    where: { status: { in: ['SANCTIONED', 'IN-EXECUTION', 'COMPLETED', 'sanctioned', 'in-execution', 'completed'] } },
+    where: { 
+      status: { in: ['SANCTIONED', 'IN-EXECUTION', 'COMPLETED', 'sanctioned', 'in-execution', 'completed'] },
+      district_id: officer.district_id 
+    },
     orderBy: { id: 'asc' },
   });
 
@@ -115,7 +128,7 @@ export default async function OfficerView() {
 
   // Fetch unresolved flags for Alert Inbox
   const unresolvedFlags = await db.alert.findMany({
-    where: { status: { not: 'RESOLVED' } },
+    where: { status: { not: 'RESOLVED' }, district_id: officer.district_id },
     orderBy: { created_at: 'desc' }
   }).catch(() => []);
 
@@ -140,12 +153,14 @@ export default async function OfficerView() {
   return (
     <main className="main-content">
       {/* Header */}
-      <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}> Officer Execution Dashboard</h1>
-        <p className="text-muted" style={{ fontSize: '0.9rem' }}>
-          Advance work states through the canonical pipeline and append immutable geo-tagged evidence.
-          All transitions are strictly linear and immutably audited.
-        </p>
+      <header style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}> {officer.name} Dashboard</h1>
+          <p className="text-muted" style={{ fontSize: '0.9rem' }}>
+            Surveillance & Execution Dashboard for District: {officer.district_id}
+          </p>
+        </div>
+        <a href="/login" style={{ padding: '8px 16px', background: 'rgba(239,68,68,0.1)', color: '#EF4444', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}>Logout</a>
       </header>
 
       {/* Pipeline Stats */}
