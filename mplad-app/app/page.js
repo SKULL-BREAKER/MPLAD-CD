@@ -235,7 +235,7 @@ export default async function Home() {
         {/* Row 4 — State distribution */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px' }}>
           {Object.entries(stateDist).map(([state, count]) => (
-            <div key={state} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div key={state} style={{ background: 'var(--border-color)', border: '1px solid var(--border-color)', borderRadius: '10px', padding: '10px 18px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span className={`tag ${stateTagClass(state)}`}>{state}</span>
               <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{count}</span>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>work{count !== 1 ? 's' : ''}</span>
@@ -321,7 +321,7 @@ export default async function Home() {
           <h2 className="section-title" style={{ fontSize: '1rem' }}>Year-wise Works &amp; Fund Summary</h2>
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
             {yearRows.map(([yr, data]) => (
-              <div key={yr} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '16px 20px', minWidth: '180px' }}>
+              <div key={yr} style={{ background: 'var(--border-color)', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '16px 20px', minWidth: '180px' }}>
                 <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--accent)', marginBottom: '4px' }}>{yr}</div>
                 <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{data.works} works</div>
                 <div style={{ fontSize: '1rem', fontWeight: 700, marginTop: '6px' }}>{fmt(data.sanctioned)}</div>
@@ -336,9 +336,9 @@ export default async function Home() {
       {Object.keys(agencyMap).length > 0 && (
         <section style={{ marginBottom: '48px' }} className="glass-card">
           <details>
-            <summary style={{ fontSize: '1rem', outline: 'none', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+            <summary style={{ fontSize: '1rem', outline: 'none', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
               <span className="section-title" style={{ margin: 0 }}>Implementing Agency Distribution</span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '12px' }}>Toggle View ↕</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'var(--border-color)', padding: '4px 10px', borderRadius: '12px' }}>Toggle View ↕</span>
             </summary>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
               {Object.entries(agencyMap).sort((a, b) => b[1].amount - a[1].amount).map(([name, data]) => {
@@ -445,7 +445,7 @@ export default async function Home() {
               {NON_PERMISSIBLE.map((item, i) => (
                 <div key={i} style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.18)', borderRadius: '10px', padding: '10px 14px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
                   <span style={{ color: '#EF4444', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}></span>
-                  <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.65)', margin: 0, lineHeight: 1.5 }}>{item}</p>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.5 }}>{item}</p>
                 </div>
               ))}
               <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', borderRadius: '10px', padding: '12px 14px', marginTop: '4px' }}>
@@ -458,7 +458,7 @@ export default async function Home() {
             {/* Min sanction amount guard */}
             <div style={{ marginTop: '16px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '12px', padding: '16px 18px' }}>
               <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#F59E0B', marginBottom: '8px' }}> Minimum Sanction Amount Guard</div>
-              <p style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, margin: 0 }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
                 As per real MPLADS guidelines (MoSPI), <strong style={{ color: '#F59E0B' }}>no project costing less than ₹1,00,000 (₹1 lakh) shall be sanctioned.</strong> Exception: essential items like hand pumps, computers, and solar lamps may have lower individual costs but are part of larger schemes. This guard is enforced at the Authority scrutiny stage and cannot be bypassed.
               </p>
             </div>
