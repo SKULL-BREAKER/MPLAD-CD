@@ -8,7 +8,7 @@ export async function POST(request) {
     
     // 1. Text2SQL Copilot - Deterministic Templates (No LLM Mode)
     // Matches: "top 5 works", "show all works", "cost > X"
-    if (role === 'officer' && (msg.includes('top') || msg.includes('show') || msg.includes('how many'))) {
+    if (msg.includes('top') || msg.includes('show') || msg.includes('how many')) {
       let query = '';
       let explanation = '';
       
@@ -46,9 +46,16 @@ export async function POST(request) {
     
     let reply = "I'm sorry, I didn't understand that. You can ask me to 'show top 5 works' or 'show completed works'.";
 
-    if (msg.includes('hello') || msg.includes('hi ')) {
-      reply = `Hello! I am the MPLADS Text2SQL Copilot. You are in ${role === 'officer' ? 'Full Access (Officer)' : 'Read-Only (Public)'} mode. How can I help you?`;
-    } 
+    // Improved conversational matching
+    if (msg === 'hi' || msg === 'hello' || msg.includes('hello ') || msg.includes('hi ')) {
+      reply = `Hello! I am the MPLADS AI Assistant. You are in ${role === 'officer' ? 'Full Access (Officer)' : 'Read-Only (Public)'} mode. How can I help you today?`;
+    } else if (msg.includes('how are you')) {
+      reply = `I'm functioning perfectly and ready to help you analyze MPLADS data!`;
+    } else if (msg.includes('who are you')) {
+      reply = `I am PRAHARI, your AI Assistant for monitoring and analyzing MPLADS project data.`;
+    } else if (msg.includes('help')) {
+      reply = `I can help you query the database! Try asking me to "show top 5 works", "show completed works", or "show works in sc/st areas".`;
+    }
 
     return NextResponse.json({ reply });
   } catch (error) {
