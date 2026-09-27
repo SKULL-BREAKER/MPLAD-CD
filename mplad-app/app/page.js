@@ -205,7 +205,7 @@ export default async function Home() {
 
         {/* Row 3 — SC/ST earmarking at scheme level */}
         <div className="glass-card" style={{ marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <h3 style={{ fontSize: '0.9rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
             SC/ST Mandatory Earmarking — Scheme Level
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 400 }}>≥15% SC · ≥7.5% ST (mandatory per MPLADS guidelines)</span>
           </h3>
@@ -336,7 +336,7 @@ export default async function Home() {
       {Object.keys(agencyMap).length > 0 && (
         <section style={{ marginBottom: '48px' }} className="glass-card">
           <details>
-            <summary style={{ fontSize: '1rem', outline: 'none', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
+            <summary style={{ fontSize: '1rem', outline: 'none', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
               <span className="section-title" style={{ margin: 0 }}>Implementing Agency Distribution</span>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'var(--border-color)', padding: '4px 10px', borderRadius: '12px' }}>Toggle View ↕</span>
             </summary>
@@ -417,7 +417,7 @@ export default async function Home() {
 
           {/* Permissible */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
               <span style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)', color: '#10B981', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}> Permissible Works (12 Priority Sectors)</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -438,7 +438,7 @@ export default async function Home() {
 
           {/* Non-permissible */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
               <span style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444', borderRadius: '8px', padding: '4px 14px', fontSize: '0.78rem', fontWeight: 700 }}> Non-Permissible Works (Absolute Disqualifiers)</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

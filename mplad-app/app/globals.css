@@ -736,7 +736,7 @@ img { max-width: 100%; }
 }
 
 @media (max-width: 480px) {
-  .grid-4 { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .stat-card .stat-value { font-size: 1.4rem; }
+  .grid-4 { grid-template-columns: 1fr; gap: 12px; }
+  .stat-card .stat-value { font-size: 1.5rem; }
   .main-content { padding: 12px; }
 }
