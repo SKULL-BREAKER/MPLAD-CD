@@ -11,6 +11,8 @@ const NAV_LINKS = [
   { href: '/officer',    label: 'Officer',          icon: '' },
   { href: '/assets',     label: 'Asset Register',  icon: '' },
   { href: '/public',     label: 'Public Portal',   icon: '' },
+  { href: '/monitor',    label: 'AI Monitor',      icon: '🟢' },
+  { href: '/fraud',      label: 'Fraud Investigator', icon: '🔴' },
 ];
 
 function NavContent({ pathname, open, onClose }) {
