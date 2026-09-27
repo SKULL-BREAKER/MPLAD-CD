@@ -3,6 +3,7 @@ import Chatbot from '../components/Chatbot';
 import EvidenceUploadForm from '../components/EvidenceUploadForm';
 import { appendEvidence } from '../../lib/modules/execution';
 import { revalidatePath } from 'next/cache';
+import PublicWorksList from './PublicWorksList';
 
 // N2 Fix: Public view must only show works in active/completed states — not PROPOSED
 const PUBLIC_VISIBLE_STATES = ['SANCTIONED', 'IN-EXECUTION', 'COMPLETED', 'UTILISED'];
@@ -181,90 +182,7 @@ export default async function PublicView() {
       )}
 
       {/* Works List */}
-      <section>
-        <h2 className="section-title">Sanctioned Works ({works.length})</h2>
-        {works.length === 0 ? (
-          <div className="alert alert-info">No works are currently available for public view. Works appear here after they are sanctioned by the District Authority.</div>
-        ) : (
-          <div className="grid">
-            {works.map(w => {
-              const sector = w.category || 'Other';
-              const color = SECTOR_COLORS[sector] || '#94A3B8';
-              const isSC = w.area_type?.toUpperCase().includes('SC-');
-              const isST = w.area_type?.toUpperCase().includes('ST-');
-              const expendPct = w.sanctioned_amount > 0 ? Math.round(((w.expenditure || 0) / w.sanctioned_amount) * 100) : 0;
-              return (
-                <div key={w.id} className="glass-card">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                    <span className="sector-badge" style={{ color, background: `${color}15`, border: `1px solid ${color}25` }}>
-                      {sector}
-                    </span>
-                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                      {isSC && <span className="sc-badge">SC</span>}
-                      {isST && <span className="st-badge">ST</span>}
-                      <span className={`tag ${stateTag(w.status)}`}>{w.status}</span>
-                    </div>
-                  </div>
-
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '10px' }}>
-                    Locality: {w.area_type}
-                    &nbsp;·&nbsp;Year: {w.fy}
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <div>
-                      <div className="label">Sanctioned</div>
-                      <div style={{ fontWeight: 700, fontSize: '1rem' }}>{fmt(w.sanctioned_amount || 0)}</div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div className="label">Expended</div>
-                      <div style={{ fontWeight: 700, fontSize: '1rem', color: expendPct > 0 ? 'var(--success)' : 'var(--text-muted)' }}>
-                        {fmt(w.expenditure || 0)}
-                      </div>
-                    </div>
-                  </div>
-
-                  {w.sanctioned_amount > 0 && (
-                    <>
-                      <div className="util-bar-wrap">
-                        <div className="util-bar" style={{ width: `${Math.min(expendPct, 100)}%`, background: color }} />
-                      </div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                        {expendPct}% expended · {['COMPLETED', 'UTILISED'].includes((w.status || '').toUpperCase()) ? ' Completed' : 'In Progress'}
-                      </div>
-                    </>
-                  )}
-
-                  {/* E1 Pipeline: Citizen Evidence Upload */}
-                  <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                    <div className="label" style={{ marginBottom: '8px', color: '#10B981' }}> Submit Field Evidence (E1 Trust Pipeline)</div>
-                    <EvidenceUploadForm workId={w.id} authority="PUBLIC" action={handleUploadPublicEvidence} />
-                  </div>
-
-                  {w.evidence && w.evidence.length > 0 && (
-                    <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
-                      <div className="label" style={{ marginBottom: '6px' }}>Geo-tagged Evidence</div>
-                      {w.evidence.map(e => (
-                        <div key={e.id} style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '8px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '6px' }}>
-                            <span>{e.media_type_code === 'PHOTO' ? '' : ''}</span>
-                            <span>{e.media_type_code}</span>
-                            <span> {Number(e.lat || 0).toFixed(4)}, {Number(e.lon || 0).toFixed(4)}</span>
-                            <span>{new Date(e.created_at || new Date()).toLocaleDateString('en-IN')}</span>
-                          </div>
-                          {e.image_path && (
-                            <img src={e.image_path} alt="Evidence" style={{ width: '100%', maxWidth: '250px', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }} />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </section>
+      <PublicWorksList works={works} SECTOR_COLORS={SECTOR_COLORS} stateTag={stateTag} action={handleUploadPublicEvidence} />
 
       <div style={{ marginTop: '40px', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
         This is a read-only transparency portal. For RTI queries about fund utilisation, contact the District Authority.

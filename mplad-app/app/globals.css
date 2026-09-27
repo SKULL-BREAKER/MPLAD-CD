@@ -110,11 +110,11 @@ img { max-width: 100%; }
 .nav-header {
   padding: 0 40px;
   height: 64px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid var(--primary); /* Misty Gold border */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(10, 15, 30, 0.92);
+  background: rgba(42, 58, 49, 0.98); /* Deep Grounding Forest */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   position: sticky;
@@ -254,7 +254,6 @@ img { max-width: 100%; }
   padding: 32px;
   box-shadow: 
     16px 16px 32px rgba(42, 58, 49, 0.15),
-    -12px -12px 24px rgba(255, 255, 255, 0.8),
     inset 4px 4px 12px rgba(255, 255, 255, 1),
     inset -4px -4px 12px rgba(42, 58, 49, 0.08);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
@@ -267,7 +266,6 @@ img { max-width: 100%; }
   transform: translateY(-6px);
   box-shadow: 
     20px 20px 40px rgba(42, 58, 49, 0.2),
-    -15px -15px 30px rgba(255, 255, 255, 0.9),
     inset 4px 4px 12px rgba(255, 255, 255, 1),
     inset -4px -4px 12px rgba(42, 58, 49, 0.1);
 }
@@ -282,7 +280,6 @@ img { max-width: 100%; }
   z-index: 1;
   box-shadow: 
     10px 10px 20px rgba(42, 58, 49, 0.12),
-    -8px -8px 16px rgba(255, 255, 255, 0.7),
     inset 3px 3px 8px rgba(255, 255, 255, 0.9),
     inset -3px -3px 8px rgba(42, 58, 49, 0.06);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
@@ -293,7 +290,6 @@ img { max-width: 100%; }
   transform: translateY(-4px);
   box-shadow: 
     14px 14px 28px rgba(42, 58, 49, 0.18),
-    -10px -10px 20px rgba(255, 255, 255, 0.8),
     inset 3px 3px 8px rgba(255, 255, 255, 1),
     inset -3px -3px 8px rgba(42, 58, 49, 0.08);
 }
@@ -396,7 +392,6 @@ img { max-width: 100%; }
   font-size: 0.95rem;
   box-shadow: 
     6px 6px 12px rgba(42, 58, 49, 0.25),
-    -4px -4px 10px rgba(255, 255, 255, 0.6),
     inset 3px 3px 6px rgba(255, 255, 255, 0.5),
     inset -3px -3px 6px rgba(42, 58, 49, 0.2);
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -410,7 +405,6 @@ img { max-width: 100%; }
   background: var(--primary-hover);
   box-shadow: 
     8px 8px 16px rgba(42, 58, 49, 0.35),
-    -6px -6px 12px rgba(255, 255, 255, 0.7),
     inset 3px 3px 6px rgba(255, 255, 255, 0.6),
     inset -3px -3px 6px rgba(42, 58, 49, 0.3);
   transform: translateY(-3px);
