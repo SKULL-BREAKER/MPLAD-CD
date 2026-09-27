@@ -254,7 +254,6 @@ img { max-width: 100%; }
   padding: 32px;
   box-shadow: 
     16px 16px 32px rgba(42, 58, 49, 0.15),
-    inset 4px 4px 12px rgba(255, 255, 255, 1),
     inset -4px -4px 12px rgba(42, 58, 49, 0.08);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
   position: relative;
@@ -266,7 +265,6 @@ img { max-width: 100%; }
   transform: translateY(-6px);
   box-shadow: 
     20px 20px 40px rgba(42, 58, 49, 0.2),
-    inset 4px 4px 12px rgba(255, 255, 255, 1),
     inset -4px -4px 12px rgba(42, 58, 49, 0.1);
 }
 
@@ -280,7 +278,6 @@ img { max-width: 100%; }
   z-index: 1;
   box-shadow: 
     10px 10px 20px rgba(42, 58, 49, 0.12),
-    inset 3px 3px 8px rgba(255, 255, 255, 0.9),
     inset -3px -3px 8px rgba(42, 58, 49, 0.06);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
   border: none;
@@ -290,7 +287,6 @@ img { max-width: 100%; }
   transform: translateY(-4px);
   box-shadow: 
     14px 14px 28px rgba(42, 58, 49, 0.18),
-    inset 3px 3px 8px rgba(255, 255, 255, 1),
     inset -3px -3px 8px rgba(42, 58, 49, 0.08);
 }
 
@@ -392,7 +388,6 @@ img { max-width: 100%; }
   font-size: 0.95rem;
   box-shadow: 
     6px 6px 12px rgba(42, 58, 49, 0.25),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.5),
     inset -3px -3px 6px rgba(42, 58, 49, 0.2);
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   letter-spacing: 0.3px;
@@ -405,7 +400,6 @@ img { max-width: 100%; }
   background: var(--primary-hover);
   box-shadow: 
     8px 8px 16px rgba(42, 58, 49, 0.35),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.6),
     inset -3px -3px 6px rgba(42, 58, 49, 0.3);
   transform: translateY(-3px);
 }
@@ -413,8 +407,7 @@ img { max-width: 100%; }
 .btn:active { 
   transform: scale(0.95) translateY(2px); 
   box-shadow: 
-    inset 4px 4px 10px rgba(42, 58, 49, 0.4),
-    inset -2px -2px 6px rgba(255, 255, 255, 0.3);
+    inset 4px 4px 10px rgba(42, 58, 49, 0.4);
 }
 .btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; transform: none; }
 
