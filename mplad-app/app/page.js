@@ -335,21 +335,26 @@ export default async function Home() {
       {/* ── Agency-wise distribution ── */}
       {Object.keys(agencyMap).length > 0 && (
         <section style={{ marginBottom: '48px' }} className="glass-card">
-          <h2 className="section-title" style={{ fontSize: '1rem' }}>Implementing Agency Distribution</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {Object.entries(agencyMap).sort((a, b) => b[1].amount - a[1].amount).map(([name, data]) => {
-              const pct = sanctionedAmount > 0 ? Math.round((data.amount / sanctionedAmount) * 100) : 0;
-              return (
-                <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <span style={{ minWidth: '220px', fontSize: '0.85rem', fontWeight: 500, color: 'var(--accent)' }}>{name}</span>
-                  <div className="util-bar-wrap" style={{ flex: 1 }}>
-                    <div className="util-bar" style={{ width: `${pct}%` }} />
+          <details>
+            <summary style={{ fontSize: '1rem', outline: 'none', cursor: 'pointer', listStyle: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '12px' }}>
+              <span className="section-title" style={{ margin: 0 }}>Implementing Agency Distribution</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '12px' }}>Toggle View ↕</span>
+            </summary>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '20px' }}>
+              {Object.entries(agencyMap).sort((a, b) => b[1].amount - a[1].amount).map(([name, data]) => {
+                const pct = sanctionedAmount > 0 ? Math.round((data.amount / sanctionedAmount) * 100) : 0;
+                return (
+                  <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <span style={{ minWidth: '220px', fontSize: '0.85rem', fontWeight: 500, color: 'var(--accent)' }}>{name}</span>
+                    <div className="util-bar-wrap" style={{ flex: 1 }}>
+                      <div className="util-bar" style={{ width: `${pct}%` }} />
+                    </div>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{data.count} works · {fmt(data.amount)} ({pct}%)</span>
                   </div>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{data.count} works · {fmt(data.amount)} ({pct}%)</span>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </details>
         </section>
       )}
 
