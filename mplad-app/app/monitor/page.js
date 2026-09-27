@@ -96,7 +96,15 @@ function HealthGauge({ score }) {
 // ── Alert card ────────────────────────────────────────────────────────────────
 
 function formatEvidenceToText(moduleCode, evRaw) {
-  const ev = typeof evRaw === 'string' ? JSON.parse(evRaw) : evRaw;
+  let ev = evRaw;
+  if (typeof evRaw === 'string') {
+    try {
+      ev = JSON.parse(evRaw);
+    } catch(e) {
+      // If it fails to parse, it's just a raw string
+      return evRaw;
+    }
+  }
   if (!ev) return 'No evidence provided';
   if (ev.message) return ev.message;
 
