@@ -674,6 +674,6 @@ export default function FraudInvestigatorPage() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
