@@ -691,7 +691,7 @@ img { max-width: 100%; }
     top: 56px;
     left: 0;
     right: 0;
-    background: rgba(10, 15, 30, 0.98);
+    background: var(--surface-2);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-color);
     flex-direction: column;
