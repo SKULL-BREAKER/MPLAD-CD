@@ -20,16 +20,33 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
     setCoords(null);
 
     try {
-      // Extract GPS data from the image EXIF
+      // First try to extract GPS data from the image EXIF
       const gps = await exifr.gps(file);
       if (gps && gps.latitude != null && gps.longitude != null) {
         setCoords({ lat: gps.latitude, lng: gps.longitude });
+        setGeoLocating(false);
       } else {
-        setLocationError('Please upload a photo with Geotag/location data. The selected image does not contain GPS coordinates.');
+        // Fallback to browser geolocation (needed when using direct camera capture as some browsers strip EXIF)
+        if ('geolocation' in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+              setLocationError('');
+              setGeoLocating(false);
+            },
+            (err) => {
+              setLocationError('No EXIF GPS found in image, and device location access was denied or failed. Please allow location access.');
+              setGeoLocating(false);
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+          );
+        } else {
+          setLocationError('Please upload a photo with Geotag/location data. Device location is not supported by this browser.');
+          setGeoLocating(false);
+        }
       }
     } catch (err) {
       setLocationError('Failed to read image EXIF data. Ensure the file is an original photo with geotags.');
-    } finally {
       setGeoLocating(false);
     }
   };
@@ -54,6 +71,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           type="file" 
           name="evidence_photo" 
           accept="image/*" 
+          capture="environment"
           required 
           className="input-field" 
           onChange={handleFileChange}
@@ -64,7 +82,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
         {geoLocating ? (
            <span style={{ fontSize: '0.75rem', color: '#9CA3AF', padding: '6px 12px' }}>
-             Reading image location...
+             Detecting location...
            </span>
         ) : coords ? (
           <span style={{ fontSize: '0.75rem', color: '#10B981', background: 'rgba(16, 185, 129, 0.1)', padding: '6px 12px', borderRadius: '4px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
@@ -72,14 +90,14 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           </span>
         ) : (
            <span style={{ fontSize: '0.75rem', color: '#EF4444', padding: '6px 12px' }}>
-             A geotagged photo is required.
+             A geotagged photo or device location is required.
            </span>
         )}
         
         <button 
           className="btn" 
           disabled={!coords || geoLocating} 
-          title={!coords ? "Select a geotagged photo first" : ""}
+          title={!coords ? "Select a photo or allow location first" : ""}
           style={{ background: coords ? '#10B981' : '#374151', color: '#fff', padding: '6px 12px', fontSize: '0.75rem', opacity: coords && !geoLocating ? 1 : 0.5, cursor: coords && !geoLocating ? 'pointer' : 'not-allowed' }}
         >
           Upload Evidence
