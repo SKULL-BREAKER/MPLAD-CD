@@ -346,17 +346,9 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
                   </span>
                   <span style={{ fontSize: '0.7rem', color: s.color, fontWeight: 700 }}>{f.severity}</span>
                 </div>
-                {f.evidence?.message ? (
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
-                    {f.evidence.message}
-                  </div>
-                ) : f.evidence ? (
-                  <pre style={{ margin: 0, fontSize: '0.65rem', background: 'rgba(42, 58, 49, 0.05)', padding: '8px 10px', borderRadius: 6, overflowX: 'auto', color: 'var(--text-main)', border: '1px solid var(--border-color)', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-                    {JSON.stringify(f.evidence, null, 2)}
-                  </pre>
-                ) : (
-                  <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>No evidence provided</div>
-                )}
+                <div style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-main)', lineHeight: 1.6 }}>
+                  {formatEvidenceToText(f.module_code, f.evidence)}
+                </div>
               </div>
             );
           })}
