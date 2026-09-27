@@ -244,12 +244,11 @@ async function analysePresentState(alerts, thresholds) {
   // P2 — SC/ST current year compliance
   for (const ey of entitlements) {
     const works = await db.work.findMany({
-      where: { member_id: ey.mp_id, fy: ey.fy },
-      include: { proposal: { select: { public_locality_term_id: true } } },
+      where: { mp_id: ey.mp_id, fy: ey.fy },
     });
     if (works.length === 0) continue;
-    const scAmount = works.filter(w => (w.area_type || w.village || w.proposal?.public_locality_term_id || '').toUpperCase().includes('SC-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
-    const stAmount = works.filter(w => (w.area_type || w.village || w.proposal?.public_locality_term_id || '').toUpperCase().includes('ST-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
+    const scAmount = works.filter(w => (w.area_type || w.village || '').toUpperCase().includes('SC-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
+    const stAmount = works.filter(w => (w.area_type || w.village || '').toUpperCase().includes('ST-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
     const annual = ey.entitlement || 0;
     if (scAmount < annual * SC_MINIMUM_RATIO) {
       alerts.push(makeAlert(
@@ -282,11 +281,11 @@ async function analysePresentState(alerts, thresholds) {
   for (const w of stalledExecutions) {
     const days = w.sanction_date ? daysSince(w.sanction_date) : 9999;
     alerts.push(makeAlert(
-      `present-stalled-${w.work_id}`, 'STALLED_WORK', SEV.HIGH, DIM.PRESENT, CONF.HIGH,
+      `present-stalled-${w.id}`, 'STALLED_WORK', SEV.HIGH, DIM.PRESENT, CONF.HIGH,
       `Stalled IN-EXECUTION Work (${days === 9999 ? '∞' : days} days)`,
-      `Work ${w.work_id} has been IN-EXECUTION with no evidence for ${days === 9999 ? 'an unknown period' : `${days} days`} ` +
+      `Work ${w.id} has been IN-EXECUTION with no evidence for ${days === 9999 ? 'an unknown period' : `${days} days`} ` +
       `(threshold: ${thresholds.stalledExecutionDays} days). Sanctioned: ${fmt(w.sanctioned_amount)}.`,
-      [w.work_id],
+      [w.id],
       { days: days === 9999 ? null : days, threshold: thresholds.stalledExecutionDays }
     ));
   }
@@ -300,11 +299,11 @@ async function analysePresentState(alerts, thresholds) {
   for (const w of unstartedSanctions) {
     const days = w.sanction_date ? daysSince(w.sanction_date) : 9999;
     alerts.push(makeAlert(
-      `present-unstarted-${w.work_id}`, 'UNSTARTED_WORK', SEV.MEDIUM, DIM.PRESENT, CONF.HIGH,
+      `present-unstarted-${w.id}`, 'UNSTARTED_WORK', SEV.MEDIUM, DIM.PRESENT, CONF.HIGH,
       `Sanctioned Work Not Started (${days} days)`,
-      `Work ${w.work_id} sanctioned ${days} days ago and still in SANCTIONED state. ` +
+      `Work ${w.id} sanctioned ${days} days ago and still in SANCTIONED state. ` +
       `Threshold: ${thresholds.unstartedSanctionDays} days. Sanctioned: ${fmt(w.sanctioned_amount)}.`,
-      [w.work_id],
+      [w.id],
       { days, threshold: thresholds.unstartedSanctionDays }
     ));
   }
@@ -314,7 +313,7 @@ async function analysePresentState(alerts, thresholds) {
   activeWorks.forEach(w => {
     const k = `${w.public_utility_term_id || w.utility || ''}|${w.public_locality_term_id || w.locality || ''}`;
     if (!dupMap[k]) dupMap[k] = [];
-    dupMap[k].push(w.work_id);
+    dupMap[k].push(w.id);
   });
   for (const [k, ids] of Object.entries(dupMap)) {
     if (ids.length > 1) {
@@ -333,29 +332,29 @@ async function analysePresentState(alerts, thresholds) {
   const needEvidence = []; // Disabled for flat schema
   for (const w of needEvidence.filter(w => !w.evidence || w.evidence.length === 0)) {
     alerts.push(makeAlert(
-      `present-noevidence-${w.work_id}`, 'EVIDENCE', SEV.HIGH, DIM.PRESENT, CONF.HIGH,
+      `present-noevidence-${w.id}`, 'EVIDENCE', SEV.HIGH, DIM.PRESENT, CONF.HIGH,
       `No Geo-Tagged Evidence — ${w.status} Work`,
-      `Work ${w.work_id} is ${w.status} but has zero immutable evidence records. ` +
+      `Work ${w.id} is ${w.status} but has zero immutable evidence records. ` +
       `Sanctioned: ${fmt(w.sanctioned_amount)}. Geo-tagged photo/video required.`,
-      [w.work_id], {}
+      [w.id], {}
     ));
   }
 
   // P7 — Expenditure shortfall on completed works
   const completedWorks = await db.work.findMany({
     where:  { status: { in: ['COMPLETED', 'UTILISED', 'completed', 'utilised'] } },
-    select: { work_id: true, sanctioned_amount: true, expenditure: true, status: true },
+    select: { id: true, sanctioned_amount: true, expenditure: true, status: true },
   });
   for (const w of completedWorks) {
     if (w.sanctioned_amount <= 0) continue;
     const expRatio = w.sanctioned_amount > 0 ? (w.expenditure || 0) / w.sanctioned_amount : 0;
     if (expRatio < thresholds.expenditureGapPct) {
       alerts.push(makeAlert(
-        `present-expgap-${w.work_id}`, 'EXPENDITURE', SEV.MEDIUM, DIM.PRESENT, CONF.MEDIUM,
+        `present-expgap-${w.id}`, 'EXPENDITURE', SEV.MEDIUM, DIM.PRESENT, CONF.MEDIUM,
         `Expenditure Gap on ${w.status} Work`,
-        `Work ${w.work_id}: only ${pct(expRatio, 1)}% expended (${fmt(w.expenditure || 0)} of ${fmt(w.sanctioned_amount)}). ` +
+        `Work ${w.id}: only ${pct(expRatio, 1)}% expended (${fmt(w.expenditure || 0)} of ${fmt(w.sanctioned_amount)}). ` +
         `Gap threshold: ${pct(thresholds.expenditureGapPct, 1)}%. Verify financial records.`,
-        [w.work_id],
+        [w.id],
         { expPct: Math.round(expRatio * 100), sanctioned: w.sanctioned_amount, expended: w.expenditure || 0 }
       ));
     }
@@ -410,9 +409,9 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
   const currentEYs = await db.fundFlow.findMany(); // Assuming all are active for now or we filter by max fy
 
   for (const ey of currentEYs) {
-    const works = await db.work.findMany({ where: { member_id: ey.member_id, year_val: currentYear } });
+    const works = await db.work.findMany({ where: { mp_id: ey.mp_id, fy: String(currentYear) } });
     const sanctionedTotal = works.reduce((s, w) => s + w.sanctioned_amount, 0);
-    const uncommitted     = ey.annual_amount - sanctionedTotal;
+    const uncommitted     = (ey.entitlement || 0) - sanctionedTotal;
 
     // FUTURE 1 — Fund exhaustion projection
     if (dayOfYear > 0 && sanctionedTotal > 0) {
@@ -425,29 +424,30 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
       if (daysToExhaust < 90 && daysToExhaust > 0) {
         const sev = daysToExhaust < 30 ? SEV.CRITICAL : daysToExhaust < 60 ? SEV.HIGH : SEV.MEDIUM;
         alerts.push(makeAlert(
-          `future-exhaustion-${ey.entitlement_year_id}`, 'FUND_FORECAST', sev, DIM.FUTURE,
+          `future-exhaustion-${ey.district_id}-${ey.fy}`, 'FUND_FORECAST', sev, DIM.FUTURE,
           daysToExhaust < 30 ? CONF.HIGH : CONF.MEDIUM,
           `Fund Exhaustion Forecast — ~${daysToExhaust} Days`,
           `At the current daily commitment rate of ${fmt(dailyBurnRate)}/day, ` +
           `the remaining balance of ${fmt(uncommitted)} will be exhausted by ~${exhaustDate}. ` +
           `${daysLeft} days remain in the financial year. Plan new proposals accordingly.`,
-          [ey.entitlement_year_id],
+          [`${ey.district_id}-${ey.fy}`],
           { daysToExhaust, exhaustDate, dailyBurnRate: Math.round(dailyBurnRate), uncommitted, daysLeft }
         ));
       }
 
       // FUTURE 2 — Under-spend risk (too much left, too little time)
       const projectedSpend = dailyBurnRate * 365;
-      const spendRisk      = projectedSpend < ey.annual_amount * 0.60 && daysLeft < 120;
+      const annual_amount = ey.entitlement || 0;
+      const spendRisk      = projectedSpend < annual_amount * 0.60 && daysLeft < 120;
       if (spendRisk) {
         alerts.push(makeAlert(
-          `future-underspend-${ey.entitlement_year_id}`, 'UNDERSPEND_RISK', SEV.HIGH, DIM.FUTURE, CONF.MEDIUM,
+          `future-underspend-${ey.district_id}-${ey.fy}`, 'UNDERSPEND_RISK', SEV.HIGH, DIM.FUTURE, CONF.MEDIUM,
           `Under-Spend Risk — Year ${currentYear}`,
           `At current burn rate (${fmt(dailyBurnRate)}/day), projected year-end spend is ${fmt(projectedSpend)} ` +
-          `(${pct(projectedSpend, ey.annual_amount)}% of ${fmt(ey.annual_amount)}). ` +
+          `(${pct(projectedSpend, annual_amount)}% of ${fmt(annual_amount)}). ` +
           `Only ${daysLeft} days remain. Accelerate proposal activity to avoid fund lapse.`,
-          [ey.entitlement_year_id],
-          { projectedSpend: Math.round(projectedSpend), annual: ey.annual_amount, daysLeft, projectedPct: pct(projectedSpend, ey.annual_amount) }
+          [`${ey.district_id}-${ey.fy}`],
+          { projectedSpend: Math.round(projectedSpend), annual: annual_amount, daysLeft, projectedPct: pct(projectedSpend, annual_amount) }
         ));
       }
     }
@@ -459,12 +459,12 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
     });
 
     const worksWithProposals = await db.work.findMany({
-      where: { mp_id: ey.member_id, fy: currentYear }
+      where: { mp_id: ey.mp_id, fy: String(currentYear) }
     });
     const scAmount = worksWithProposals.filter(w => w.area_type?.toUpperCase().includes('SC-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
     const stAmount = worksWithProposals.filter(w => w.area_type?.toUpperCase().includes('ST-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
-    const scTarget = ey.annual_amount * SC_MINIMUM_RATIO;
-    const stTarget = ey.annual_amount * ST_MINIMUM_RATIO;
+    const scTarget = (ey.entitlement || 0) * SC_MINIMUM_RATIO;
+    const stTarget = (ey.entitlement || 0) * ST_MINIMUM_RATIO;
 
     if (scAmount < scTarget && daysLeft > 0) {
       const scDeficit      = scTarget - scAmount;
@@ -508,10 +508,9 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
     where:   { status: 'IN-EXECUTION' }
   });
 
-  // Compute avg days per state from historical completed works + audits
-  const completedAudits = await db.actionAudit.findMany({
-    where: { state_change_code: { in: ['IN-EXECUTION', 'COMPLETED'] } },
-    orderBy: { action_datetime: 'asc' },
+  const completedAudits = await db.auditAction.findMany({
+    where: { action: { in: ['IN-EXECUTION', 'COMPLETED'] } },
+    orderBy: { at: 'asc' },
   });
 
   // Stagnation risk per work
@@ -522,12 +521,12 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
     if (!firstEvidence || daysInExec > thresholds.stalledExecutionDays * 2) {
       const conf = daysInExec > thresholds.stalledExecutionDays * 3 ? CONF.HIGH : CONF.MEDIUM;
       alerts.push(makeAlert(
-        `future-stagnation-${w.work_id}`, 'STAGNATION_RISK', SEV.HIGH, DIM.FUTURE, conf,
+        `future-stagnation-${w.id}`, 'STAGNATION_RISK', SEV.HIGH, DIM.FUTURE, conf,
         `High Stagnation Risk — Work May Not Complete`,
-        `Work ${w.work_id} has been IN-EXECUTION for ${daysInExec === 9999 ? 'an unknown duration' : `${daysInExec} days`} ` +
+        `Work ${w.id} has been IN-EXECUTION for ${daysInExec === 9999 ? 'an unknown duration' : `${daysInExec} days`} ` +
         `with no evidence. Based on historical patterns, this work is at high risk of not completing in the current year. ` +
         `Sanctioned: ${fmt(w.sanctioned_amount)}.`,
-        [w.work_id],
+        [w.id],
         { daysInExec: daysInExec === 9999 ? null : daysInExec, sanctioned: w.sanctioned_amount }
       ));
     }
@@ -535,7 +534,7 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
 
   // FUTURE 5 — Sector concentration risk (one sector > 70% of funds)
   const allCurrentWorks = await db.work.findMany({
-    where: { fy: currentYear }
+    where: { fy: String(currentYear) }
   });
   const sectorTotals = {};
   const totalSanctioned = allCurrentWorks.reduce((s, w) => s + (w.sanctioned_amount || 0), 0);

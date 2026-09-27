@@ -568,9 +568,9 @@ export default function FraudInvestigatorPage() {
             style={{ padding: '7px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.05)',
               border: '1px solid rgba(255,255,255,0.1)', color: '#fff', outline: 'none',
               fontSize: '0.8rem', cursor: 'pointer' }}>
-            <option value="ALL">All Modules</option>
+            <option value="ALL" style={{ background: '#1a1a2e', color: '#fff' }}>All Modules</option>
             {Object.entries(MODULE_META).map(([k, m]) => (
-              <option key={k} value={k}>{m.icon} {m.label}</option>
+              <option key={k} value={k} style={{ background: '#1a1a2e', color: '#fff' }}>{m.icon} {m.label}</option>
             ))}
           </select>
           <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.75rem' }}>

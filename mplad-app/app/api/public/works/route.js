@@ -17,29 +17,6 @@ export async function GET(request) {
   const [works, total] = await Promise.all([
     db.work.findMany({
       where,
-      include: {
-        comments: {
-          orderBy: { created_at: 'desc' },
-          take: 10,
-          select: {
-            comment_id: true,
-            poster_name: true,
-            comment_text: true,
-            created_at: true,
-          },
-        },
-        photos: {
-          orderBy: { created_at: 'desc' },
-          take: 10,
-          select: {
-            photo_id: true,
-            poster_name: true,
-            photo_data: true,
-            caption: true,
-            created_at: true,
-          },
-        },
-      },
       orderBy: [{ fy: 'desc' }],
       skip,
       take: limit,
