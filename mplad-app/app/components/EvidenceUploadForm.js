@@ -1,52 +1,126 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import exifr from 'exifr';
 
 export default function EvidenceUploadForm({ workId, authority, action }) {
   const [geoLocating, setGeoLocating] = useState(false);
   const [locationError, setLocationError] = useState('');
   const [coords, setCoords] = useState(null);
+  
+  const [cameraActive, setCameraActive] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const fileInputRef = useRef(null);
+
+  const requestLocation = (callback) => {
+    setGeoLocating(true);
+    setLocationError('');
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          setGeoLocating(false);
+          if(callback) callback();
+        },
+        (err) => {
+          setLocationError('Device location access was denied or failed. Please allow location access.');
+          setGeoLocating(false);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    } else {
+      setLocationError('Device location is not supported by this browser.');
+      setGeoLocating(false);
+    }
+  };
+
+  const startCamera = async () => {
+    try {
+      setCameraActive(true);
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (err) {
+      setLocationError("Failed to access the camera. " + err.message);
+      setCameraActive(false);
+    }
+  };
+
+  const takePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Stop stream
+      const stream = video.srcObject;
+      const tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+      
+      const dataUrl = canvas.toDataURL('image/jpeg');
+      setPhotoPreview(dataUrl);
+      setCameraActive(false);
+
+      // Convert DataURL to File and inject into the form
+      canvas.toBlob((blob) => {
+        const file = new File([blob], `capture_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        if (fileInputRef.current) {
+          fileInputRef.current.files = dt.files;
+        }
+        
+        // After taking photo, ask for live location since it has no EXIF
+        requestLocation();
+      }, 'image/jpeg');
+    }
+  };
+
+  const cancelCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject;
+      stream.getTracks().forEach(track => track.stop());
+    }
+    setCameraActive(false);
+    setPhotoPreview(null);
+    setCoords(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) {
       setCoords(null);
+      setPhotoPreview(null);
       return;
     }
+    
+    // Create preview
+    setPhotoPreview(URL.createObjectURL(file));
 
     setGeoLocating(true);
     setLocationError('');
     setCoords(null);
 
     try {
-      // First try to extract GPS data from the image EXIF
       const gps = await exifr.gps(file);
       if (gps && gps.latitude != null && gps.longitude != null) {
         setCoords({ lat: gps.latitude, lng: gps.longitude });
         setGeoLocating(false);
       } else {
-        // Fallback to browser geolocation (needed when using direct camera capture as some browsers strip EXIF)
-        if ('geolocation' in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-              setLocationError('');
-              setGeoLocating(false);
-            },
-            (err) => {
-              setLocationError('No EXIF GPS found in image, and device location access was denied or failed. Please allow location access.');
-              setGeoLocating(false);
-            },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-          );
-        } else {
-          setLocationError('Please upload a photo with Geotag/location data. Device location is not supported by this browser.');
-          setGeoLocating(false);
-        }
+        requestLocation();
       }
     } catch (err) {
-      setLocationError('Failed to read image EXIF data. Ensure the file is an original photo with geotags.');
+      setLocationError('Failed to read image EXIF data.');
       setGeoLocating(false);
     }
   };
@@ -62,22 +136,51 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
         </>
       )}
 
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-        <select name="media_type" className="select-field" style={{ width: '110px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }}>
-          <option value="PHOTO">PHOTO</option>
-          <option value="VIDEO">VIDEO</option>
-        </select>
-        <input 
-          type="file" 
-          name="evidence_photo" 
-          accept="image/*" 
-          capture="environment"
-          required 
-          className="input-field" 
-          onChange={handleFileChange}
-          style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} 
-        />
-      </div>
+      {cameraActive ? (
+        <div style={{ position: 'relative', width: '100%', maxWidth: '300px', borderRadius: '8px', overflow: 'hidden', background: '#000' }}>
+          <video ref={videoRef} autoPlay playsInline style={{ width: '100%', display: 'block' }}></video>
+          <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+          <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '10px' }}>
+             <button type="button" onClick={takePhoto} style={{ background: '#10B981', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>📸 Take Photo</button>
+             <button type="button" onClick={cancelCamera} style={{ background: '#EF4444', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+          </div>
+        </div>
+      ) : photoPreview ? (
+        <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
+          <img src={photoPreview} alt="Preview" style={{ width: '100%', borderRadius: '8px', display: 'block' }} />
+          <button type="button" onClick={cancelCamera} style={{ position: 'absolute', top: '5px', right: '5px', background: '#EF4444', color: '#fff', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>Remove</button>
+          
+          <input 
+            type="file" 
+            name="evidence_photo" 
+            accept="image/*" 
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+          />
+          <select name="media_type" style={{ display: 'none' }}><option value="PHOTO">PHOTO</option></select>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+          <select name="media_type" className="select-field" style={{ width: '110px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }}>
+            <option value="PHOTO">PHOTO</option>
+            <option value="VIDEO">VIDEO</option>
+          </select>
+          <input 
+            type="file" 
+            name="evidence_photo" 
+            accept="image/*" 
+            capture="environment"
+            className="input-field" 
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} 
+          />
+          <button type="button" onClick={startCamera} style={{ background: '#3B82F6', color: '#fff', border: 'none', padding: '6px 12px', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer' }}>
+            📷 Live Camera
+          </button>
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
         {geoLocating ? (
