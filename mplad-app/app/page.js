@@ -144,7 +144,7 @@ export default async function Home() {
         </div>
         <h1 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: '16px' }}>
           Members of Parliament<br />
-          <span style={{ background: 'linear-gradient(to right, var(--accent), #818CF8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          <span style={{ background: 'linear-gradient(to right, var(--accent), #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
             Local Area Development Scheme
           </span>
         </h1>

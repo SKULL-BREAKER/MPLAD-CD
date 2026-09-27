@@ -126,7 +126,7 @@ img { max-width: 100%; }
   font-size: 1.1rem;
   font-weight: 800;
   letter-spacing: -0.5px;
-  background: linear-gradient(to right, var(--accent), #818CF8);
+  background: linear-gradient(to right, #D4AF37, #FDFBF7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -145,19 +145,19 @@ img { max-width: 100%; }
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--text-muted);
+  color: rgba(253, 251, 247, 0.75); /* Muted Ivory */
   transition: color 0.2s, background 0.2s;
   white-space: nowrap;
 }
 
 .nav-links a:hover {
-  color: var(--text-main);
+  color: #FDFBF7;
   background: rgba(255,255,255,0.06);
 }
 
 .nav-links .nav-active, .nav-links a.nav-active {
-  color: var(--accent);
-  background: rgba(56,189,248,0.08);
+  color: #D4AF37; /* Misty Gold */
+  background: rgba(212, 175, 55, 0.15);
 }
 
 .nav-icon {
@@ -207,7 +207,7 @@ img { max-width: 100%; }
 
 .nav-mosp-desktop {
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: rgba(253, 251, 247, 0.6);
   letter-spacing: 0.5px;
 }
 
