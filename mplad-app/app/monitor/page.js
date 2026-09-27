@@ -99,16 +99,12 @@ function AlertCard({ alert }) {
   const dc = DIM_CFG[alert.dimension] || DIM_CFG.PRESENT;
   const cc = CONF_CFG[alert.confidence] || CONF_CFG.MEDIUM;
   return (
-    <div style={{
-      background: sc.bg, border: `1px solid ${sc.border}`, borderRadius: '12px',
-      padding: '14px 18px', boxShadow: sc.glow, position: 'relative', overflow: 'hidden',
-      animation: 'fadeIn 0.3s ease forwards',
-    }}>
+    <div className="clay-card" style={{ padding: "14px 18px", position: "relative", overflow: "hidden", animation: "fadeIn 0.3s ease forwards", marginBottom: "16px" }}>
       <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px', background: sc.color, borderRadius: '3px 0 0 3px' }} />
       <div style={{ paddingLeft: '8px' }}>
         {/* Header row */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', marginBottom: '6px' }}>
-          <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#F8FAFC' }}>{alert.title}</span>
+          <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-main)' }}>{alert.title}</span>
           {/* Dimension badge */}
           <span style={{ background: dc.bg, border: `1px solid ${dc.border}`, color: dc.color, borderRadius: '4px', padding: '1px 7px', fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
             {dc.icon} {dc.label}
@@ -438,7 +434,7 @@ export default function MonitorPage() {
                 ️ Thresholds
               </button>
               <button onClick={() => scan()} disabled={loading} style={{ background: loading ? 'rgba(79,70,229,0.3)' : 'rgba(79,70,229,0.55)', border: '1px solid rgba(79,70,229,0.4)', borderRadius: '9px', color: 'var(--text-main)', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '7px' }}>
-                {loading ? <span style={{ display: 'inline-block', width: '13px', height: '13px', border: '2px solid rgba(255,255,255,0.25)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> : '⟳'}
+                {loading ? <span style={{ display: 'inline-block', width: '13px', height: '13px', border: '2px solid rgba(255,255,255,0.25)', borderTopColor: 'var(--text-main)', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> : '⟳'}
                 {loading ? 'Scanning…' : 'Re-scan'}
               </button>
             </div>

@@ -93,7 +93,7 @@ function buildWaterfall(data) {
           value: v,
           itemStyle: { color: colors[i], borderRadius: i < 3 ? [0,0,0,0] : [4,4,0,0] },
           label: {
-            show: true, position: 'top', color: colors[i] === 'transparent' ? 'transparent' : '#F8FAFC',
+            show: true, position: 'top', color: colors[i] === 'transparent' ? 'transparent' : 'var(--text-main)',
             fontSize: 10, formatter: () => v > 0 ? fmt(v) : '',
           },
         })),
@@ -155,7 +155,7 @@ function buildComparisonBar(estimates, sanctioned) {
       data: items.map(i => ({
         value: i.value,
         itemStyle: { color: i.color, borderRadius: [4, 4, 0, 0] },
-        label: { show: true, position: 'top', color: '#F8FAFC', fontSize: 10, formatter: () => fmt(i.value) },
+        label: { show: true, position: 'top', color: 'var(--text-main)', fontSize: 10, formatter: () => fmt(i.value) },
       })),
     }],
   };
@@ -306,7 +306,7 @@ export default function CostJustificationPage({ params }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
               <span style={{ fontWeight: 800, fontSize: '1.1rem', color: vm.color }}>{vm.label}</span>
               {verdict.gap_norm !== null && (
-                <span style={{ background: 'rgba(0,0,0,0.3)', borderRadius: 99, padding: '2px 10px', fontSize: '0.78rem', color: '#CBD5E1', fontWeight: 600 }}>
+                <span style={{ background: 'rgba(0,0,0,0.3)', borderRadius: 99, padding: '2px 10px', fontSize: '0.78rem', color: 'var(--text-main)', fontWeight: 600 }}>
                   Gap: {pct(verdict.gap_norm)}
                 </span>
               )}
@@ -319,7 +319,7 @@ export default function CostJustificationPage({ params }) {
                 V3 DETERMINISTIC
               </span>
             </div>
-            <p style={{ color: '#CBD5E1', fontSize: '0.88rem', lineHeight: 1.5 }}>{verdict.explanation}</p>
+            <p style={{ color: 'var(--text-main)', fontSize: '0.88rem', lineHeight: 1.5 }}>{verdict.explanation}</p>
           </div>
         </div>
       )}
@@ -330,7 +330,7 @@ export default function CostJustificationPage({ params }) {
           <div style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
             Evidence Card · {evidenceCard.type}
           </div>
-          <p style={{ color: '#F8FAFC', fontWeight: 600, fontSize: '0.95rem', marginBottom: 6 }}>{evidenceCard.headline}</p>
+          <p style={{ color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', marginBottom: 6 }}>{evidenceCard.headline}</p>
           <p style={{ color: '#94A3B8', fontSize: '0.87rem', lineHeight: 1.6 }}>{evidenceCard.body}</p>
           {evidenceCard.action && (
             <button className="btn" style={{ marginTop: 12, fontSize: '0.82rem', background: 'rgba(56,189,248,0.15)', border: '1px solid rgba(56,189,248,0.3)' }}>
@@ -388,7 +388,7 @@ export default function CostJustificationPage({ params }) {
               <select
                 value={specForm.category}
                 onChange={e => setSpecForm(f => ({ ...f, category: e.target.value }))}
-                style={{ background: '#111827', color: '#F8FAFC', border: '1px solid #334155', borderRadius: 6, padding: '6px 10px', width: '100%', fontSize: '0.88rem' }}
+                style={{ background: '#111827', color: 'var(--text-main)', border: '1px solid #334155', borderRadius: 6, padding: '6px 10px', width: '100%', fontSize: '0.88rem' }}
               >
                 <option value="">Select category…</option>
                 {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
@@ -526,10 +526,10 @@ export default function CostJustificationPage({ params }) {
                         <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', color: '#38BDF8' }}>{item.steel_factor?.toFixed(3)}</td>
                         <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', color: '#F59E0B' }}>{item.cement_factor?.toFixed(3)}</td>
                         <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', color: '#10B981' }}>{item.labor_factor?.toFixed(3)}</td>
-                        <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', color: '#CBD5E1' }}>{item.blended_index?.toFixed(4)}</td>
+                        <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', color: 'var(--text-main)' }}>{item.blended_index?.toFixed(4)}</td>
                         <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', color: '#94A3B8' }}>{item.terrain_mult?.toFixed(2)}×</td>
                         <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', fontWeight: 600 }}>₹{Math.round(item.adj_rate || 0).toLocaleString('en-IN')}</td>
-                        <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', fontWeight: 700, color: '#F8FAFC' }}>{fmt(item.line_total)}</td>
+                        <td style={{ padding: '7px 10px', textAlign: 'right', fontFamily: 'monospace', fontWeight: 700, color: 'var(--text-main)' }}>{fmt(item.line_total)}</td>
                         <td style={{ padding: '7px 10px', fontSize: '0.72rem', color: '#64748B', maxWidth: 200 }}>
                           <span style={{ background: 'rgba(100,116,139,0.15)', borderRadius: 4, padding: '2px 6px' }}>{item.source_ref}</span>
                         </td>
