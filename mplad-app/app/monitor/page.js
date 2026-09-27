@@ -162,11 +162,9 @@ function AlertCard({ alert }) {
         {alert.evidence_json && (
           <div style={{ marginTop: '12px', padding: '10px', background: 'rgba(0,0,0,0.2)', borderLeft: `3px solid ${sc.color}`, borderRadius: '4px' }}>
             <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '6px', letterSpacing: '0.5px' }}>WHY FLAGGED (EVIDENCE)</div>
-            <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '0.78rem', color: 'var(--text-main)', lineHeight: 1.5 }}>
-              {Object.entries(typeof alert.evidence_json === 'string' ? JSON.parse(alert.evidence_json) : alert.evidence_json).map(([k, v]) => (
-                <li key={k}><strong style={{ color: 'var(--text-muted)' }}>{k.replace(/_/g, ' ')}:</strong> {typeof v === 'object' ? JSON.stringify(v) : v}</li>
-              ))}
-            </ul>
+            <div style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-main)', lineHeight: 1.6 }}>
+              {formatEvidenceToText(alert.category, alert.evidence_json)}
+            </div>
           </div>
         )}
 
