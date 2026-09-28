@@ -125,6 +125,13 @@ img { max-width: 100%; }
   gap: 4px;
   align-items: center;
   list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  padding: 0 12px; /* padding so edge items don't stick to the side */
+}
+.nav-links::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .nav-links a {
