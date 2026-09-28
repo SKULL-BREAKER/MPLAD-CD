@@ -23,38 +23,25 @@ export async function POST(request) {
     }
 
     // Upsert: update existing flag or create new feedback record
-    const existing = await db.fraudFlag.findFirst({
-      where: { work_id, module_code: module_code || 'RISK_FUSION' },
-    });
-
-    let record;
-    if (existing) {
-      record = await db.fraudFlag.update({
-        where: { flag_id: existing.flag_id },
-        data: {
-          investigator_verdict: verdict,
-          verdict_officer_id:   officer_id || null,
-          verdict_at:           new Date(),
-        },
-      });
-    } else {
-      record = await db.fraudFlag.create({
-        data: {
+    const record = await db.fraudLabel.upsert({
+      where: {
+        work_id_pattern: {
           work_id,
-          module_code:          module_code || 'RISK_FUSION',
-          risk_score:           0,
-          severity:             'MEDIUM',
-          evidence_json:        JSON.stringify({ feedback_only: true }),
-          investigator_verdict: verdict,
-          verdict_officer_id:   officer_id || null,
-          verdict_at:           new Date(),
-        },
-      });
-    }
+          pattern: module_code || 'RISK_FUSION'
+        }
+      },
+      update: {
+        label_class: verdict
+      },
+      create: {
+        work_id,
+        pattern: module_code || 'RISK_FUSION',
+        label_class: verdict
+      }
+    });
 
     return NextResponse.json({
       ok: true,
-      flag_id: record.flag_id,
       verdict,
       message: verdict === 'CONFIRMED_FRAUD'
         ? ' Marked as confirmed fraud. This case will be escalated.'
@@ -77,11 +64,16 @@ export async function GET(request) {
     if (!work_id) {
       return NextResponse.json({ ok: false, error: 'work_id required' }, { status: 400 });
     }
-    const flags = await db.fraudFlag.findMany({
-      where: { work_id, investigator_verdict: { not: null } },
-      orderBy: { verdict_at: 'desc' },
+    const flags = await db.fraudLabel.findMany({
+      where: { work_id, label_class: { not: null } }
     });
-    return NextResponse.json({ ok: true, flags });
+    // Map to old expected format
+    const mappedFlags = flags.map(f => ({
+      module_code: f.pattern,
+      investigator_verdict: f.label_class,
+      verdict_at: new Date()
+    }));
+    return NextResponse.json({ ok: true, flags: mappedFlags });
   } catch (err) {
     return NextResponse.json({ ok: false, error: err.message }, { status: 500 });
   }

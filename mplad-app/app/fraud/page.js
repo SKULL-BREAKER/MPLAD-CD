@@ -272,6 +272,31 @@ function formatEvidenceToText(moduleCode, ev) {
   }
 }
 
+function EvidenceFlag({ f }) {
+  const [expanded, setExpanded] = useState(false);
+  const meta = MODULE_META[f.module_code] || { icon:'', color:'#94A3B8', label: f.module_code };
+  const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
+
+  return (
+    <div className="glass-card" style={{ padding: '12px 16px', marginBottom: 8, cursor: 'pointer', transition: 'all 0.2s' }} onClick={() => setExpanded(!expanded)}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: expanded ? 8 : 0 }}>
+        <span style={{ fontSize: '0.75rem', color: meta.color, fontWeight: 700 }}>
+          {meta.icon} {meta.label}
+        </span>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <span style={{ fontSize: '0.7rem', color: s.color, fontWeight: 700 }}>{f.severity}</span>
+          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{expanded ? '▲' : '▼'}</span>
+        </div>
+      </div>
+      {expanded && (
+        <div style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-main)', lineHeight: 1.6 }}>
+          {formatEvidenceToText(f.module_code, f.evidence)}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
   const sev = SEV_CFG[work.severity] || SEV_CFG.MEDIUM;
   const satFlag = work.flags?.find(f => f.module_code === 'SATELLITE');
@@ -342,23 +367,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
         <h3 style={{ margin: '0 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)',
           textTransform: 'uppercase', letterSpacing: '0.08em' }}>Evidence Chain ({work.flags?.length || 0} flags)</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {(work.flags || []).map((f, i) => {
-            const meta = MODULE_META[f.module_code] || { icon:'', color:'#94A3B8', label: f.module_code };
-            const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
-            return (
-              <div key={i} className="glass-card" style={{ padding: '12px 16px', marginBottom: 8 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: '0.75rem', color: meta.color, fontWeight: 700 }}>
-                    {meta.icon} {meta.label}
-                  </span>
-                  <span style={{ fontSize: '0.7rem', color: s.color, fontWeight: 700 }}>{f.severity}</span>
-                </div>
-                <div style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-main)', lineHeight: 1.6 }}>
-                  {formatEvidenceToText(f.module_code, f.evidence)}
-                </div>
-              </div>
-            );
-          })}
+          {(work.flags || []).map((f, i) => <EvidenceFlag key={i} f={f} />)}
         </div>
       </div>
 
