@@ -117,15 +117,16 @@ export default async function AssetRegister({ searchParams }) {
       <section style={{ marginBottom: '40px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '16px' }}>
           <h2 className="section-title" style={{ margin: 0 }}>Completed Works</h2>
-          <form method="GET" style={{ display: 'flex', gap: '8px', minWidth: '300px' }}>
+          <form method="GET" style={{ display: 'flex', gap: '16px', minWidth: '320px', alignItems: 'center' }}>
             <input 
               type="text" 
               name="q" 
               defaultValue={q} 
               placeholder="Search ID, Sector, Locality..." 
-              style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--surface)', color: 'var(--text-main)', fontSize: '0.85rem' }} 
+              className="clay-input"
+              style={{ flex: 1 }} 
             />
-            <button type="submit" style={{ padding: '8px 16px', background: 'var(--success)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}>
+            <button type="submit" className="clay-btn">
               Search
             </button>
           </form>

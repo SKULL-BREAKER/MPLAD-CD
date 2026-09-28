@@ -782,3 +782,63 @@ img { max-width: 100%; }
   .stat-card .stat-value { font-size: 1.5rem; }
   .main-content { padding: 12px; }
 }
+
+/* ── Claymorphism Form Elements ─────────────────────────────────────────────── */
+.clay-input {
+  background: var(--surface-2);
+  border: none;
+  border-radius: 16px;
+  padding: 12px 20px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-weight: 500;
+  box-shadow: 
+    inset 4px 4px 8px rgba(42, 58, 49, 0.08),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+  outline: none;
+}
+.clay-input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+.clay-input:focus {
+  box-shadow: 
+    inset 6px 6px 12px rgba(42, 58, 49, 0.12),
+    inset -6px -6px 12px rgba(255, 255, 255, 1);
+}
+
+.clay-btn {
+  background: var(--surface-2);
+  color: var(--primary-hover);
+  border: none;
+  border-radius: 16px;
+  padding: 12px 24px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 
+    6px 6px 12px rgba(42, 58, 49, 0.1),
+    -6px -6px 12px rgba(255, 255, 255, 0.9),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(42, 58, 49, 0.05);
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.clay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    8px 8px 16px rgba(42, 58, 49, 0.12),
+    -8px -8px 16px rgba(255, 255, 255, 1),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.8),
+    inset -2px -2px 4px rgba(42, 58, 49, 0.05);
+}
+.clay-btn:active {
+  transform: translateY(1px);
+  box-shadow: 
+    2px 2px 4px rgba(42, 58, 49, 0.1),
+    -2px -2px 4px rgba(255, 255, 255, 0.9),
+    inset 4px 4px 8px rgba(42, 58, 49, 0.08),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+}
