@@ -55,7 +55,7 @@ function NotificationsDropdown() {
 
     fetch('/api/alerts').then(r => r.json()).then(d => {
       if(d.ok) setAlerts(d.alerts || []);
-    });
+    }).catch(e => console.error('Failed to fetch alerts:', e));
   }, []);
 
   const handleOpen = () => {
@@ -80,7 +80,7 @@ function NotificationsDropdown() {
 
   const dismiss = async (id) => {
     setAlerts(alerts.filter(a => a.id !== id));
-    await fetch('/api/alerts', { method: 'POST', body: JSON.stringify({ id }) });
+    fetch('/api/alerts', { method: 'POST', body: JSON.stringify({ id }) }).catch(e => console.error('Failed to dismiss alert:', e));
   };
 
   // Sort alerts: Pinned first, then newest
