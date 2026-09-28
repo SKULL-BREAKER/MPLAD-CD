@@ -141,14 +141,14 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           <video ref={videoRef} autoPlay playsInline style={{ width: '100%', display: 'block' }}></video>
           <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
           <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '10px' }}>
-             <button type="button" onClick={takePhoto} style={{ background: '#10B981', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}> Take Photo</button>
-             <button type="button" onClick={cancelCamera} style={{ background: '#C55A5A', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+             <button type="button" onClick={takePhoto} className="clay-btn clay-btn-success" style={{ padding: '8px 16px', fontSize: '0.8rem' }}>Take Photo</button>
+             <button type="button" onClick={cancelCamera} className="clay-btn clay-btn-danger" style={{ padding: '8px 16px', fontSize: '0.8rem' }}>Cancel</button>
           </div>
         </div>
       ) : photoPreview ? (
         <div style={{ position: 'relative', width: '100%', maxWidth: '300px' }}>
           <img src={photoPreview} alt="Preview" style={{ width: '100%', borderRadius: '8px', display: 'block' }} />
-          <button type="button" onClick={cancelCamera} style={{ position: 'absolute', top: '5px', right: '5px', background: '#C55A5A', color: 'var(--text-main)', border: 'none', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.7rem' }}>Remove</button>
+          <button type="button" onClick={cancelCamera} className="clay-btn clay-btn-danger" style={{ position: 'absolute', top: '5px', right: '5px', padding: '4px 8px', fontSize: '0.7rem' }}>Remove</button>
           
           <input 
             type="file" 
@@ -161,52 +161,56 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           <select name="media_type" style={{ display: 'none' }}><option value="PHOTO">PHOTO</option></select>
         </div>
       ) : (
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <select name="media_type" className="select-field" style={{ width: '110px', padding: '6px 8px', fontSize: '0.75rem' }}>
-            <option value="PHOTO">PHOTO</option>
-            <option value="VIDEO">VIDEO</option>
-          </select>
-          <input 
-            type="file" 
-            name="evidence_photo" 
-            accept="image/*" 
-            capture="environment"
-            className="input-field" 
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem' }} 
-          />
-          <button type="button" onClick={startCamera} style={{ background: '#3B82F6', color: 'var(--text-main)', border: 'none', padding: '6px 12px', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <label className="clay-btn clay-btn-primary" style={{ 
+            padding: '8px 16px', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' 
+          }}>
+            Upload Photo
+            <input 
+              type="file" 
+              name="evidence_photo" 
+              accept="image/*" 
+              capture="environment"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: 'none' }} 
+            />
+          </label>
+          
+          <button type="button" onClick={startCamera} className="clay-btn clay-btn-primary" style={{ 
+            padding: '8px 16px', fontSize: '0.8rem'
+          }}>
              Live Camera
           </button>
+          <input type="hidden" name="media_type" value="PHOTO" />
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-        {geoLocating ? (
-           <span style={{ fontSize: '0.75rem', color: '#9CA3AF', padding: '6px 12px' }}>
-             Detecting location...
-           </span>
-        ) : coords ? (
-          <span style={{ fontSize: '0.75rem', color: '#10B981', background: 'rgba(16, 185, 129, 0.1)', padding: '6px 12px', borderRadius: '4px', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
-            Location Verified ({coords.lat.toFixed(4)}, {coords.lng.toFixed(4)})
-          </span>
-        ) : (
-           <span style={{ fontSize: '0.75rem', color: '#C55A5A', padding: '6px 12px' }}>
-             A geotagged photo or device location is required.
-           </span>
-        )}
+      <div className="glass-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', padding: '12px 16px' }}>
+        <div>
+          {geoLocating ? (
+             <span style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>Detecting location...</span>
+          ) : coords ? (
+            <span style={{ fontSize: '0.75rem', color: '#10B981', fontWeight: 'bold' }}>
+              ✓ Location Verified
+            </span>
+          ) : (
+             <span style={{ fontSize: '0.75rem', color: '#C55A5A' }}>
+               Geotag required
+             </span>
+          )}
+        </div>
         
         <button 
-          className="btn" 
+          className="clay-btn clay-btn-success" 
           disabled={!coords || geoLocating} 
           title={!coords ? "Select a photo or allow location first" : ""}
-          style={{ background: coords ? '#10B981' : '#374151', color: 'var(--text-main)', padding: '6px 12px', fontSize: '0.75rem', opacity: coords && !geoLocating ? 1 : 0.5, cursor: coords && !geoLocating ? 'pointer' : 'not-allowed' }}
+          style={{ padding: '8px 16px', fontSize: '0.8rem' }}
         >
-          Upload Evidence
+          Submit Evidence
         </button>
       </div>
-      {locationError && <div style={{ color: '#C55A5A', fontSize: '0.7rem' }}>{locationError}</div>}
+      {locationError && <div style={{ color: '#C55A5A', fontSize: '0.7rem', marginTop: '5px' }}>{locationError}</div>}
     </form>
   );
 }

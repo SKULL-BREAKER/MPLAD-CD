@@ -14,18 +14,9 @@ export async function POST(request) {
     // Attempt to find officer by ID
     let officer = await db.user.findUnique({ where: { id: officerId } });
     
-    // If it doesn't exist, magically create one for demo purposes, 
-    // assuming the officerId they typed IS the district ID they surveil.
-    if (!officer) {
-      officer = await db.user.create({
-        data: {
-          id: officerId,
-          role: 'OFFICER',
-          name: `Nodal Officer (${officerId})`,
-          district_id: officerId,
-          trust_score: 100,
-        }
-      });
+    // Prevent normal people from logging in by disabling automatic profile generation
+    if (!officer || officer.role !== 'OFFICER') {
+      return NextResponse.json({ error: 'Unauthorized: Invalid Officer ID or you do not have Officer privileges.' }, { status: 401 });
     }
 
     const token = await signToken({

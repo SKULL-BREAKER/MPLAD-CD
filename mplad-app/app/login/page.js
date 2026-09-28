@@ -69,7 +69,6 @@ export default function Login() {
                 boxSizing: 'border-box'
               }}
             />
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginTop: '6px' }}>Hint: Type any ID to automatically generate a profile.</p>
           </div>
 
           {error && <div style={{ color: '#C55A5A', fontSize: '0.85rem', textAlign: 'center' }}>{error}</div>}

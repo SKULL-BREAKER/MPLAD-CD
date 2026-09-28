@@ -32,7 +32,7 @@ async function main() {
   for (const f of flows) {
     if (yearMap[f.fy]) {
       await prisma.fundFlow.update({
-        where: { id: f.id },
+        where: { district_id_fy_mp_id: { district_id: f.district_id, fy: f.fy, mp_id: f.mp_id } },
         data: { fy: yearMap[f.fy] }
       });
       fCount++;

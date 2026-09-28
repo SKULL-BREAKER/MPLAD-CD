@@ -194,6 +194,7 @@ async function analysePresentState(alerts, thresholds) {
   // Load current active works
   const activeWorks = await db.work.findMany({
     where: { status: { notIn: ['COMPLETED', 'UTILISED', 'completed', 'utilised', 'DROPPED'] } },
+    select: { id: true, mp_id: true, sanctioned_amount: true, status: true, sanction_date: true, public_utility_term_id: true, utility: true, public_locality_term_id: true, locality: true, evidence: true }
   });
 
   const entitlements = await db.fundFlow.findMany();
@@ -245,6 +246,7 @@ async function analysePresentState(alerts, thresholds) {
   for (const ey of entitlements) {
     const works = await db.work.findMany({
       where: { mp_id: ey.mp_id, fy: ey.fy },
+      select: { sanctioned_amount: true, area_type: true, village: true }
     });
     if (works.length === 0) continue;
     const scAmount = works.filter(w => (w.area_type || w.village || '').toUpperCase().includes('SC-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
@@ -361,20 +363,35 @@ async function analysePresentState(alerts, thresholds) {
   }
 
   // P8 — Low-value proposals below custom minimum
-  const allWorksForProposals = await db.work.findMany();
-  const proposals = allWorksForProposals.filter(w => w.status === 'PROPOSED');
+  const proposals = await db.work.findMany({
+    where: { status: 'PROPOSED' },
+    select: { id: true, fy: true, sanctioned_amount: true }
+  });
+  
+  let lowValueCount = 0;
   for (const p of proposals) {
     if ((p.sanctioned_amount || 0) < thresholds.minSanctionAmount) {
-      alerts.push(makeAlert(
-        `present-lowval-${p.id}`, 'LOW_VALUE_PROPOSAL', SEV.LOW, DIM.PRESENT, CONF.HIGH,
-        `Proposal Below Custom Minimum Amount`,
-        `Proposal ${p.id} (Year ${p.fy}) requests ${fmt(p.sanctioned_amount || 0)}, ` +
-        `below your custom floor of ${fmt(thresholds.minSanctionAmount)}. ` +
-        `(Note: MPLADS statutory minimum is ₹1,00,000.)`,
-        [p.id],
-        { requested: p.sanctioned_amount, customMinimum: thresholds.minSanctionAmount }
-      ));
+      lowValueCount++;
+      if (lowValueCount <= 50) { // Cap to 50 alerts to prevent UI freezing
+        alerts.push(makeAlert(
+          `present-lowval-${p.id}`, 'LOW_VALUE_PROPOSAL', SEV.LOW, DIM.PRESENT, CONF.HIGH,
+          `Proposal Below Custom Minimum Amount`,
+          `Proposal ${p.id} (Year ${p.fy}) requests ${fmt(p.sanctioned_amount || 0)}, ` +
+          `below your custom floor of ${fmt(thresholds.minSanctionAmount)}. ` +
+          `(Note: MPLADS statutory minimum is ₹1,00,000.)`,
+          [p.id],
+          { requested: p.sanctioned_amount, customMinimum: thresholds.minSanctionAmount }
+        ));
+      }
     }
+  }
+  if (lowValueCount > 50) {
+     alerts.push(makeAlert(
+        `present-lowval-overflow`, 'LOW_VALUE_PROPOSAL', SEV.LOW, DIM.PRESENT, CONF.HIGH,
+        `+${lowValueCount - 50} More Low-Value Proposals Detected`,
+        `There are ${lowValueCount - 50} additional proposals requesting below ${fmt(thresholds.minSanctionAmount)} that are hidden to conserve dashboard performance.`,
+        [], {}
+     ));
   }
 
   // P9 — Global utilisation rate
@@ -409,7 +426,10 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
   const currentEYs = await db.fundFlow.findMany(); // Assuming all are active for now or we filter by max fy
 
   for (const ey of currentEYs) {
-    const works = await db.work.findMany({ where: { mp_id: ey.mp_id, fy: String(currentYear) } });
+    const works = await db.work.findMany({ 
+      where: { mp_id: ey.mp_id, fy: String(currentYear) },
+      select: { sanctioned_amount: true, area_type: true, village: true }
+    });
     const sanctionedTotal = works.reduce((s, w) => s + w.sanctioned_amount, 0);
     const uncommitted     = (ey.entitlement || 0) - sanctionedTotal;
 
@@ -459,7 +479,8 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
     });
 
     const worksWithProposals = await db.work.findMany({
-      where: { mp_id: ey.mp_id, fy: String(currentYear) }
+      where: { mp_id: ey.mp_id, fy: String(currentYear) },
+      select: { sanctioned_amount: true, area_type: true }
     });
     const scAmount = worksWithProposals.filter(w => w.area_type?.toUpperCase().includes('SC-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
     const stAmount = worksWithProposals.filter(w => w.area_type?.toUpperCase().includes('ST-')).reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
@@ -505,7 +526,8 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
 
   // FUTURE 4 — Work completion forecast (based on historical avg state duration)
   const inExecWorks = await db.work.findMany({
-    where:   { status: 'IN-EXECUTION' }
+    where:   { status: 'IN-EXECUTION' },
+    select:  { id: true, sanctioned_amount: true }
   });
 
   const completedAudits = await db.auditAction.findMany({
@@ -534,7 +556,8 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
 
   // FUTURE 5 — Sector concentration risk (one sector > 70% of funds)
   const allCurrentWorks = await db.work.findMany({
-    where: { fy: String(currentYear) }
+    where: { fy: String(currentYear) },
+    select: { sanctioned_amount: true, category: true }
   });
   const sectorTotals = {};
   const totalSanctioned = allCurrentWorks.reduce((s, w) => s + (w.sanctioned_amount || 0), 0);

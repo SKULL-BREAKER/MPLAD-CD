@@ -81,6 +81,28 @@ async function handleUploadEvidence(formData) {
   revalidatePath('/officer');
 }
 
+const formatEvidence = (jsonStr) => {
+  if (!jsonStr) return 'No details available.';
+  try {
+    const obj = JSON.parse(jsonStr);
+    if (obj.message) return obj.message;
+    if (obj.scPct !== undefined) return `Target: ${obj.target}%, Current: ${obj.scPct}%, Deficit: ₹${(obj.deficit || 0).toLocaleString('en-IN')}`;
+    if (obj.stPct !== undefined) return `Target: ${obj.target}%, Current: ${obj.stPct}%, Deficit: ₹${(obj.deficit || 0).toLocaleString('en-IN')}`;
+    if (obj.matched_with) return `Duplicate candidate: ${obj.matched_with} (${(obj.similarity * 100).toFixed(1)}% match)`;
+    
+    return Object.entries(obj)
+      .filter(([k,v]) => typeof v !== 'object')
+      .map(([k,v]) => {
+         let val = v;
+         if (typeof v === 'number' && !Number.isInteger(v)) val = v.toFixed(2);
+         return `${k.replace(/_/g, ' ')}: ${val}`;
+      })
+      .join(' · ');
+  } catch (e) {
+    return jsonStr.substring(0, 100) + '...';
+  }
+};
+
 export default async function OfficerView() {
   const cookieStore = await cookies();
   const token = cookieStore.get('officer_token')?.value;
@@ -161,7 +183,7 @@ export default async function OfficerView() {
             Surveillance & Execution Dashboard for District: {officer.district_id}
           </p>
         </div>
-        <a href="/login" style={{ padding: '8px 16px', background: 'rgba(239,68,68,0.1)', color: '#C55A5A', borderRadius: '8px', textDecoration: 'none', fontWeight: 'bold' }}>Logout</a>
+        <a href="/login" className="clay-btn" style={{ color: '#C55A5A', textDecoration: 'none', padding: '8px 16px', fontSize: '0.85rem' }}>Logout</a>
       </header>
 
       {/* Pipeline Stats */}
@@ -229,25 +251,60 @@ export default async function OfficerView() {
       {alertsWithSLA.length > 0 && (
         <div style={{ marginBottom: '32px' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#C55A5A', marginBottom: '12px' }}> Action Required: Alert Inbox</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
-            {alertsWithSLA.map(alert => (
-              <div key={alert.id} style={{ background: 'rgba(239,68,68,0.05)', border: `1px solid ${alert.breached ? '#C55A5A' : 'rgba(239,68,68,0.2)'}`, borderRadius: '8px', padding: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span style={{ fontWeight: 800, color: alert.severity === 'CRITICAL' ? '#C55A5A' : '#D97746' }}>{alert.severity} ALERT</span>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: alert.breached ? '#C55A5A' : '#10B981', background: 'rgba(0,0,0,0.3)', padding: '2px 6px', borderRadius: '4px' }}>
-                    {alert.breached ? `BREACHED BY ${Math.abs(alert.daysLeft)}d` : `${alert.daysLeft}d left`}
-                  </span>
-                </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Work ID: {alert.work_id}</div>
-                <div style={{ fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)', padding: '8px', borderRadius: '4px', color: 'var(--text-main)' }}>
-                  {alert.title} · {(alert.evidence_json || '').substring(0, 80)}...
-                </div>
-                <button className="btn" style={{ width: '100%', marginTop: '12px', background: 'rgba(239,68,68,0.1)', color: '#C55A5A', border: '1px solid rgba(239,68,68,0.3)', fontSize: '0.75rem', padding: '6px' }}>
-                  Review & Verdict
-                </button>
+          
+          {alertsWithSLA.filter(a => a.severity === 'CRITICAL' || a.severity === 'HIGH').length > 0 && (
+            <div style={{ maxHeight: '450px', overflowY: 'auto', paddingRight: '8px', marginBottom: '16px' }} className="custom-scrollbar">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
+                {alertsWithSLA.filter(a => a.severity === 'CRITICAL' || a.severity === 'HIGH').map(alert => (
+                  <div key={alert.id} className="glass-card" style={{ background: 'var(--surface-2)', border: `1px solid ${alert.breached ? '#C55A5A' : 'transparent'}`, borderRadius: '24px', padding: '20px', position: 'relative' }}>
+                    {alert.breached && <div style={{ position: 'absolute', top: '-6px', right: '-6px', background: '#C55A5A', color: 'white', fontSize: '0.65rem', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>SLA BREACHED</div>}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontWeight: 800, color: alert.severity === 'CRITICAL' ? '#C55A5A' : '#D97746' }}>{alert.severity} ALERT</span>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: alert.breached ? 'white' : '#10B981', background: alert.breached ? '#C55A5A' : 'rgba(16,185,129,0.15)', padding: '4px 8px', borderRadius: '6px', border: alert.breached ? 'none' : '1px solid rgba(16,185,129,0.3)' }}>
+                        {alert.breached ? `BREACHED BY ${Math.abs(alert.daysLeft)}d` : `${alert.daysLeft}d left`}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Work ID: {alert.work_id}</div>
+                    <div style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.7)', padding: '8px', borderRadius: '4px', color: '#111827', lineHeight: 1.4, border: '1px solid rgba(0,0,0,0.05)' }}>
+                      <strong style={{ color: '#C55A5A', display: 'block', marginBottom: '2px' }}>{alert.title}</strong>
+                      {formatEvidence(alert.evidence_json)}
+                    </div>
+                    <button className="clay-btn" style={{ width: '100%', marginTop: '12px', padding: '8px', fontSize: '0.75rem', background: 'var(--surface-2)', color: 'var(--primary-hover)' }}>
+                      Take Action
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {alertsWithSLA.filter(a => a.severity === 'LOW' || a.severity === 'MEDIUM').length > 0 && (
+            <details style={{ background: 'var(--surface-2)', padding: '16px', borderRadius: '16px', border: '1px solid var(--border-color)', cursor: 'pointer' }}>
+              <summary style={{ fontWeight: 'bold', color: 'var(--text-main)', display: 'flex', alignItems: 'center', outline: 'none', fontSize: '1rem' }}>
+                 View Low / Medium Priority Alerts ({alertsWithSLA.filter(a => a.severity === 'LOW' || a.severity === 'MEDIUM').length})
+              </summary>
+              <div className="custom-scrollbar" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px', marginTop: '16px', cursor: 'default', maxHeight: '450px', overflowY: 'auto', paddingRight: '8px' }}>
+                {alertsWithSLA.filter(a => a.severity === 'LOW' || a.severity === 'MEDIUM').map(alert => (
+                  <div key={alert.id} className="glass-card" style={{ background: 'var(--surface-2)', border: `1px solid transparent`, borderRadius: '24px', padding: '20px', position: 'relative' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ fontWeight: 800, color: alert.severity === 'MEDIUM' ? '#F59E0B' : '#6B7280' }}>{alert.severity} ALERT</span>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#10B981', background: 'rgba(16,185,129,0.15)', padding: '4px 8px', borderRadius: '6px', border: '1px solid rgba(16,185,129,0.3)' }}>
+                        {alert.daysLeft}d left
+                      </span>
+                    </div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>Work ID: {alert.work_id}</div>
+                    <div style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.7)', padding: '8px', borderRadius: '4px', color: '#111827', lineHeight: 1.4, border: '1px solid rgba(0,0,0,0.05)' }}>
+                      <strong style={{ color: '#4B5563', display: 'block', marginBottom: '2px' }}>{alert.title}</strong>
+                      {formatEvidence(alert.evidence_json)}
+                    </div>
+                    <button className="clay-btn" style={{ width: '100%', marginTop: '12px', padding: '8px', fontSize: '0.75rem', background: 'var(--surface-2)', color: 'var(--primary-hover)' }}>
+                      Take Action
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </details>
+          )}
         </div>
       )}
 
@@ -298,11 +355,12 @@ export default async function OfficerView() {
 
                   {/* AI Monitoring Dashboard (Injected Risk Profile) */}
                   {w.risk && ['HIGH', 'CRITICAL'].includes(w.risk.tier?.toUpperCase()) && (
-                    <div style={{ background: w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.1)' : 'rgba(245,158,11,0.1)', border: `1px solid ${w.risk.tier?.toUpperCase() === 'CRITICAL' ? 'rgba(239,68,68,0.3)' : 'rgba(245,158,11,0.3)'}`, borderRadius: '8px', padding: '12px 16px', marginBottom: '16px' }}>
+                    <div className="glass-card" style={{ background: 'var(--surface-2)', padding: '16px', marginBottom: '16px', position: 'relative' }}>
+                      <div style={{ position: 'absolute', top: '-6px', right: '-6px', background: w.risk.tier?.toUpperCase() === 'CRITICAL' ? '#C55A5A' : '#F59E0B', color: 'white', fontSize: '0.65rem', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }}>{w.risk.tier} RISK</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                         <span style={{ fontSize: '1.1rem' }}></span>
                         <strong style={{ color: w.risk.tier?.toUpperCase() === 'CRITICAL' ? '#C55A5A' : '#C48F37' }}>
-                          AI Risk Assessment: {w.risk.tier}
+                          AI Risk Assessment
                         </strong>
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>(Score: {Number(w.risk.risk_score || 0).toFixed(2)})</span>
                       </div>
@@ -310,7 +368,7 @@ export default async function OfficerView() {
                         {w.detections.map((d, i) => (
                           <div key={i} style={{ fontSize: '0.8rem', display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
                             <span style={{ color: 'var(--text-muted)' }}>[{d.detector}]</span>
-                            <span>{(d.evidence_json || '').substring(0, 100)}...</span>
+                            <span>{formatEvidence(d.evidence_json)}</span>
                           </div>
                         ))}
                       </div>
@@ -331,8 +389,8 @@ export default async function OfficerView() {
 
                 {/* Evidence already appended */}
                 {w.evidence.length > 0 && (
-                  <div style={{ background: 'rgba(42, 58, 49, 0.05)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px' }}>
-                    <div className="label" style={{ marginBottom: '8px' }}>Evidence ({w.evidence.length} record{w.evidence.length !== 1 ? 's' : ''})</div>
+                  <div className="glass-card" style={{ background: 'var(--surface-2)', padding: '16px', marginBottom: '16px' }}>
+                    <div className="label" style={{ marginBottom: '12px' }}>Evidence ({w.evidence.length} record{w.evidence.length !== 1 ? 's' : ''})</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {w.evidence.map(e => (
                         <div key={e.id} style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingBottom: '8px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
@@ -360,9 +418,9 @@ export default async function OfficerView() {
                     <input type="hidden" name="work_id" value={w.id} />
                     <input type="hidden" name="current_state" value={w.status} />
                     <button
-                      className="btn"
+                      className="clay-btn clay-btn-primary"
                       disabled={!nextState}
-                      style={{ background: nextMeta ? nextMeta.color : '#374151', minWidth: '180px' }}
+                      style={{ minWidth: '180px' }}
                     >
                       {nextState
                         ? `${nextMeta?.icon} Advance → ${nextMeta?.label}`

@@ -87,9 +87,9 @@ function loadModel() {
   ];
 
   for (const p of candidates) {
-    if (existsSync(p)) {
+    if (existsSync(/*turbopackIgnore: true*/ p)) {
       try {
-        _model = JSON.parse(readFileSync(p, 'utf-8'));
+        _model = JSON.parse(readFileSync(/*turbopackIgnore: true*/ p, 'utf-8'));
         console.log(`[C4] Loaded model from ${p}`);
         return _model;
       } catch (e) {

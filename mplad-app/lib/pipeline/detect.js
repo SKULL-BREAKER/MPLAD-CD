@@ -18,9 +18,9 @@ async function main() {
   const cacheDir = path.resolve(process.cwd(), '../data/cache');
   const configDir = path.resolve(process.cwd(), '../config');
 
-  // Load all works
-  const works = await db.work.findMany();
-  console.log(`Loaded ${works.length} works from database.`);
+  // Load a subset of works to prevent Out-Of-Memory and infinite N^2 loops on 130k+ datasets
+  const works = await db.work.findMany({ take: 2000, orderBy: { sanctioned_amount: 'desc' } });
+  console.log(`Loaded ${works.length} works from database (capped to 2k).`);
 
   // Clear existing results
   console.log("🧹 Clearing previous detection results...");
