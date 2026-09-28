@@ -51,7 +51,7 @@ export default function PublicWorksList({ works, SECTOR_COLORS, action }) {
               boxShadow: 'inset 2px 2px 6px rgba(42, 58, 49, 0.05)'
             }}
           />
-          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}>🔍</span>
+          <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5 }}></span>
         </div>
       </div>
 

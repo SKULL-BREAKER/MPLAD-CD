@@ -228,7 +228,7 @@ export default async function OfficerView() {
       {/* Alert Inbox */}
       {alertsWithSLA.length > 0 && (
         <div style={{ marginBottom: '32px' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#C55A5A', marginBottom: '12px' }}>️ Action Required: Alert Inbox</h2>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#C55A5A', marginBottom: '12px' }}> Action Required: Alert Inbox</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '16px' }}>
             {alertsWithSLA.map(alert => (
               <div key={alert.id} style={{ background: 'rgba(239,68,68,0.05)', border: `1px solid ${alert.breached ? '#C55A5A' : 'rgba(239,68,68,0.2)'}`, borderRadius: '8px', padding: '16px' }}>

@@ -44,14 +44,14 @@ const STATUS_CFG = {
 };
 
 const CAT_LABEL = {
-  FUND_BALANCE:        ' Fund Balance',    SCST_COMPLIANCE: '️ SC/ST Compliance',
+  FUND_BALANCE:        ' Fund Balance',    SCST_COMPLIANCE: ' SC/ST Compliance',
   TREND_UTILISATION:   ' Utilisation Trend', TREND_REJECTION: ' Rejection Trend',
   TREND_FUND_USAGE:    ' Fund Usage Trend', SCST_HISTORY:   ' SC/ST History',
-  STALLED_WORK:        '️ Stalled Work',     UNSTARTED_WORK: ' Unstarted Work',
+  STALLED_WORK:        ' Stalled Work',     UNSTARTED_WORK: ' Unstarted Work',
   DUPLICATION:         ' Duplication',       EVIDENCE:       ' Evidence',
   EXPENDITURE:         ' Expenditure',      UTILISATION:    ' Utilisation',
   LOW_VALUE_PROPOSAL:  ' Low-Value',        FUND_FORECAST:  ' Fund Forecast',
-  UNDERSPEND_RISK:     '️ Underspend Risk',  SCST_FORECAST:  ' SC/ST Forecast',
+  UNDERSPEND_RISK:     ' Underspend Risk',  SCST_FORECAST:  ' SC/ST Forecast',
   STAGNATION_RISK:     ' Stagnation Risk',  SECTOR_CONCENTRATION: ' Sector Risk',
 };
 
@@ -299,7 +299,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
     <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: '360px', background: '#0E1628', borderLeft: '1px solid rgba(255,255,255,0.08)', zIndex: 1000, overflowY: 'auto', padding: '24px', boxShadow: '-20px 0 60px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column', gap: '0' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
         <div>
-          <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '4px' }}>️ Custom Thresholds</div>
+          <div style={{ fontWeight: 800, fontSize: '1rem', marginBottom: '4px' }}> Custom Thresholds</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Your rules — override the defaults</div>
         </div>
         <button onClick={onClose} style={{ background: 'rgba(42, 58, 49, 0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: 'var(--text-main)', padding: '5px 10px', cursor: 'pointer', fontSize: '0.8rem' }}> Close</button>
@@ -312,7 +312,7 @@ function ThresholdDrawer({ thresholds, onChange, onClose }) {
         {field('fundBalanceCriticalPct',  'Balance Critical Level',0.02,    0.20,    0.01,  true)}
         {field('expenditureGapPct',       'Expenditure Gap Alert', 0.10,    0.90,    0.05,  true)}
 
-        <div style={{ fontSize: '0.7rem', color: '#D97746', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}>️ Time Rules</div>
+        <div style={{ fontSize: '0.7rem', color: '#D97746', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '14px', marginTop: '20px' }}> Time Rules</div>
         {field('stalledExecutionDays',    'Stalled Execution (days)',  7,  90,  1,   false)}
         {field('unstartedSanctionDays',   'Unstarted Sanction (days)', 14, 180, 1,  false)}
 
@@ -470,7 +470,7 @@ export default function MonitorPage() {
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#62A4B0', letterSpacing: '-0.5px' }}>{countdown}s</div>
               </div>}
               <button onClick={() => setShowDrawer(true)} style={{ background: 'rgba(79,70,229,0.18)', border: '1px solid rgba(79,70,229,0.35)', borderRadius: '9px', color: '#818CF8', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: 'pointer' }}>
-                ️ Thresholds
+                 Thresholds
               </button>
               <button onClick={() => scan()} disabled={loading} style={{ background: loading ? 'rgba(79,70,229,0.3)' : 'rgba(79,70,229,0.55)', border: '1px solid rgba(79,70,229,0.4)', borderRadius: '9px', color: 'var(--text-main)', padding: '9px 16px', fontSize: '0.82rem', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: '7px' }}>
                 {loading ? <span style={{ display: 'inline-block', width: '13px', height: '13px', border: '2px solid rgba(255,255,255,0.25)', borderTopColor: 'var(--text-main)', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} /> : '⟳'}
@@ -646,7 +646,7 @@ export default function MonitorPage() {
                 <li>SC/ST 15%/7.5% trajectory forecast</li><li>Work stagnation probability scoring</li>
                 <li>Sector concentration risk</li>
               </ul>
-              <strong style={{ color: '#C48F37', marginTop: '8px', display: 'block' }}>️ Custom Thresholds:</strong>
+              <strong style={{ color: '#C48F37', marginTop: '8px', display: 'block' }}> Custom Thresholds:</strong>
               <ul style={{ paddingLeft: '14px', marginTop: '4px' }}>
                 <li>Officer-defined minimum sanction amount</li>
                 <li>Custom fund balance warning/critical %</li>

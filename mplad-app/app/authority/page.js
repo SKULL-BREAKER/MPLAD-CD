@@ -100,7 +100,7 @@ export default async function AuthorityView() {
   return (
     <main className="main-content">
       <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}>️ Authority Scrutiny Board</h1>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}> Authority Scrutiny Board</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
           Scrutinise proposals for eligibility, duplication & cost-reasonableness. Sanction or reject with canonical reason.
           All decisions are immutably audited.

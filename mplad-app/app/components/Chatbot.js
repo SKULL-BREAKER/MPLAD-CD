@@ -66,7 +66,7 @@ export default function Chatbot({ role }) {
           overflow: 'hidden'
         }}
       >
-        {isOpen ? '✕' : <img src="/ludo_logo.png" alt="LUDO AI" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />}
+        {isOpen ? '' : <img src="/ludo_logo.png" alt="LUDO AI" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />}
       </button>
 
       {/* Chat Window */}

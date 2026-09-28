@@ -16,13 +16,13 @@ const PERMISSIBLE = [
   { sector: 'Education',              examples: 'School buildings, libraries, labs, sports grounds',         icon: '' },
   { sector: 'Healthcare & Sanitation',examples: 'PHC buildings, toilets, sanitation units, nallahs',         icon: '' },
   { sector: 'Electricity',            examples: 'Street lights, electrification, transformers',              icon: '' },
-  { sector: 'Non-Conventional Energy',examples: 'Solar panels, biogas plants, wind energy units',            icon: '️' },
+  { sector: 'Non-Conventional Energy',examples: 'Solar panels, biogas plants, wind energy units',            icon: '' },
   { sector: 'Irrigation',             examples: 'Field channels, minor irrigation, check dams',              icon: '' },
-  { sector: 'Railways/Roads/Bridges', examples: 'Rural roads, culverts, bridges, footpaths',                icon: '️' },
+  { sector: 'Railways/Roads/Bridges', examples: 'Rural roads, culverts, bridges, footpaths',                icon: '' },
   { sector: 'Sports',                 examples: 'Playgrounds, sports equipment, gymnasiums',                 icon: '' },
   { sector: 'Agriculture',            examples: 'Seed banks, godowns, soil testing labs',                   icon: '' },
   { sector: 'Self-Help Group',        examples: 'SHG training centres, common facility centres',             icon: '' },
-  { sector: 'Urban Development',      examples: 'Community centres, parks, solid waste units',               icon: '️' },
+  { sector: 'Urban Development',      examples: 'Community centres, parks, solid waste units',               icon: '' },
 ];
 const NON_PERMISSIBLE = [
   'Works of individual benefit (houses, individual toilets)',
@@ -363,13 +363,13 @@ export default async function Home() {
         <h2 className="section-title">Access by Role</h2>
         <div className="grid">
           <Link href="/mp" className="glass-card" style={{ display: 'block' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>️</div>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: 'var(--accent)' }}>Member of Parliament</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Structure work proposals from 12 canonical priority sectors. View entitlement balance and SC/ST earmarking targets.</p>
             <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>Enter MP Workspace →</div>
           </Link>
           <Link href="/authority" className="glass-card" style={{ display: 'block' }}>
-            <div style={{ fontSize: '2rem', marginBottom: '12px' }}>️</div>
+            <div style={{ fontSize: '2rem', marginBottom: '12px' }}></div>
             <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', color: 'var(--danger)' }}>Designated Authority</h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginBottom: '16px', lineHeight: 1.5 }}>Scrutinise proposals for eligibility, duplication &amp; cost-reasonableness. Sanction or reject with one canonical reason.</p>
             <div style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '0.875rem' }}>Enter Authority Board →</div>

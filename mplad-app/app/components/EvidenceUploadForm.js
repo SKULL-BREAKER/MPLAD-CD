@@ -141,7 +141,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
           <video ref={videoRef} autoPlay playsInline style={{ width: '100%', display: 'block' }}></video>
           <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
           <div style={{ position: 'absolute', bottom: '10px', left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: '10px' }}>
-             <button type="button" onClick={takePhoto} style={{ background: '#10B981', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>📸 Take Photo</button>
+             <button type="button" onClick={takePhoto} style={{ background: '#10B981', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}> Take Photo</button>
              <button type="button" onClick={cancelCamera} style={{ background: '#C55A5A', color: 'var(--text-main)', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
           </div>
         </div>
@@ -177,7 +177,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
             style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem' }} 
           />
           <button type="button" onClick={startCamera} style={{ background: '#3B82F6', color: 'var(--text-main)', border: 'none', padding: '6px 12px', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer' }}>
-            📷 Live Camera
+             Live Camera
           </button>
         </div>
       )}

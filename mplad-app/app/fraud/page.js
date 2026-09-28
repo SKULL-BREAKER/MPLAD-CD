@@ -13,22 +13,22 @@ const SEV_CFG = {
 };
 
 const MODULE_META = {
-  COST_OUTLIER:   { label: 'Cost Outlier',        icon: '💰', color: '#C48F37' },
-  DUPLICATE:      { label: 'Duplicate Work',      icon: '👯', color: '#A78BFA' },
-  TIMELINE:       { label: 'Timeline Violation',  icon: '⏱️', color: '#C55A5A' },
-  CONTRACTOR_NET: { label: 'Contractor Network',  icon: '🏢', color: '#10B981' },
-  SPLITTING:      { label: 'Tender Splitting',    icon: '✂️', color: '#D97746' },
-  GUIDELINE:      { label: 'Guideline Breach',    icon: '📏', color: '#62A4B0' },
-  BENAMI:         { label: 'Benami Entity',       icon: '🎭', color: '#EC4899' },
-  SATELLITE:      { label: 'Ghost Work 🛰️',       icon: '🛰️', color: '#8B5CF6' },
-  RISK_FUSION:    { label: 'Risk Fusion',         icon: '🧠', color: '#06B6D4' },
-  D1: { label: 'D1: Duplicate', icon: '👯', color: '#A78BFA' },
-  D2: { label: 'D2: Cost Anomaly', icon: '💰', color: '#C48F37' },
-  D3: { label: 'D3: Timeline Delay', icon: '⏱️', color: '#C55A5A' },
-  D6: { label: 'D6: Geo-Conflict', icon: '🗺️', color: '#62A4B0' },
-  D6_overlap: { label: 'D6_overlap: Spatial Cluster', icon: '📍', color: '#D97746' },
-  D8: { label: 'D8: Monopoly', icon: '🏢', color: '#10B981' },
-  ENSEMBLE: { label: 'AI Ensemble', icon: '🧠', color: '#8B5CF6' },
+  COST_OUTLIER:   { label: 'Cost Outlier',        icon: '', color: '#C48F37' },
+  DUPLICATE:      { label: 'Duplicate Work',      icon: '', color: '#A78BFA' },
+  TIMELINE:       { label: 'Timeline Violation',  icon: '⏱', color: '#C55A5A' },
+  CONTRACTOR_NET: { label: 'Contractor Network',  icon: '', color: '#10B981' },
+  SPLITTING:      { label: 'Tender Splitting',    icon: '', color: '#D97746' },
+  GUIDELINE:      { label: 'Guideline Breach',    icon: '', color: '#62A4B0' },
+  BENAMI:         { label: 'Benami Entity',       icon: '', color: '#EC4899' },
+  SATELLITE:      { label: 'Ghost Work ',       icon: '', color: '#8B5CF6' },
+  RISK_FUSION:    { label: 'Risk Fusion',         icon: '', color: '#06B6D4' },
+  D1: { label: 'D1: Duplicate', icon: '', color: '#A78BFA' },
+  D2: { label: 'D2: Cost Anomaly', icon: '', color: '#C48F37' },
+  D3: { label: 'D3: Timeline Delay', icon: '⏱', color: '#C55A5A' },
+  D6: { label: 'D6: Geo-Conflict', icon: '', color: '#62A4B0' },
+  D6_overlap: { label: 'D6_overlap: Spatial Cluster', icon: '', color: '#D97746' },
+  D8: { label: 'D8: Monopoly', icon: '', color: '#10B981' },
+  ENSEMBLE: { label: 'AI Ensemble', icon: '', color: '#8B5CF6' },
 };
 
 function fmt(n) {
@@ -87,7 +87,7 @@ function SatellitePanel({ flag }) {
     <div className="glass-card" style={{ borderRadius: 12, overflow: 'hidden', padding: 0 }}>
       <div style={{ padding: '10px 16px', background: 'rgba(139,92,246,0.12)', borderBottom: '1px solid var(--border-color)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ color: '#A78BFA', fontWeight: 700, fontSize: '0.85rem' }}>️ Sentinel-2 Satellite Imagery</span>
+        <span style={{ color: '#A78BFA', fontWeight: 700, fontSize: '0.85rem' }}> Sentinel-2 Satellite Imagery</span>
         <span style={{ color: 'var(--text-muted)', fontSize: '0.7rem' }}>
           {ev.demo_mode ? '(DEMO MODE — simulated change scores)' : 'Live Sentinel-2 NDBI Index'}
         </span>
@@ -125,7 +125,7 @@ function SatellitePanel({ flag }) {
         <div style={{ position: 'absolute', top: 8, left: '50%', transform: 'translateX(-50%)',
           background: ev.sub_type === 'GHOST_WORK' ? 'rgba(239,68,68,0.9)' : 'rgba(16,185,129,0.9)',
           borderRadius: 20, padding: '3px 10px', fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-main)' }}>
-          Change Score: {((ev.change_score || 0) * 100).toFixed(0)}% {ev.sub_type === 'GHOST_WORK' ? '️ GHOST WORK' : ''}
+          Change Score: {((ev.change_score || 0) * 100).toFixed(0)}% {ev.sub_type === 'GHOST_WORK' ? ' GHOST WORK' : ''}
         </div>
       </div>
       <div style={{ padding: '10px 16px', fontSize: '0.72rem', color: 'var(--text-muted)',
@@ -211,7 +211,7 @@ function NetworkGraph({ districtFlags }) {
 // Factor Bar (per-module contribution breakdown)
 // ─────────────────────────────────────────────────────────────────────────────
 function FactorBar({ factor }) {
-  const meta = MODULE_META[factor.module] || { label: factor.module, icon: '️', color: '#94A3B8' };
+  const meta = MODULE_META[factor.module] || { label: factor.module, icon: '', color: '#94A3B8' };
   const maxContrib = 35; // max possible contribution
   const w = Math.min(100, (factor.contribution / maxContrib) * 100);
   return (
@@ -299,7 +299,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
                 background: verdict === 'CONFIRMED_FRAUD' ? 'rgba(239,68,68,0.15)' : 'rgba(56,189,248,0.15)',
                 color: verdict === 'CONFIRMED_FRAUD' ? '#C55A5A' : '#62A4B0',
                 border: `1px solid ${verdict === 'CONFIRMED_FRAUD' ? 'rgba(239,68,68,0.3)' : 'rgba(56,189,248,0.3)'}` }}>
-                {verdict === 'CONFIRMED_FRAUD' ? '️ Confirmed Fraud' : ' False Positive'}
+                {verdict === 'CONFIRMED_FRAUD' ? ' Confirmed Fraud' : ' False Positive'}
               </span>
             )}
           </div>
@@ -343,7 +343,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
           textTransform: 'uppercase', letterSpacing: '0.08em' }}>Evidence Chain ({work.flags?.length || 0} flags)</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {(work.flags || []).map((f, i) => {
-            const meta = MODULE_META[f.module_code] || { icon:'️', color:'#94A3B8', label: f.module_code };
+            const meta = MODULE_META[f.module_code] || { icon:'', color:'#94A3B8', label: f.module_code };
             const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
             return (
               <div key={i} className="glass-card" style={{ padding: '12px 16px', marginBottom: 8 }}>
@@ -371,7 +371,7 @@ function WorkDetailPanel({ work, districtFlags, onFeedback, feedbackMap }) {
             className="btn"
             style={{ flex: 1, padding: '10px', background: 'var(--danger)', color: '#fff', cursor: 'pointer',
               fontWeight: 700, fontSize: '0.8rem', transition: 'all 0.2s', border: 'none' }}>
-            ️ Confirm Fraud
+             Confirm Fraud
           </button>
           <button
             id={`btn-fp-${work.work_id}`}
@@ -530,7 +530,7 @@ export default function FraudInvestigatorPage() {
               style={{ padding: '8px 18px', borderRadius: 12, border: 'none',
                 color: '#10B981', cursor: 'pointer',
                 fontWeight: 700, fontSize: '0.85rem' }}>
-              {exporting ? '' : '⬇️ Export CSV'}
+              {exporting ? '' : ' Export CSV'}
             </button>
           </div>
         </div>
@@ -546,7 +546,7 @@ export default function FraudInvestigatorPage() {
             <KpiCard icon="" label="High Risk" value={summary.high_works} color="#D97746" />
             <KpiCard icon="" label="Avg Risk Score" value={`${summary.avg_risk}/100`} color="#A78BFA" />
             <KpiCard icon="" label="Total Flags" value={summary.total_flags} color="#C48F37" />
-            <KpiCard icon="️" label="District Flags" value={summary.district_flags} color="#10B981" />
+            <KpiCard icon="" label="District Flags" value={summary.district_flags} color="#10B981" />
           </div>
         )}
 
@@ -623,13 +623,13 @@ export default function FraudInvestigatorPage() {
                           <span style={{ fontSize: '0.62rem', padding: '1px 6px', borderRadius: 10,
                             background: verdict === 'CONFIRMED_FRAUD' ? 'rgba(239,68,68,0.2)' : 'rgba(56,189,248,0.2)',
                             color: verdict === 'CONFIRMED_FRAUD' ? '#C55A5A' : '#62A4B0', flexShrink: 0 }}>
-                            {verdict === 'CONFIRMED_FRAUD' ? '️' : ''}
+                            {verdict === 'CONFIRMED_FRAUD' ? '' : ''}
                           </span>
                         )}
                       </div>
                       <div style={{ display: 'flex', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
                         {(work.factors || []).slice(0, 3).map((f, i) => {
-                          const m = MODULE_META[f.module] || { icon:'️', color:'#94A3B8' };
+                          const m = MODULE_META[f.module] || { icon:'', color:'#94A3B8' };
                           return (
                             <span key={i} style={{ fontSize: '0.62rem', color: m.color, padding: '1px 5px',
                               borderRadius: 6, background: `${m.color}18`, border: `1px solid ${m.color}30` }}>
@@ -673,11 +673,11 @@ export default function FraudInvestigatorPage() {
                 border: '1px solid rgba(16,185,129,0.15)', padding: 20 }}>
                 <h3 style={{ margin: '0 0 16px', fontSize: '0.85rem', color: '#10B981',
                   textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                  ️ District-Level Flags ({districtFlags.length})
+                   District-Level Flags ({districtFlags.length})
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {districtFlags.slice(0, 8).map((f, i) => {
-                    const meta = MODULE_META[f.module_code] || { icon:'️', color:'#94A3B8', label: f.module_code };
+                    const meta = MODULE_META[f.module_code] || { icon:'', color:'#94A3B8', label: f.module_code };
                     const s    = SEV_CFG[f.severity] || SEV_CFG.MEDIUM;
                     return (
                       <div key={i} style={{ padding: '10px 14px', borderRadius: 8, background: s.bg, border: `1px solid ${s.border}` }}>

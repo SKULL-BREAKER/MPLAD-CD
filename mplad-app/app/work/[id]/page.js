@@ -65,8 +65,8 @@ export default async function WorkDetailsPage({ params }) {
               <span className={`tag ${statusClass}`}>{work.status || 'PROPOSED'}</span>
             </div>
             <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', marginBottom: '16px', display: 'flex', gap: '16px' }}>
-              <span>📍 {district?.name || work.district_id || 'Unknown Location'}, {district?.state}</span>
-              <span>🏗️ {work.category || 'Sector'}</span>
+              <span> {district?.name || work.district_id || 'Unknown Location'}, {district?.state}</span>
+              <span> {work.category || 'Sector'}</span>
             </div>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', fontSize: '0.75rem' }}>
@@ -94,7 +94,7 @@ export default async function WorkDetailsPage({ params }) {
         {isHighRisk && (
           <div className="glass-card" style={{ flex: '0 1 250px', padding: '24px', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-               <span style={{ fontSize: '2rem' }}>⚠️</span>
+               <span style={{ fontSize: '2rem' }}></span>
                <div>
                  <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--danger)' }}>Risk Level</div>
                  <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--danger)' }}>High</div>
@@ -196,7 +196,7 @@ export default async function WorkDetailsPage({ params }) {
                   <td>
                     {work.lat && work.lon ? (
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>📍 {work.lat.toFixed(4)}° N, {work.lon.toFixed(4)}° E</span>
+                        <span> {work.lat.toFixed(4)}° N, {work.lon.toFixed(4)}° E</span>
                         <a href={`https://maps.google.com/?q=${work.lat},${work.lon}`} target="_blank" rel="noreferrer" style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 600 }}>View on Map</a>
                       </div>
                     ) : 'Not Available'}
@@ -212,7 +212,7 @@ export default async function WorkDetailsPage({ params }) {
                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                  {updates.slice(0, 4).map((up, i) => (
                    <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
-                     <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(16,185,129,0.1)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>✓</div>
+                     <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(16,185,129,0.1)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}></div>
                      <div>
                        <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{up.field} updated</div>
                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{up.at}</div>
@@ -228,10 +228,10 @@ export default async function WorkDetailsPage({ params }) {
             <div className="glass-card" style={{ padding: '24px' }}>
                <h2 className="section-title" style={{ fontSize: '1rem', marginTop: 0 }}>Actions</h2>
                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                 <button className="btn btn-success" style={{ width: '100%', justifyContent: 'center' }}>✓ Verify Evidence</button>
-                 <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>ℹ️ Request More Info</button>
-                 <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', color: 'var(--warning)', borderColor: 'var(--warning)' }}>⚠️ Mark for Investigation</button>
-                 <button className="btn btn-danger" style={{ width: '100%', justifyContent: 'center' }}>✕ Reject Work</button>
+                 <button className="btn btn-success" style={{ width: '100%', justifyContent: 'center' }}> Verify Evidence</button>
+                 <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>ℹ Request More Info</button>
+                 <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', color: 'var(--warning)', borderColor: 'var(--warning)' }}> Mark for Investigation</button>
+                 <button className="btn btn-danger" style={{ width: '100%', justifyContent: 'center' }}> Reject Work</button>
                </div>
             </div>
           </div>
@@ -249,7 +249,7 @@ export default async function WorkDetailsPage({ params }) {
             <div style={{ width: '100%', height: '200px', background: '#e2e8f0', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
               {work.lat && work.lon ? (
                  <div style={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                   <div style={{ fontSize: '2rem' }}>📍</div>
+                   <div style={{ fontSize: '2rem' }}></div>
                    <div style={{ fontSize: '0.75rem', fontWeight: 600, background: 'var(--text-main)', padding: '2px 6px', borderRadius: '4px', marginTop: '-8px' }}>
                      {work.lat.toFixed(4)}, {work.lon.toFixed(4)}
                    </div>
@@ -286,13 +286,13 @@ export default async function WorkDetailsPage({ params }) {
               {['Sanction Order (PDF)', 'Work Agreement (PDF)', 'Utilisation Certificate (PDF)'].map((doc, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', border: '1px solid var(--border-color)', borderRadius: '8px' }}>
                   <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <span style={{ color: 'var(--danger)' }}>📄</span>
+                    <span style={{ color: 'var(--danger)' }}></span>
                     <div>
                       <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{doc}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>1.2 MB</div>
                     </div>
                   </div>
-                  <span style={{ color: 'var(--primary)', cursor: 'pointer' }}>⬇️</span>
+                  <span style={{ color: 'var(--primary)', cursor: 'pointer' }}></span>
                 </div>
               ))}
             </div>

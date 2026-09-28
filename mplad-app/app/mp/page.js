@@ -84,7 +84,7 @@ export default async function MPView() {
       <header style={{ marginBottom: '32px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
-            <h2 style={{ fontSize: '1.6rem', fontWeight: 800 }}>️ MP Workspace</h2>
+            <h2 style={{ fontSize: '1.6rem', fontWeight: 800 }}> MP Workspace</h2>
             <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '4px' }}>
               Member: {member_id} · Constituency: {constituency_id} · Year: {year_val}
             </div>

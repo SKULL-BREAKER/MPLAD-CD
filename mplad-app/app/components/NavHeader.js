@@ -6,13 +6,13 @@ import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home',            icon: '' },
-  { href: '/mp',         label: 'MP Workspace',    icon: '⚙️' },
-  { href: '/authority',  label: 'Authority Board',  icon: '⚖️' },
+  { href: '/mp',         label: 'MP Workspace',    icon: '' },
+  { href: '/authority',  label: 'Authority Board',  icon: '' },
   { href: '/officer',    label: 'Officer',          icon: '' },
   { href: '/assets',     label: 'Asset Register',  icon: '' },
   { href: '/public',     label: 'Public Portal',   icon: '' },
-  { href: '/monitor',    label: 'AI Monitor',      icon: '🟢' },
-  { href: '/fraud',      label: 'Fraud Investigator', icon: '🔴' },
+  { href: '/monitor',    label: 'AI Monitor',      icon: '' },
+  { href: '/fraud',      label: 'Fraud Investigator', icon: '' },
 ];
 
 function NavContent({ pathname, open, onClose }) {
@@ -44,7 +44,7 @@ export default function NavHeader() {
   return (
     <nav className="nav-header">
       <Link href="/" className="nav-brand">
-        🇮🇳 MPLADS Portal
+         MPLADS Portal
       </Link>
 
       <NavContent pathname={pathname} open={open} onClose={() => setOpen(false)} />
