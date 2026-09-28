@@ -44,7 +44,7 @@ async function submitProposal(formData) {
   await structureProposal({
     constituency_id: 'DIST-001',
     member_id: 'MP-001',
-    year_val: '2019-20',
+    year_val: '2024-25',
     public_utility_term_id: utility,
     public_locality_term_id: locality,
     requested_amount: amount,
@@ -63,7 +63,7 @@ const SECTOR_COLORS = {
 
 export default async function MPView() {
   const member_id      = 'MP-001';
-  const year_val       = '2019-20';
+  const year_val       = '2024-25';
   const constituency_id = 'DIST-001';
 
   const [balanceData, scst, proposals] = await Promise.all([
