@@ -501,7 +501,7 @@ img { max-width: 100%; }
     0 0 0 3px rgba(212, 175, 55, 0.3);
 }
 
-.select-field option { background: #111827; color: var(--text-main); }
+.select-field option { background: var(--surface-2); color: var(--text-main); }
 
 .label {
   font-size: 0.78rem;
@@ -597,7 +597,7 @@ img { max-width: 100%; }
   font-size: 0.75rem; 
   text-transform: uppercase; 
   letter-spacing: 0.6px; 
-  color: var(--text-muted); 
+  color: var(--text-main); 
   border-bottom: 2px solid var(--border-color); 
   font-weight: 700; 
 }

@@ -162,7 +162,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
         </div>
       ) : (
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-          <select name="media_type" className="select-field" style={{ width: '110px', padding: '6px 8px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }}>
+          <select name="media_type" className="select-field" style={{ width: '110px', padding: '6px 8px', fontSize: '0.75rem' }}>
             <option value="PHOTO">PHOTO</option>
             <option value="VIDEO">VIDEO</option>
           </select>
@@ -174,7 +174,7 @@ export default function EvidenceUploadForm({ workId, authority, action }) {
             className="input-field" 
             ref={fileInputRef}
             onChange={handleFileChange}
-            style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem', background: 'rgba(0,0,0,0.2)' }} 
+            style={{ flex: 1, minWidth: '150px', padding: '4px', fontSize: '0.75rem' }} 
           />
           <button type="button" onClick={startCamera} style={{ background: '#3B82F6', color: 'var(--text-main)', border: 'none', padding: '6px 12px', fontSize: '0.75rem', borderRadius: '4px', cursor: 'pointer' }}>
             📷 Live Camera
