@@ -8,12 +8,12 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
+  themeColor: '#0A0F1E',
 };
 
 export const metadata = {
   title: 'MPLADS Portal — Canonical Logic Architecture',
   description: 'MPLADS: Transparent, authority-separated management of constituency works, entitlements, proposals, geo-tagged evidence and immutable audit.',
-  themeColor: '#0A0F1E',
 };
 
 export default function RootLayout({ children }) {
