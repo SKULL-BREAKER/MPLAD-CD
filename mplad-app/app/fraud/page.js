@@ -661,7 +661,7 @@ export default function FraudInvestigatorPage() {
           </div>
 
           {/* Detail panel */}
-          <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ flex: 1, minWidth: 0, maxHeight: 'calc(100vh - 320px)', overflowY: 'auto', paddingRight: '12px' }}>
             {selectedWork ? (
               <WorkDetailPanel
                 work={selectedWork}
