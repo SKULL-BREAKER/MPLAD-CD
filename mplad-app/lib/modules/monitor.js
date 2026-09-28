@@ -221,7 +221,7 @@ async function analysePresentState(alerts, thresholds) {
 
     if (balPct < thresholds.fundBalanceCriticalPct) {
       alerts.push(makeAlert(
-        `present-fund-crit-${ey.mp_id}-${ey.fy}`, 'FUND_BALANCE', SEV.CRITICAL, DIM.PRESENT, CONF.HIGH,
+        `present-fund-crit---`, 'FUND_BALANCE', SEV.CRITICAL, DIM.PRESENT, CONF.HIGH,
         `Critical Fund Balance — Year ${ey.fy}`,
         `Balance is ${fmt(balance)} (${pct(balPct, 1)}% of ${fmt(ey.entitlement)}). ` +
         `Below the critical threshold of ${pct(thresholds.fundBalanceCriticalPct, 1)}%. ` +
@@ -231,7 +231,7 @@ async function analysePresentState(alerts, thresholds) {
       ));
     } else if (balPct < thresholds.fundBalanceWarnPct) {
       alerts.push(makeAlert(
-        `present-fund-warn-${ey.mp_id}-${ey.fy}`, 'FUND_BALANCE', SEV.HIGH, DIM.PRESENT, CONF.HIGH,
+        `present-fund-warn---`, 'FUND_BALANCE', SEV.HIGH, DIM.PRESENT, CONF.HIGH,
         `Low Fund Balance Warning — Year ${ey.fy}`,
         `Balance is ${fmt(balance)} (${pct(balPct, 1)}% remaining). ` +
         `Below the officer-set warning threshold of ${pct(thresholds.fundBalanceWarnPct, 1)}%. Slow down new sanctions.`,
@@ -252,7 +252,7 @@ async function analysePresentState(alerts, thresholds) {
     const annual = ey.entitlement || 0;
     if (scAmount < annual * SC_MINIMUM_RATIO) {
       alerts.push(makeAlert(
-        `present-sc-${ey.mp_id}-${ey.fy}`, 'SCST_COMPLIANCE', SEV.CRITICAL, DIM.PRESENT, CONF.HIGH,
+        `present-sc---`, 'SCST_COMPLIANCE', SEV.CRITICAL, DIM.PRESENT, CONF.HIGH,
         `SC Earmarking Breach — ${ey.fy}`,
         `SC allocation is ${fmt(scAmount)} (${pct(scAmount, annual)}%), below the mandatory 15% (${fmt(annual * SC_MINIMUM_RATIO)}). ` +
         `Deficit: ${fmt(annual * SC_MINIMUM_RATIO - scAmount)}.`,
@@ -262,7 +262,7 @@ async function analysePresentState(alerts, thresholds) {
     }
     if (stAmount < annual * ST_MINIMUM_RATIO) {
       alerts.push(makeAlert(
-        `present-st-${ey.mp_id}-${ey.fy}`, 'SCST_COMPLIANCE', SEV.CRITICAL, DIM.PRESENT, CONF.HIGH,
+        `present-st---`, 'SCST_COMPLIANCE', SEV.CRITICAL, DIM.PRESENT, CONF.HIGH,
         `ST Earmarking Breach — ${ey.fy}`,
         `ST allocation is ${fmt(stAmount)} (${pct(stAmount, annual)}%), below the mandatory 7.5% (${fmt(annual * ST_MINIMUM_RATIO)}). ` +
         `Deficit: ${fmt(annual * ST_MINIMUM_RATIO - stAmount)}.`,
@@ -473,7 +473,7 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
       const willMeet       = currentScRate >= dailyScNeeded;
       if (!willMeet) {
         alerts.push(makeAlert(
-          `future-sc-miss-${ey.mp_id}-${ey.fy}`, 'SCST_FORECAST', SEV.CRITICAL, DIM.FUTURE,
+          `future-sc-miss---`, 'SCST_FORECAST', SEV.CRITICAL, DIM.FUTURE,
           daysLeft < 60 ? CONF.HIGH : CONF.MEDIUM,
           `SC 15% Target Will Likely Be Missed — ${currentYear}`,
           `Current SC allocation: ${fmt(scAmount)} (${pct(scAmount, ey.entitlement || 0)}%). ` +
@@ -491,7 +491,7 @@ async function predictFutureRisks(alerts, yearlyStats, thresholds) {
       const willMeet      = currentStRate >= dailyStNeeded;
       if (!willMeet) {
         alerts.push(makeAlert(
-          `future-st-miss-${ey.mp_id}-${ey.fy}`, 'SCST_FORECAST', SEV.CRITICAL, DIM.FUTURE,
+          `future-st-miss---`, 'SCST_FORECAST', SEV.CRITICAL, DIM.FUTURE,
           daysLeft < 60 ? CONF.HIGH : CONF.MEDIUM,
           `ST 7.5% Target Will Likely Be Missed — ${currentYear}`,
           `Current ST allocation: ${fmt(stAmount)} (${pct(stAmount, ey.entitlement || 0)}%). ` +
