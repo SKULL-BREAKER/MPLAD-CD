@@ -193,12 +193,17 @@ function AlertCard({ alert }) {
 // ── Dimension panel ───────────────────────────────────────────────────────────
 function DimPanel({ dim, alerts }) {
   const [open, setOpen] = useState(true);
+  const [limit, setLimit] = useState(50);
   const dc = DIM_CFG[dim];
+  
   if (!alerts.length) return (
     <div style={{ padding: '20px', textAlign: 'center', color: 'rgba(42, 58, 49, 0.1)', fontSize: '0.82rem', background: 'rgba(42, 58, 49, 0.05)', borderRadius: '10px', marginBottom: '16px' }}>
       {dc.icon} No {dc.label} alerts
     </div>
   );
+  
+  const displayed = alerts.slice(0, limit);
+  
   return (
     <div style={{ marginBottom: '20px' }}>
       <button onClick={() => setOpen(o => !o)} style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', marginBottom: open ? '12px' : 0, padding: '4px 0' }}>
@@ -207,7 +212,19 @@ function DimPanel({ dim, alerts }) {
         <span style={{ background: dc.bg, border: `1px solid ${dc.border}`, color: dc.color, borderRadius: '99px', padding: '1px 10px', fontSize: '0.72rem', fontWeight: 800 }}>{alerts.length}</span>
         <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: 'var(--text-muted)' }}>{open ? '▲' : '▼'}</span>
       </button>
-      {open && <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>{alerts.map(a => <AlertCard key={a.id} alert={a} />)}</div>}
+      {open && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
+          {displayed.map(a => <AlertCard key={a.id} alert={a} />)}
+          {alerts.length > limit && (
+            <button 
+              onClick={() => setLimit(l => l + 50)} 
+              style={{ padding: '12px', background: 'rgba(42, 58, 49, 0.05)', border: '1px solid rgba(42, 58, 49, 0.1)', borderRadius: '8px', color: 'var(--text-main)', cursor: 'pointer', fontWeight: 600, marginTop: '8px', transition: 'background 0.2s', fontSize: '0.8rem' }}
+            >
+              Load More (+50) · {alerts.length - limit} remaining
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
