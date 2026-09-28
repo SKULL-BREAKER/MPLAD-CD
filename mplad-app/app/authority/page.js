@@ -178,7 +178,7 @@ export default async function AuthorityView() {
           {pendingProposals.length === 0 ? (
             <div className="alert alert-ok">No pending proposals. All proposals have been actioned.</div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: 'calc(100vh - 280px)', overflowY: 'auto', paddingRight: '12px' }}>
               {pendingProposals.map(p => {
                 const eligibility = getEligibilitySignal(p.category || '');
                 const costSignal = getCostSignal(p.sanctioned_amount || 0);
@@ -240,7 +240,7 @@ export default async function AuthorityView() {
           {activeWorks.length === 0 ? (
             <div className="alert alert-info">No works sanctioned yet.</div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: 'calc(100vh - 280px)', overflowY: 'auto', paddingRight: '12px' }}>
               {activeWorks.map(w => {
                 const sector = w.category || '—';
                 const color = SECTOR_COLORS[sector] || '#94A3B8';
