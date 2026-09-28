@@ -47,8 +47,6 @@ export default async function Home() {
     return [[], [], [], []];
   });
 
-  const totalProposals = works.length;
-
   // ── Derived scheme-level statistics (Scaled to real-world Official Data) ──
   const MULT = 248; // Scales dummy dataset to ~1.9 million real-world works
   const FUND_MULT = 160; // Scales dummy 340 Cr to ~54,000 Cr real-world financials
