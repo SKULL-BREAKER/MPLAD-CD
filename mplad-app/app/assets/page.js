@@ -13,10 +13,25 @@ export const metadata = {
   description: 'Durable community assets created under MPLADS — read-only public register of completed works.',
 };
 
-export default async function AssetRegister() {
+export default async function AssetRegister({ searchParams }) {
+  // Await searchParams in Next.js 15+ if needed, but in 14 it's an object. 
+  // For safety with both, we use an async wrapper or just read it directly if it's not a promise.
+  const resolvedSearchParams = await searchParams;
+  const q = resolvedSearchParams?.q || '';
+
   // Completed and Utilised works = public durable community assets
+  const whereClause = { status: { in: ['COMPLETED', 'UTILISED', 'completed', 'utilised'] } };
+  if (q) {
+    whereClause.OR = [
+      { id: { contains: q } },
+      { category: { contains: q } },
+      { area_type: { contains: q } },
+      { village: { contains: q } },
+    ];
+  }
+
   const assets = await db.work.findMany({ take: 100,
-    where: { status: { in: ['COMPLETED', 'UTILISED', 'completed', 'utilised'] } },
+    where: whereClause,
     orderBy: { id: 'desc' },
   }).catch(() => []);
 
@@ -100,7 +115,22 @@ export default async function AssetRegister() {
 
       {/* Completed Works as Assets */}
       <section style={{ marginBottom: '40px' }}>
-        <h2 className="section-title">Completed Works</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '16px' }}>
+          <h2 className="section-title" style={{ margin: 0 }}>Completed Works</h2>
+          <form method="GET" style={{ display: 'flex', gap: '8px', minWidth: '300px' }}>
+            <input 
+              type="text" 
+              name="q" 
+              defaultValue={q} 
+              placeholder="Search ID, Sector, Locality..." 
+              style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--surface)', color: 'var(--text-main)', fontSize: '0.85rem' }} 
+            />
+            <button type="submit" style={{ padding: '8px 16px', background: 'var(--success)', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem' }}>
+              Search
+            </button>
+          </form>
+        </div>
+        
         {assets.length === 0 ? (
           <div className="alert alert-info">No completed works yet. Works appear here once they reach COMPLETED or UTILISED state.</div>
         ) : (
