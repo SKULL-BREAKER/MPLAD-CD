@@ -109,7 +109,7 @@ function NotificationsDropdown() {
       </button>
       
       {open && (
-        <div style={{ position: 'absolute', top: 40, right: 0, width: 320, background: 'var(--surface)', border: '1px solid var(--border-color)', borderRadius: 12, boxShadow: '0 8px 30px rgba(0,0,0,0.3)', zIndex: 9999, overflow: 'hidden' }}>
+        <div className="notifications-dropdown-menu">
           <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border-color)', fontWeight: 'bold', fontSize: '0.9rem', color: 'var(--text-main)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             Notifications
             <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', cursor: 'pointer' }} onClick={() => setOpen(false)}>Close</span>

@@ -205,6 +205,19 @@ img { max-width: 100%; }
   letter-spacing: 0.5px;
 }
 
+.notifications-dropdown-menu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  z-index: 9999;
+  overflow: hidden;
+}
+
 
 /* Mobile hamburger */
 .nav-toggle {
@@ -729,8 +742,8 @@ img { max-width: 100%; }
     top: 56px;
     left: 0;
     right: 0;
-    background: #FDFBF7;
-    border-bottom: 1px solid var(--border-color);
+    background: #2A3A31; /* Matched top header to fix invisible text issue */
+    border-bottom: 2px solid var(--primary);
     flex-direction: column;
     align-items: stretch;
     padding: 8px;
@@ -746,6 +759,7 @@ img { max-width: 100%; }
     padding: 10px 16px;
     border-radius: 8px;
     font-size: 0.9rem;
+    color: rgba(253, 251, 247, 0.75); /* Explicitly ensuring text color matches desktop layout */
   }
 
   .nav-toggle {
@@ -766,6 +780,15 @@ img { max-width: 100%; }
   .data-table th, .data-table td { padding: 8px 12px; }
 
   .section-title { font-size: 1rem; }
+
+  .notifications-dropdown-menu {
+    position: fixed;
+    top: 60px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+    max-width: 100%;
+  }
 }
 
 @media (min-width: 769px) {
