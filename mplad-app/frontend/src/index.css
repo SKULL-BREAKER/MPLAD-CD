@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* ============================================================
-   PRAHARI Design System
+   SABAI Design System
    Primary: Claymorphism + Premium Solid Morphism
    Secondary: Selective glass on nav/modal layers
    Forbidden: Neon, cyberpunk, AI template aesthetics
@@ -165,7 +165,7 @@ body {
    Skeleton loading animation
    ============================================================ */
 
-@keyframes prahari-skeleton {
+@keyframes sabai-skeleton {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
@@ -178,7 +178,7 @@ body {
     var(--surface-3) 75%
   );
   background-size: 200% 100%;
-  animation: prahari-skeleton 1.6s ease-in-out infinite;
+  animation: sabai-skeleton 1.6s ease-in-out infinite;
   border-radius: var(--radius-sm);
 }
 

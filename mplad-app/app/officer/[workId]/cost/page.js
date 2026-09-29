@@ -676,11 +676,11 @@ export default function CostJustificationPage({ params }) {
               <div style={{ marginBottom: '24px', lineHeight: '1.6', fontSize: '1rem' }}>
                 <p><strong>Subject / विषय:</strong> Automated Cost Justification Review for {workId}</p>
                 <p style={{ marginTop: '12px' }}>
-                  This memo certifies that the cost estimate for the aforementioned work has been evaluated using the PRAHARI V3 Deterministic Engine. 
+                  This memo certifies that the cost estimate for the aforementioned work has been evaluated using the SABAI V3 Deterministic Engine. 
                   The sanctioned amount of <strong>{fmt(data?.sanctioned_amount)}</strong> was compared against the norm-based expected cost of <strong>{fmt(data?.estimates?.norm?.expected_cost)}</strong>.
                 </p>
                 <p style={{ marginTop: '12px', fontStyle: 'italic', color: '#333' }}>
-                  यह ज्ञापन प्रमाणित करता है कि उपरोक्त कार्य के लिए लागत अनुमान का मूल्यांकन प्रहरी V3 नियतात्मक इंजन का उपयोग करके किया गया है।
+                  यह ज्ञापन प्रमाणित करता है कि उपरोक्त कार्य के लिए लागत अनुमान का मूल्यांकन सबई V3 नियतात्मक इंजन का उपयोग करके किया गया है।
                   स्वीकृत राशि <strong>{fmt(data?.sanctioned_amount)}</strong> की तुलना मानदंड-आधारित अपेक्षित लागत <strong>{fmt(data?.estimates?.norm?.expected_cost)}</strong> से की गई थी।
                 </p>
               </div>

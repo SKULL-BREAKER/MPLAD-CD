@@ -78,7 +78,7 @@ function App() {
                   color: 'var(--text-primary)',
                   letterSpacing: '-0.01em',
                 }}>
-                  PRAHARI
+                  SABAI
                 </span>
                 <span style={{
                   fontFamily: 'var(--font-sans)',
