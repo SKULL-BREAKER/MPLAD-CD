@@ -135,6 +135,7 @@ img { max-width: 100%; }
 }
 
 .nav-links a {
+  display: block;
   padding: 6px 14px;
   border-radius: 8px;
   font-size: 0.875rem;
@@ -756,6 +757,7 @@ img { max-width: 100%; }
   }
 
   .nav-links a {
+    display: block;
     padding: 10px 16px;
     border-radius: 8px;
     font-size: 0.9rem;
