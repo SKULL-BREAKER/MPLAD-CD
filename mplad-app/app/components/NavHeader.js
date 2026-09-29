@@ -160,10 +160,7 @@ export default function NavHeader() {
 
       <div className="nav-actions">
         <NotificationsDropdown />
-        {/* Desktop: MoSPI label */}
-        <div aria-hidden="true" className="nav-mosp-desktop">
-          MoSPI · Govt. of India
-        </div>
+
 
         {/* Mobile hamburger */}
         <button

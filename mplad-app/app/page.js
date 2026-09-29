@@ -150,9 +150,7 @@ export default async function Home() {
 
       {/* ── Hero ── */}
       <section style={{ textAlign: 'center', padding: '48px 0 40px' }}>
-        <div style={{ display: 'inline-block', background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.2)', borderRadius: '99px', padding: '6px 18px', fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 600, marginBottom: '20px', letterSpacing: '0.5px' }}>
-          Ministry of Statistics &amp; Programme Implementation · Since 1993
-        </div>
+
         <h1 style={{ fontSize: '3rem', fontWeight: 800, letterSpacing: '-1.5px', lineHeight: 1.1, marginBottom: '16px' }}>
           Members of Parliament<br />
           <span style={{ background: 'linear-gradient(to right, var(--accent), #D4AF37)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
