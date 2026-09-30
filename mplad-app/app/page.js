@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Chatbot from './components/Chatbot';
 import db from '../lib/db';
 
 // ── Sector colour map ──────────────────────────────────────────────────────────
@@ -521,6 +522,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      <Chatbot role="public" />
     </main>
   );
 }

@@ -63,13 +63,20 @@ export async function POST(request) {
         if (msg.includes('data') || msg.includes('stats')) bestReply = mockResponses[3];
         if (msg.includes('monitor') || msg.includes('anomaly') || msg.includes('officer')) bestReply = mockResponses[4];
         
-        // However, the user says "Train LUDO Ai perfectly", we will return a generic smart response for any question.
-        return NextResponse.json({ reply: `(LUDO AI): ${bestReply}\n\n*Note: I am fully trained on the present official data and monitor everything perfectly to alert officers of anomalies.*` });
+        if (role === 'public' && (msg.includes('anomaly') || msg.includes('fraud') || msg.includes('alert'))) {
+           return NextResponse.json({ reply: `(LUDO AI): I am sorry, but as a public user, I cannot provide details on internal alerts or anomalies. I am here to provide you with general news and information regarding the MPLADS scheme. For security, alerts and problems are strictly restricted to designated officers.` });
+        }
+
+        return NextResponse.json({ reply: `(LUDO AI): ${bestReply}\n\n*Note: I am fully trained on the present official data.*` });
       } else {
         const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+        const systemPrompt = role === 'officer' 
+          ? `System: You are LUDO, the official AI Assistant for the MPLADS scheme. The user is an Officer. You monitor the website perfectly and correctly notify the officers when there is a problem or anomaly found under their respective area. You must assist the officer with alerts and problems. Use present data.` 
+          : `System: You are LUDO, the official AI Assistant for the MPLADS scheme. The user is from the Public. You are here to provide public news and general information regarding the scheme. CRITICAL RULE: You MUST NOT inform the public about any internal alerts, anomalies, fraud, or systemic problems. Alerts and problems are strictly for officers only. If the public user asks about problems or alerts, decline politely. Use present data.`;
+
         const response = await ai.models.generateContent({
           model: 'gemini-2.5-pro',
-          contents: `System: You are LUDO, the official AI Assistant for the MPLADS scheme (Members of Parliament Local Area Development Scheme). You monitor the website perfectly and correctly notify the officers when there is a problem or anomaly found under their respective area. You must respond to any details related to the website even if the visitor or user asks vaguely or poorly. You only use present data, never past years' data. You are official. Keep your response concise, polite, and helpful.\n\nUser (${role}): ${message}`,
+          contents: `${systemPrompt}\n\nUser: ${message}`,
         });
         
         return NextResponse.json({ reply: response.text });
