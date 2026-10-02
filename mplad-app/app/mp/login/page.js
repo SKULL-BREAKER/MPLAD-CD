@@ -1,13 +1,5 @@
-'use client';
-import GoogleLoginCard from '../../components/GoogleLoginCard';
+import { redirect } from 'next/navigation';
 
-export default function MPLogin() {
-  return (
-    <GoogleLoginCard
-      expectedRole="MP"
-      title="MP Secure Portal"
-      subtitle="For registered Members of Parliament — Lok Sabha & Rajya Sabha"
-      accentColor="#10B981"
-    />
-  );
+export default function MPLoginRedirect() {
+  redirect('/login');
 }

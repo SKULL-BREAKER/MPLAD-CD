@@ -16,8 +16,8 @@ export async function POST(request) {
 
     const normalised = email.toLowerCase().trim();
 
-    // Rate limit: 3 OTPs per email per 10 minutes
-    const { allowed, resetIn } = rateLimit(`otp:${normalised}`, 3, 600);
+    // Rate limit: 20 OTPs per email per 10 minutes (for easier testing)
+    const { allowed, resetIn } = rateLimit(`otp:${normalised}`, 20, 600);
     if (!allowed) {
       return new Response(
         JSON.stringify({ error: `Too many OTP requests. Try again in ${resetIn}s.` }),
@@ -25,8 +25,8 @@ export async function POST(request) {
       );
     }
 
-    // Rate limit: 10 requests per IP per 10 minutes (prevent scraping)
-    const ipLimit = rateLimit(`otp-ip:${ip}`, 10, 600);
+    // Rate limit: 50 requests per IP per 10 minutes (prevent scraping but allow testing)
+    const ipLimit = rateLimit(`otp-ip:${ip}`, 50, 600);
     if (!ipLimit.allowed) {
       return new Response(
         JSON.stringify({ error: 'Too many requests from your network. Try again later.' }),

@@ -31,12 +31,7 @@ async function handleReject(formData) {
   revalidatePath('/authority');
 }
 
-async function handleLogout() {
-  'use server';
-  const cookieStore = await cookies();
-  cookieStore.delete('authority_auth');
-  redirect('/authority/login');
-}
+import LogoutButton from '../components/LogoutButton';
 
 // ── AI Support — read-only eligibility signal ─────────────────────────────────
 function getEligibilitySignal(utility_term) {
@@ -65,11 +60,22 @@ const SECTOR_COLORS = {
   'Other': '#94A3B8',
 };
 
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../../lib/authOptions';
+
+// ... other imports ...
+
 export default async function AuthorityView() {
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user || (session.user.role !== 'ADMIN' && session.user.role !== 'OFFICER')) {
+    redirect('/login');
+  }
+
+  // Enforce 2FA layer
   const cookieStore = await cookies();
-  const auth = cookieStore.get('authority_auth');
-  if (!auth || auth.value !== 'true') {
-    redirect('/authority/login');
+  const twoFactor = cookieStore.get('mplads_2fa_verified');
+  if (!twoFactor || twoFactor.value !== 'true') {
+    redirect('/login/2fa');
   }
 
   const allWorks = await db.work.findMany({ take: 100,
@@ -122,19 +128,7 @@ export default async function AuthorityView() {
             All decisions are immutably audited.
           </p>
         </div>
-        <form action={handleLogout}>
-          <button type="submit" className="btn btn-sm" style={{ 
-            background: 'var(--surface-2)', 
-            color: 'var(--danger)', 
-            border: 'none',
-            fontWeight: 700,
-            boxShadow: '4px 4px 10px rgba(42, 58, 49, 0.08), inset 2px 2px 6px rgba(255, 255, 255, 0.8), inset -2px -2px 6px rgba(42, 58, 49, 0.04)',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease'
-          }}>
-            Secure Logout
-          </button>
-        </form>
+        <LogoutButton />
       </header>
 
       {/* ── Fund Utilisation Report ── */}

@@ -24,6 +24,8 @@ const PUBLIC_PREFIXES = [
   '/ludo_logo',
 ];
 
+import { getToken } from 'next-auth/jwt';
+
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
 
@@ -34,27 +36,32 @@ export async function middleware(request) {
 
   // Enforce auth on protected API routes
   if (PROTECTED.some(p => pathname.startsWith(p))) {
-    const authHeader = request.headers.get('Authorization');
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+    // 1. Try NextAuth cookie token first (for browser requests)
+    let payload = await getToken({ 
+      req: request, 
+      secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET 
+    });
 
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Unauthorized — Bearer token required' },
-        { status: 401 }
-      );
+    // 2. Fallback to old Bearer token logic (for scripts/Postman)
+    if (!payload) {
+      const authHeader = request.headers.get('Authorization');
+      const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+      if (token) {
+        const { verifyToken } = await import('./lib/auth');
+        payload = await verifyToken(token).catch(() => null);
+      }
     }
 
-    const payload = await verifyToken(token);
     if (!payload) {
       return NextResponse.json(
-        { error: 'Unauthorized — invalid or expired token' },
+        { error: 'Unauthorized — valid session or Bearer token required' },
         { status: 401 }
       );
     }
 
     // Inject verified identity into request headers for downstream handlers
     const headers = new Headers(request.headers);
-    headers.set('x-user-id', String(payload.officer_id || payload.id || ''));
+    headers.set('x-user-id', String(payload.mp_id || payload.officer_id || payload.id || ''));
     headers.set('x-user-role', String(payload.role || ''));
     headers.set('x-district-id', String(payload.district_id || ''));
 
