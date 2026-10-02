@@ -1,0 +1,462 @@
+{
+  "generated_at": "2026-10-02T06:14:00.971Z",
+  "stats": {
+    "total": 131158,
+    "completed": 44028,
+    "proposed": 87130,
+    "budget": 79446419680,
+    "spent": 24086877005,
+    "districts": 538,
+    "mps": 734
+  },
+  "categories": [
+    {
+      "category": "Normal/Others",
+      "n": 128243,
+      "amt": 76484792564
+    },
+    {
+      "category": "Repair and Renovation",
+      "n": 1817,
+      "amt": 1233803235
+    },
+    {
+      "category": "Trust and Society",
+      "n": 1068,
+      "amt": 1215147031
+    },
+    {
+      "category": "Bar and Associations",
+      "n": 19,
+      "amt": 975000
+    },
+    {
+      "category": "Education",
+      "n": 1,
+      "amt": 500000000
+    }
+  ],
+  "top_districts": [
+    {
+      "district_id": "KAUSHAMBI",
+      "total": 2584,
+      "completed": 607,
+      "budget": 111313844,
+      "spent": 42926694
+    },
+    {
+      "district_id": "MACHHLISHAHR",
+      "total": 1396,
+      "completed": 725,
+      "budget": 139032410,
+      "spent": 34383272
+    },
+    {
+      "district_id": "SHRAWASTI",
+      "total": 1357,
+      "completed": 0,
+      "budget": 90062310,
+      "spent": 0
+    },
+    {
+      "district_id": "NIZAMABAD",
+      "total": 916,
+      "completed": 476,
+      "budget": 265293027,
+      "spent": 147505027
+    },
+    {
+      "district_id": "PURI",
+      "total": 730,
+      "completed": 548,
+      "budget": 119940874,
+      "spent": 31620874
+    },
+    {
+      "district_id": "JAUNPUR",
+      "total": 686,
+      "completed": 522,
+      "budget": 98054310,
+      "spent": 24508010
+    },
+    {
+      "district_id": "KHEDA",
+      "total": 674,
+      "completed": 247,
+      "budget": 132055020,
+      "spent": 44304206
+    },
+    {
+      "district_id": "GIRIDIH",
+      "total": 674,
+      "completed": 49,
+      "budget": 116151312,
+      "spent": 14533632
+    },
+    {
+      "district_id": "KARIMNAGAR",
+      "total": 635,
+      "completed": 173,
+      "budget": 165760635,
+      "spent": 40964083
+    },
+    {
+      "district_id": "KANGRA",
+      "total": 628,
+      "completed": 208,
+      "budget": 172852135,
+      "spent": 44716806
+    },
+    {
+      "district_id": "MAHESANA",
+      "total": 620,
+      "completed": 150,
+      "budget": 118848405,
+      "spent": 27935405
+    },
+    {
+      "district_id": "PRATAPGARH",
+      "total": 600,
+      "completed": 106,
+      "budget": 115593071,
+      "spent": 34071121
+    },
+    {
+      "district_id": "KORAPUT",
+      "total": 575,
+      "completed": 159,
+      "budget": 184292417,
+      "spent": 46662417
+    },
+    {
+      "district_id": "BHADOHI",
+      "total": 544,
+      "completed": 407,
+      "budget": 96578062,
+      "spent": 52573170
+    },
+    {
+      "district_id": "SHIMLA",
+      "total": 541,
+      "completed": 83,
+      "budget": 114563436,
+      "spent": 21196476
+    },
+    {
+      "district_id": "PANCHMAHAL",
+      "total": 539,
+      "completed": 91,
+      "budget": 110204302,
+      "spent": 18476402
+    },
+    {
+      "district_id": "FARIDKOT",
+      "total": 539,
+      "completed": 227,
+      "budget": 123049927,
+      "spent": 49705480
+    },
+    {
+      "district_id": "ANAND",
+      "total": 529,
+      "completed": 247,
+      "budget": 116967527,
+      "spent": 46772418
+    },
+    {
+      "district_id": "CHELVELLA",
+      "total": 519,
+      "completed": 180,
+      "budget": 144766371,
+      "spent": 47532371
+    },
+    {
+      "district_id": "ETAWAH",
+      "total": 514,
+      "completed": 192,
+      "budget": 173738742,
+      "spent": 59111265
+    }
+  ],
+  "top_mps": [
+    {
+      "name": "PUSHPENDRA SAROJ",
+      "state": "Uttar Pradesh",
+      "constituency": "KAUSHAMBI",
+      "works": 2584,
+      "completed": 607,
+      "budget": 111313844
+    },
+    {
+      "name": "PRIYA SAROJ",
+      "state": "Uttar Pradesh",
+      "constituency": "MACHHLISHAHR",
+      "works": 1396,
+      "completed": 725,
+      "budget": 139032410
+    },
+    {
+      "name": "Ram Shiromani",
+      "state": "Uttar Pradesh",
+      "constituency": "SHRAWASTI",
+      "works": 1357,
+      "completed": 0,
+      "budget": 90062310
+    },
+    {
+      "name": "Arvind Dharmapuri",
+      "state": "Telangana",
+      "constituency": "NIZAMABAD",
+      "works": 916,
+      "completed": 476,
+      "budget": 265293027
+    },
+    {
+      "name": "SAMBIT PATRA",
+      "state": "Odisha",
+      "constituency": "PURI",
+      "works": 730,
+      "completed": 548,
+      "budget": 119940874
+    },
+    {
+      "name": "BABU SINGH KUSHWAHA",
+      "state": "Uttar Pradesh",
+      "constituency": "JAUNPUR",
+      "works": 686,
+      "completed": 522,
+      "budget": 98054310
+    },
+    {
+      "name": "Shri Chandra Prakash Choudhary",
+      "state": "Jharkhand",
+      "constituency": "GIRIDIH",
+      "works": 674,
+      "completed": 49,
+      "budget": 116151312
+    },
+    {
+      "name": "Devusinh Jesingbhai Chauhan",
+      "state": "Gujarat",
+      "constituency": "KHEDA",
+      "works": 674,
+      "completed": 247,
+      "budget": 132055020
+    },
+    {
+      "name": "Shri Baburam Nishad (2022-28)",
+      "state": "Uttar Pradesh",
+      "constituency": "Sitting Rajya Sabha",
+      "works": 649,
+      "completed": 436,
+      "budget": 187164497
+    },
+    {
+      "name": "Sanjay Kumar Bandi",
+      "state": "Telangana",
+      "constituency": "KARIMNAGAR",
+      "works": 635,
+      "completed": 173,
+      "budget": 165760635
+    },
+    {
+      "name": "RAJEEV BHARDWAJ",
+      "state": "Himachal Pradesh",
+      "constituency": "KANGRA",
+      "works": 628,
+      "completed": 208,
+      "budget": 172852135
+    },
+    {
+      "name": "HARIBHAI PATEL",
+      "state": "Gujarat",
+      "constituency": "MAHESANA",
+      "works": 620,
+      "completed": 150,
+      "budget": 118848405
+    },
+    {
+      "name": "DR. S P SINGH",
+      "state": "Uttar Pradesh",
+      "constituency": "PRATAPGARH",
+      "works": 600,
+      "completed": 106,
+      "budget": 115593071
+    },
+    {
+      "name": "Saptagiri Sankar Ulaka",
+      "state": "Odisha",
+      "constituency": "KORAPUT",
+      "works": 575,
+      "completed": 159,
+      "budget": 184292417
+    },
+    {
+      "name": "VINOD KUMAR BIND",
+      "state": "Uttar Pradesh",
+      "constituency": "BHADOHI",
+      "works": 544,
+      "completed": 407,
+      "budget": 96578062
+    }
+  ],
+  "state_summary": [
+    {
+      "state": "Uttar Pradesh",
+      "total": 25975,
+      "completed": 10262,
+      "budget": 13770701260,
+      "mps": 111
+    },
+    {
+      "state": "Gujarat",
+      "total": 9768,
+      "completed": 3119,
+      "budget": 3742722755,
+      "mps": 33
+    },
+    {
+      "state": "Madhya Pradesh",
+      "total": 8669,
+      "completed": 2643,
+      "budget": 3975833783,
+      "mps": 37
+    },
+    {
+      "state": "Bihar",
+      "total": 7621,
+      "completed": 3875,
+      "budget": 6027941544,
+      "mps": 51
+    },
+    {
+      "state": "Tamil Nadu",
+      "total": 6940,
+      "completed": 3629,
+      "budget": 6091841087,
+      "mps": 52
+    },
+    {
+      "state": "Odisha",
+      "total": 6805,
+      "completed": 1556,
+      "budget": 2829229326,
+      "mps": 30
+    },
+    {
+      "state": "Telangana",
+      "total": 6065,
+      "completed": 2349,
+      "budget": 2436607589,
+      "mps": 23
+    },
+    {
+      "state": "Karnataka",
+      "total": 5999,
+      "completed": 1318,
+      "budget": 4106817859,
+      "mps": 40
+    },
+    {
+      "state": "West Bengal",
+      "total": 5926,
+      "completed": 2426,
+      "budget": 4963411975,
+      "mps": 51
+    },
+    {
+      "state": "Kerala",
+      "total": 5862,
+      "completed": 1278,
+      "budget": 3947104925,
+      "mps": 31
+    },
+    {
+      "state": "Maharashtra",
+      "total": 5725,
+      "completed": 1178,
+      "budget": 5730292340,
+      "mps": 60
+    },
+    {
+      "state": "Jharkhand",
+      "total": 5666,
+      "completed": 996,
+      "budget": 2165598336,
+      "mps": 18
+    },
+    {
+      "state": "Punjab",
+      "total": 5193,
+      "completed": 2002,
+      "budget": 2180922163,
+      "mps": 18
+    },
+    {
+      "state": "Rajasthan",
+      "total": 4404,
+      "completed": 1313,
+      "budget": 3022112231,
+      "mps": 32
+    },
+    {
+      "state": "Andhra Pradesh",
+      "total": 4374,
+      "completed": 1467,
+      "budget": 3129814070,
+      "mps": 35
+    },
+    {
+      "state": "Assam",
+      "total": 2776,
+      "completed": 230,
+      "budget": 2027431525,
+      "mps": 20
+    },
+    {
+      "state": "Chhattisgarh",
+      "total": 2686,
+      "completed": 1064,
+      "budget": 1509514286,
+      "mps": 16
+    },
+    {
+      "state": "Himachal Pradesh",
+      "total": 2544,
+      "completed": 735,
+      "budget": 699701230,
+      "mps": 6
+    },
+    {
+      "state": "Haryana",
+      "total": 2157,
+      "completed": 467,
+      "budget": 1178186015,
+      "mps": 14
+    },
+    {
+      "state": "Uttarakhand",
+      "total": 1477,
+      "completed": 351,
+      "budget": 773462751,
+      "mps": 8
+    }
+  ],
+  "risk_summary": [
+    {
+      "tier": "LOW",
+      "n": 62
+    }
+  ],
+  "alert_summary": [
+    {
+      "status": "UNRESOLVED",
+      "n": 7821
+    },
+    {
+      "status": "new",
+      "n": 510
+    }
+  ],
+  "top_risk_works": []
+}
