@@ -870,9 +870,9 @@ img { max-width: 100%; }
 .clay-btn-primary { color: #3B82F6; }
 .clay-btn-success { color: #10B981; }
 .clay-btn-danger { color: #C55A5A; }
- 
- / *   L U D O   C H A T B O T   * /  
- .chatbot-window {
+
+/* LUDO CHATBOT */
+.chatbot-window {
   position: fixed;
   bottom: 90px;
   right: 20px;
