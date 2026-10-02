@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 import { runFraudEngine } from '../../../lib/modules/fraud_engine';
+import { verifyRequest } from '../../../lib/auth';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 60; // up to 60s for large datasets
+export const maxDuration = 60;
 
 export async function GET(request) {
+  const payload = await verifyRequest(request);
+  if (!payload) {
+    return NextResponse.json({ error: 'Unauthorized — officer login required' }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const top = parseInt(searchParams.get('top') || '50', 10);
