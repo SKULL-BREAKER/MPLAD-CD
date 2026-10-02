@@ -56,14 +56,30 @@ export const metadata = {
   description: 'Read-only public view of all sanctioned MPLADS works with geo-tagged evidence and fund utilisation.',
 };
 
-export default async function PublicView() {
-  const works = await db.work.findMany({ take: 100,
-    where: { status: { in: ['SANCTIONED', 'IN-EXECUTION', 'COMPLETED', 'UTILISED', 'sanctioned', 'in-execution', 'completed', 'utilised'] } },
-    orderBy: { id: 'asc' },
-  });
+import { unstable_cache } from 'next/cache';
 
-  const allEvidence = await db.evidenceSubmission.findMany({
-    orderBy: { created_at: 'desc' }
+export default async function PublicView() {
+  const getCachedPublicData = unstable_cache(
+    async () => {
+      const works = await db.work.findMany({
+        take: 100, // Limit to 100 for the feed, but cache the result
+        where: { status: { in: ['SANCTIONED', 'IN-EXECUTION', 'COMPLETED', 'UTILISED', 'sanctioned', 'in-execution', 'completed', 'utilised'] } },
+        orderBy: { id: 'asc' },
+      });
+
+      const allEvidence = await db.evidenceSubmission.findMany({
+        orderBy: { created_at: 'desc' }
+      });
+
+      return { works, allEvidence };
+    },
+    ['public-works-v1'],
+    { revalidate: 30 } // Cache for 30 seconds
+  );
+
+  const { works, allEvidence } = await getCachedPublicData().catch((e) => {
+    console.error("DB Error:", e);
+    return { works: [], allEvidence: [] };
   });
   const evidenceMap = {};
   allEvidence.forEach(e => {

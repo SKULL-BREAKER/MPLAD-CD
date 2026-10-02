@@ -1,44 +1,45 @@
 import db from '../db';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MAIN EXPORT
-// ─────────────────────────────────────────────────────────────────────────────
 /**
  * runFraudEngine(options)
- * Loads data from DB and returns real AI pipeline risk scores.
  * Returns { perWork, districtFlags, summary, scannedAt }
+ * Only loads rows that have risk scores — never scans all 131k works.
  */
 export async function runFraudEngine(options = {}) {
   const start = Date.now();
 
-  // Load real AI scores from DB
+  // Load risk entries (already ordered, small set)
   const risks = await db.workRisk.findMany({
     orderBy: { risk_score: 'desc' },
+    include: {
+      work: {
+        select: {
+          id: true, title: true, category: true, status: true,
+          sanctioned_amount: true, expenditure: true,
+          district_id: true, village: true, fy: true,
+        },
+      },
+    },
   });
 
-  const detectionResults = await db.detectionResult.findMany();
+  const riskWorkIds = risks.map(r => r.work_id);
 
-  // Map DetectionResult into perWork flags
+  // Load only detection results for the works we already have
+  const detectionResults = await db.detectionResult.findMany({
+    where: { work_id: { in: riskWorkIds } },
+  });
+
+  // Build flag map
   const flagMap = {};
   for (const dr of detectionResults) {
     if (!flagMap[dr.work_id]) flagMap[dr.work_id] = [];
-    
-    // Parse evidence JSON
     let evidence = null;
-    try { evidence = dr.evidence_json ? JSON.parse(dr.evidence_json) : null; } catch(e) {}
-    
+    try { evidence = dr.evidence_json ? JSON.parse(dr.evidence_json) : null; } catch (_) {}
     flagMap[dr.work_id].push({
-      module_code: dr.detector, // Changed from category to module_code
+      module_code: dr.detector,
       severity: dr.tier,
       evidence: evidence || { message: dr.evidence_json },
     });
-  }
-
-  // Load flat works
-  const works = await db.work.findMany();
-  const workMap = {};
-  for (const w of works) {
-    workMap[w.id] = w;
   }
 
   const perWork = risks.map(r => {
@@ -67,12 +68,12 @@ export async function runFraudEngine(options = {}) {
       flags,
       factors,
       timestamp: r.updated_at,
-      work_details: workMap[r.work_id] || null,
+      work_details: r.work || null,
     };
   });
 
   const summary = {
-    total_works:    works.length,
+    total_works:    risks.length,
     flagged_works:  perWork.filter(w => w.risk_score >= 40).length,
     critical_works: perWork.filter(w => w.severity === 'CRITICAL').length,
     high_works:     perWork.filter(w => w.severity === 'HIGH').length,

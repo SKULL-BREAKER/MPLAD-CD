@@ -1,40 +1,63 @@
 import { NextResponse } from 'next/server';
 import db from '../../../lib/db';
-import { runDetectionEngines } from '../../../lib/modules/fusionBrain';
+import { verifyRequest } from '../../../lib/auth';
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+
+/**
+ * GET /api/investigator
+ * Returns top 50 works by risk score with their flags.
+ * Requires officer JWT.
+ * Uses a DB join instead of O(n²) JS loops.
+ */
+export async function GET(request) {
+  const payload = await verifyRequest(request);
+  if (!payload) {
+    return NextResponse.json({ error: 'Unauthorized — officer login required' }, { status: 401 });
+  }
+
   try {
-    const risks = await db.workRisk.findMany({ take: 100 });
-    const works = await db.work.findMany({ take: 100 });
-
-    const analyzedWorks = works.map(w => {
-      const risk = risks.find(r => r.work_id === w.id);
-      let aiAnalysis = { score: 0, level: 'LOW', factors: [] };
-      if (risk) {
-        let factors = [];
-        try {
-          if (risk.contributions_json) {
-            factors = JSON.parse(risk.contributions_json).map(f => ({
-              module: f.module_code,
-              severity: f.severity,
-              detail: f.evidence?.message || (f.evidence ? JSON.stringify(f.evidence) : '')
-            }));
-          }
-        } catch(e) {}
-        aiAnalysis = {
-          score: risk.risk_score || 0,
-          level: risk.tier || 'LOW',
-          factors
-        };
-      }
-      return { ...w, aiAnalysis };
+    // Single DB query: join work_risk with works, ordered by score
+    const risks = await db.workRisk.findMany({
+      take: 50,
+      orderBy: { risk_score: 'desc' },
+      include: {
+        work: {
+          select: {
+            id: true, title: true, category: true, status: true,
+            sanctioned_amount: true, expenditure: true,
+            district_id: true, village: true, fy: true,
+          },
+        },
+      },
     });
 
-    analyzedWorks.sort((a, b) => b.aiAnalysis.score - a.aiAnalysis.score);
+    const queue = risks.map(r => {
+      let factors = [];
+      try {
+        if (r.contributions_json) {
+          factors = JSON.parse(r.contributions_json).map(f => ({
+            module: f.module_code,
+            severity: f.severity,
+            detail: f.evidence?.message || (f.evidence ? JSON.stringify(f.evidence) : ''),
+          }));
+        }
+      } catch (_) {}
 
-    return NextResponse.json({ success: true, queue: analyzedWorks.slice(0, 50) }); // Top 50 to avoid huge payload
-  } catch (error) {
-    console.error('Investigator API Error:', error);
+      return {
+        ...r.work,
+        work_id: r.work_id,
+        aiAnalysis: {
+          score: r.risk_score || 0,
+          level: r.tier || 'LOW',
+          factors,
+        },
+      };
+    });
+
+    return NextResponse.json({ success: true, queue });
+  } catch (err) {
+    console.error('[investigator]', err.message);
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }

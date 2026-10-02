@@ -2,6 +2,8 @@ import db from '../../lib/db';
 import { sanctionProposal, rejectProposal } from '../../lib/modules/scrutiny';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 // ── Server Actions (module-level — no closures) ───────────────────────────────
 async function handleSanction(formData) {
@@ -27,6 +29,13 @@ async function handleReject(formData) {
     console.error('[Reject Error]', e.message);
   }
   revalidatePath('/authority');
+}
+
+async function handleLogout() {
+  'use server';
+  const cookieStore = await cookies();
+  cookieStore.delete('authority_auth');
+  redirect('/authority/login');
 }
 
 // ── AI Support — read-only eligibility signal ─────────────────────────────────
@@ -57,6 +66,12 @@ const SECTOR_COLORS = {
 };
 
 export default async function AuthorityView() {
+  const cookieStore = await cookies();
+  const auth = cookieStore.get('authority_auth');
+  if (!auth || auth.value !== 'true') {
+    redirect('/authority/login');
+  }
+
   const allWorks = await db.work.findMany({ take: 100,
     orderBy: { id: 'asc' },
   });
@@ -99,12 +114,27 @@ export default async function AuthorityView() {
 
   return (
     <main className="main-content">
-      <header style={{ marginBottom: '32px' }}>
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}> Authority Scrutiny Board</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-          Scrutinise proposals for eligibility, duplication & cost-reasonableness. Sanction or reject with canonical reason.
-          All decisions are immutably audited.
-        </p>
+      <header style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <div>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}> Authority Scrutiny Board</h1>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '800px' }}>
+            Scrutinise proposals for eligibility, duplication & cost-reasonableness. Sanction or reject with canonical reason.
+            All decisions are immutably audited.
+          </p>
+        </div>
+        <form action={handleLogout}>
+          <button type="submit" className="btn btn-sm" style={{ 
+            background: 'var(--surface-2)', 
+            color: 'var(--danger)', 
+            border: 'none',
+            fontWeight: 700,
+            boxShadow: '4px 4px 10px rgba(42, 58, 49, 0.08), inset 2px 2px 6px rgba(255, 255, 255, 0.8), inset -2px -2px 6px rgba(42, 58, 49, 0.04)',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease'
+          }}>
+            Secure Logout
+          </button>
+        </form>
       </header>
 
       {/* ── Fund Utilisation Report ── */}

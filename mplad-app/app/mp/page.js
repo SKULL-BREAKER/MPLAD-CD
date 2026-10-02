@@ -3,6 +3,8 @@ import { getEntitlementBalance, getSCSTUtilisation } from '../../lib/modules/ent
 import { structureProposal } from '../../lib/modules/proposal';
 import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 // ── 12 Canonical MPLADS Priority Sectors ─────────────────────────────────────
 const PRIORITY_SECTORS = [
@@ -52,6 +54,13 @@ async function submitProposal(formData) {
   revalidatePath('/mp');
 }
 
+async function handleLogout() {
+  'use server';
+  const cookieStore = await cookies();
+  cookieStore.delete('mp_auth');
+  redirect('/mp/login');
+}
+
 // ── Sector colour map ─────────────────────────────────────────────────────────
 const SECTOR_COLORS = {
   'Drinking Water': '#0EA5E9', 'Education': '#8B5CF6', 'Electricity': '#C48F37',
@@ -62,6 +71,12 @@ const SECTOR_COLORS = {
 };
 
 export default async function MPView() {
+  const cookieStore = await cookies();
+  const auth = cookieStore.get('mp_auth');
+  if (!auth || auth.value !== 'true') {
+    redirect('/mp/login');
+  }
+
   const member_id      = 'MP-001';
   const year_val       = '2024-25';
   const constituency_id = 'DIST-001';
@@ -89,6 +104,19 @@ export default async function MPView() {
               Member: {member_id} · Constituency: {constituency_id} · Year: {year_val}
             </div>
           </div>
+          <form action={handleLogout}>
+            <button type="submit" className="btn btn-sm" style={{ 
+              background: 'var(--surface-2)', 
+              color: 'var(--danger)', 
+              border: 'none',
+              fontWeight: 700,
+              boxShadow: '4px 4px 10px rgba(42, 58, 49, 0.08), inset 2px 2px 6px rgba(255, 255, 255, 0.8), inset -2px -2px 6px rgba(42, 58, 49, 0.04)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}>
+              Secure Logout
+            </button>
+          </form>
         </div>
 
         {/* Fund stats */}
@@ -238,8 +266,11 @@ export default async function MPView() {
               required
             />
           </div>
-          <div className="alert alert-info" style={{ fontSize: '0.8rem' }}>
+          <div className="alert alert-info" style={{ fontSize: '0.8rem', marginBottom: '8px' }}>
              AI eligibility and duplication checks will run at the Authority scrutiny stage.
+          </div>
+          <div className="alert alert-ok" style={{ fontSize: '0.8rem', marginBottom: '16px' }}>
+             <strong>🔒 Strict Confidentiality:</strong> Your proposals remain securely hidden from the Public Portal until formally sanctioned by the District Authority, preventing external misuse or lobbying.
           </div>
           <button type="submit" className="btn">Submit Proposal →</button>
         </form>

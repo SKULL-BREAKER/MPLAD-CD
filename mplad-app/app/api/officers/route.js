@@ -3,27 +3,10 @@ import bcrypt from 'bcryptjs';
 import db from '../../../lib/db';
 import { verifyRequest } from '../../../lib/auth';
 
-// ── Seed helper — creates a test officer if none exist ─────────────────────────
-async function ensureTestOfficer() {
-  const count = await db.user.count({ where: { role: 'OFFICER' } });
-  if (count === 0) {
-    const hash = await bcrypt.hash('officer123', 10);
-    await db.user.create({
-      data: {
-        id: 'officer1',
-        phone_hash: hash,
-        name: 'Field Officer — CONST-101',
-        district_id: 'CONST-101',
-        role: 'OFFICER'
-      },
-    });
-  }
-}
+export const dynamic = 'force-dynamic';
 
-// GET /api/officers — list officers (admin) or get current officer info
+// GET /api/officers — get current officer profile (requires JWT)
 export async function GET(request) {
-  await ensureTestOfficer();
-
   const payload = await verifyRequest(request);
   if (!payload) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -31,7 +14,7 @@ export async function GET(request) {
 
   const officer = await db.user.findUnique({
     where: { id: payload.officer_id },
-    select: { id: true, name: true, district_id: true },
+    select: { id: true, name: true, district_id: true, role: true },
   });
 
   if (!officer) {
@@ -41,14 +24,33 @@ export async function GET(request) {
   return NextResponse.json({ officer });
 }
 
-// POST /api/officers — create a new officer (admin only, no auth check for demo)
+/**
+ * POST /api/officers — create officer account
+ * REQUIRES a valid existing officer JWT (admin-level officer only).
+ * Removes the open unauthenticated creation endpoint.
+ */
 export async function POST(request) {
+  const payload = await verifyRequest(request);
+  if (!payload) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Only ADMIN-role officers can create other officers
+  if (payload.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Forbidden — admin role required' }, { status: 403 });
+  }
+
   try {
     const body = await request.json();
     const { username, password, display_name, constituency_id } = body;
 
     if (!username || !password || !display_name || !constituency_id) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+      return NextResponse.json({ error: 'All fields required: username, password, display_name, constituency_id' }, { status: 400 });
+    }
+
+    // Password strength check — minimum 8 chars
+    if (password.length < 8) {
+      return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 });
     }
 
     const existing = await db.user.findUnique({ where: { id: username } });
@@ -56,15 +58,21 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Username already exists' }, { status: 409 });
     }
 
-    const hash = await bcrypt.hash(password, 10);
+    const hash = await bcrypt.hash(password, 12); // cost factor 12
     const officer = await db.user.create({
-      data: { id: username, phone_hash: hash, name: display_name, district_id: constituency_id, role: 'OFFICER' },
+      data: {
+        id: String(username).trim().toLowerCase(),
+        phone_hash: hash,
+        name: String(display_name).trim().slice(0, 100),
+        district_id: String(constituency_id).trim().toUpperCase(),
+        role: 'OFFICER',
+      },
       select: { id: true, name: true, district_id: true },
     });
 
     return NextResponse.json({ officer }, { status: 201 });
   } catch (err) {
-    console.error('[Officer Create Error]', err);
+    console.error('[officers POST]', err.message);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
