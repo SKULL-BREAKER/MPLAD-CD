@@ -1,15 +1,20 @@
 'use client';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useEffect, use } from 'react';
+import { useEffect, useState, use } from 'react';
 
 export default function LoginPage({ searchParams }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const resolvedParams = searchParams ? use(searchParams) : {};
-  const error = resolvedParams?.error;
+  const errorParam = resolvedParams?.error;
 
-  // Auto-redirect to 2FA step
+  const [email, setEmail]       = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
+
+  // Auto-redirect if already logged in
   useEffect(() => {
     if (status !== 'authenticated') return;
     const role = session?.user?.role;
@@ -18,9 +23,21 @@ export default function LoginPage({ searchParams }) {
     }
   }, [status, session]);
 
-  const handleSignIn = () => {
-    // Uses Google's default callback which goes to this page, then the useEffect redirects
-    signIn('google', { callbackUrl: '/login' });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    const res = await signIn('credentials', {
+      email,
+      password,
+      redirect: false,
+    });
+    setLoading(false);
+    if (res?.error) {
+      setError('Invalid email or password. Please try again.');
+    } else {
+      router.replace('/login/2fa');
+    }
   };
 
   return (
@@ -30,95 +47,107 @@ export default function LoginPage({ searchParams }) {
       minHeight: '80vh', padding: '24px',
     }}>
       <style>{`
-        .g-btn { transition: all 0.2s; }
-        .g-btn:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .g-btn:active { transform: scale(0.98); }
+        .login-input {
+          width: 100%; padding: 12px 14px; border: 1.5px solid #E5E7EB;
+          borderRadius: 10px; fontSize: 0.95rem; outline: none;
+          transition: border-color 0.2s; background: #FAFAFA; boxSizing: border-box;
+        }
+        .login-input:focus { border-color: #10B981; background: white; }
+        .login-btn { transition: all 0.2s; }
+        .login-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(16,185,129,0.35); }
+        .login-btn:active:not(:disabled) { transform: scale(0.98); }
       `}</style>
 
       <div style={{
-        width: '100%', maxWidth: 440,
+        width: '100%', maxWidth: 420,
         background: 'var(--surface-2, white)',
         borderRadius: 24, padding: '48px 36px',
         boxShadow: '0 16px 40px rgba(0,0,0,0.1)',
         border: '1px solid rgba(0,0,0,0.05)',
-        textAlign: 'center',
       }}>
+        {/* Icon */}
         <div style={{
           width: 72, height: 72, borderRadius: '50%',
           background: 'rgba(16, 185, 129, 0.1)', border: '2px solid rgba(16, 185, 129, 0.2)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           margin: '0 auto 24px', fontSize: 36,
-        }}>
-          🇮🇳
-        </div>
+        }}>🇮🇳</div>
 
-        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--primary, #10B981)', margin: '0 0 10px' }}>
+        <h1 style={{ fontSize: '1.8rem', fontWeight: 900, color: 'var(--primary, #10B981)', margin: '0 0 6px', textAlign: 'center' }}>
           MPLADS Portal
         </h1>
-        <p style={{ color: 'var(--text-muted, #666)', fontSize: '0.9rem', margin: '0 0 32px', lineHeight: 1.5 }}>
-          Centralized secure login for Members of Parliament, District Officers, and System Administrators.
+        <p style={{ color: 'var(--text-muted, #666)', fontSize: '0.85rem', margin: '0 0 32px', lineHeight: 1.5, textAlign: 'center' }}>
+          Secure login for Members of Parliament, Officers & Administrators
         </p>
 
-        {error === 'OAuthCallback' && (
+        {/* Error */}
+        {(error || errorParam === 'CredentialsSignin') && (
           <div style={{
             background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B',
-            borderRadius: 10, padding: '12px', marginBottom: 24, fontSize: '0.85rem',
+            borderRadius: 10, padding: '12px', marginBottom: 20, fontSize: '0.85rem', textAlign: 'center',
           }}>
-            ⚠️ Authentication error. Please try again.
+            ⚠️ {error || 'Invalid credentials. Please try again.'}
           </div>
         )}
 
-        {error === 'not_registered' && (
-          <div style={{
-            background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B',
-            borderRadius: 10, padding: '12px', marginBottom: 24, fontSize: '0.85rem',
-          }}>
-            ⚠️ <strong>{resolvedParams?.email}</strong> is not registered. Please use your official MPLADS account.
-          </div>
-        )}
-
-        {status === 'loading' ? (
-          <div style={{ padding: '14px', color: '#666', fontSize: '0.9rem' }}>Checking session...</div>
-        ) : status === 'authenticated' ? (
-          <div style={{ padding: '14px', textAlign: 'center' }}>
-            <div style={{ color: '#10B981', fontWeight: 700, fontSize: '1.1rem', marginBottom: '12px' }}>
-              ✅ Signed in as {session?.user?.email}
-            </div>
-            {!session?.user?.role && (
-              <div style={{ color: '#B91C1C', fontSize: '0.85rem', marginBottom: '16px' }}>
-                ⚠️ No role assigned. Your account might be cached without a role.
-              </div>
-            )}
-            <button
-              onClick={() => {
-                import('next-auth/react').then(({ signOut }) => signOut());
-              }}
-              className="g-btn"
-              style={{
-                background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B',
-                padding: '8px 16px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem',
-                fontWeight: 600
-              }}
-            >
-              Sign Out & Try Again
+        {status === 'authenticated' ? (
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: '#10B981', fontWeight: 700, marginBottom: 12 }}>✅ Signed in as {session?.user?.email}</div>
+            <button onClick={() => import('next-auth/react').then(({ signOut }) => signOut())}
+              style={{ background: '#FEF2F2', border: '1px solid #FECACA', color: '#991B1B', padding: '8px 16px', borderRadius: 8, cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}>
+              Sign Out
             </button>
           </div>
         ) : (
-          <button onClick={handleSignIn} className="g-btn" style={{
-            width: '100%', padding: '14px 20px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
-            background: 'white', border: '1.5px solid #E5E7EB',
-            borderRadius: 12, cursor: 'pointer', fontWeight: 600, fontSize: '1rem',
-            color: '#374151',
-          }}>
-            <svg width="22" height="22" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-            </svg>
-            Sign in with Google
-          </button>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div>
+              <label style={{ fontSize: '0.82rem', fontWeight: 600, color: '#374151', display: 'block', marginBottom: 6 }}>
+                Email Address
+              </label>
+              <input
+                id="login-email"
+                type="email"
+                className="login-input"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="your@email.gov.in"
+                required
+                autoComplete="email"
+                style={{ width: '100%', padding: '12px 14px', border: '1.5px solid #E5E7EB', borderRadius: 10, fontSize: '0.95rem', outline: 'none', background: '#FAFAFA', boxSizing: 'border-box' }}
+              />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.82rem', fontWeight: 600, color: '#374151', display: 'block', marginBottom: 6 }}>
+                Password
+              </label>
+              <input
+                id="login-password"
+                type="password"
+                className="login-input"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                autoComplete="current-password"
+                style={{ width: '100%', padding: '12px 14px', border: '1.5px solid #E5E7EB', borderRadius: 10, fontSize: '0.95rem', outline: 'none', background: '#FAFAFA', boxSizing: 'border-box' }}
+              />
+            </div>
+            <button
+              id="login-submit"
+              type="submit"
+              disabled={loading}
+              className="login-btn"
+              style={{
+                width: '100%', padding: '14px', marginTop: 4,
+                background: loading ? '#9CA3AF' : 'linear-gradient(135deg, #10B981, #059669)',
+                color: 'white', border: 'none', borderRadius: 12,
+                cursor: loading ? 'not-allowed' : 'pointer',
+                fontWeight: 700, fontSize: '1rem', letterSpacing: '0.3px',
+              }}
+            >
+              {loading ? 'Signing in…' : 'Sign In'}
+            </button>
+          </form>
         )}
       </div>
     </main>

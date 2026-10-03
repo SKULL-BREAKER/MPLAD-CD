@@ -66,8 +66,9 @@ import { authOptions } from '../../lib/authOptions';
 // ... other imports ...
 
 export default async function AuthorityView() {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user || (session.user.role !== 'ADMIN' && session.user.role !== 'OFFICER')) {
+  let session = null;
+  try { session = await getServerSession(authOptions); } catch {}
+  if (!session?.user || (session.user.role !== 'ADMIN' && session.user.role !== 'OFFICER')) {
     redirect('/login');
   }
 

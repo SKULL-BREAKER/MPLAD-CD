@@ -34,9 +34,20 @@ export async function verifyToken(token) {
 }
 
 /**
- * Extract Bearer token from Authorization header and verify it
+ * Extract Bearer token from Authorization header and verify it,
+ * OR trust the middleware-injected x-user-role header (set after NextAuth session verify).
  */
 export async function verifyRequest(request) {
+  // 1. Trust middleware-injected identity (set after NextAuth cookie verification)
+  const role = request.headers.get('x-user-role');
+  if (role) {
+    return {
+      role,
+      id: request.headers.get('x-user-id') || null,
+      district_id: request.headers.get('x-district-id') || null,
+    };
+  }
+  // 2. Fallback: Bearer token (for scripts/Postman)
   const authHeader = request.headers.get('Authorization');
   if (!authHeader?.startsWith('Bearer ')) return null;
   return verifyToken(authHeader.slice(7));

@@ -71,8 +71,9 @@ import { authOptions } from '../../lib/authOptions';
 // ... other imports ...
 
 export default async function MPView() {
-  const session = await getServerSession(authOptions);
-  if (!session || !session.user || (session.user.role !== 'MP' && session.user.role !== 'ADMIN')) {
+  let session = null;
+  try { session = await getServerSession(authOptions); } catch {}
+  if (!session?.user || (session.user.role !== 'MP' && session.user.role !== 'ADMIN')) {
     redirect('/login');
   }
 

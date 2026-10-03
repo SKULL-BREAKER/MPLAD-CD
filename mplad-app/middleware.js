@@ -39,7 +39,7 @@ export async function middleware(request) {
     // 1. Try NextAuth cookie token first (for browser requests)
     let payload = await getToken({ 
       req: request, 
-      secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET 
+      secret: process.env.NEXTAUTH_SECRET || process.env.JWT_SECRET || 'mplads-dev-only-secret-do-not-use-in-production-2026'
     });
 
     // 2. Fallback to old Bearer token logic (for scripts/Postman)

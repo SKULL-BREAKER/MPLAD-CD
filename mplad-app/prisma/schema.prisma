@@ -113,13 +113,15 @@ model CostEstimate {
 }
 
 model User {
-  id          String  @id
-  role        String?
-  name        String?
-  district_id String?
-  phone_hash  String?
-  trust_score Float?  @default(50)
-  created_at  String?
+  id            String  @id
+  role          String?
+  name          String?
+  email         String? @unique
+  password_hash String?
+  district_id   String?
+  phone_hash    String?
+  trust_score   Float?  @default(50)
+  created_at    String?
 
   @@map("users")
 }
