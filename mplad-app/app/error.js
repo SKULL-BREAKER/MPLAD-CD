@@ -1,11 +1,42 @@
 'use client';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Error({ error, reset }) {
+  const router = useRouter();
+
   useEffect(() => {
-    // In a production system, this would send to Sentry or Datadog
     console.error('[Global Error Boundary]', error);
+
+    // Auth/session errors → redirect to login instead of showing error page
+    const msg = error?.message?.toLowerCase() || '';
+    const isAuthError =
+      msg.includes('unauthorized') ||
+      msg.includes('session') ||
+      msg.includes('unauthenticated') ||
+      msg.includes('redirect') ||
+      msg.includes('nextauth') ||
+      msg.includes('fetch') ||
+      error?.digest?.includes('NEXT_REDIRECT');
+
+    if (isAuthError) {
+      router.replace('/login');
+    }
   }, [error]);
+
+  // If it looks like an auth error, show a redirect message instead of crash page
+  const msg = error?.message?.toLowerCase() || '';
+  const isAuthError =
+    msg.includes('unauthorized') || msg.includes('session') ||
+    msg.includes('fetch') || error?.digest?.includes('NEXT_REDIRECT');
+
+  if (isAuthError) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
+        <p style={{ color: 'var(--text-muted, #64748B)' }}>Redirecting to login…</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{
