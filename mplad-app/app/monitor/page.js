@@ -405,10 +405,12 @@ export default function MonitorPage() {
   const [scanCount,   setScanCount]   = useState(0);
   const [activeTab,   setActiveTab]   = useState('PRESENT');  // PAST | PRESENT | FUTURE | ALL
   const [showDrawer,  setShowDrawer]  = useState(false);
-  const [thresholds,  setThresholds]  = useState(() => {
-    try { const s = localStorage.getItem('mplad_monitor_thresholds'); return s ? { ...THRESHOLD_DEFAULTS, ...JSON.parse(s) } : { ...THRESHOLD_DEFAULTS }; }
-    catch { return { ...THRESHOLD_DEFAULTS }; }
-  });
+  const [thresholds,  setThresholds]  = useState({ ...THRESHOLD_DEFAULTS });
+  useEffect(() => { try { const s = localStorage.getItem('mplad_monitor_thresholds'); if(s) setThresholds({...THRESHOLD_DEFAULTS, ...JSON.parse(s)}); } catch {} }, []);
+  // removed
+  
+  
+  
 
   // Build API URL with current thresholds
   const buildUrl = useCallback((t) => {
