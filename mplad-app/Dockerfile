@@ -31,6 +31,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/data ./data
 COPY --from=builder /app/demo.db ./demo.db
+COPY --from=builder /app/node_modules/.prisma/client/ ./node_modules/.prisma/client/
 
 # Set the correct permission for prerender cache
 RUN mkdir .next
