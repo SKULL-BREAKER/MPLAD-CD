@@ -2,6 +2,7 @@
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, use } from 'react';
+import Link from 'next/link';
 
 export default function LoginPage({ searchParams }) {
   const { data: session, status } = useSession();
@@ -18,9 +19,10 @@ export default function LoginPage({ searchParams }) {
   useEffect(() => {
     if (status !== 'authenticated') return;
     const role = session?.user?.role;
-    if (role === 'MP' || role === 'OFFICER' || role === 'ADMIN') {
-      router.replace('/login/2fa');
-    }
+    if (role === 'MP') router.replace('/mp');
+    else if (role === 'OFFICER') router.replace('/officer');
+    else if (role === 'ADMIN') router.replace('/authority');
+    else router.replace('/');
   }, [status, session]);
 
   const handleSubmit = async (e) => {
@@ -35,9 +37,8 @@ export default function LoginPage({ searchParams }) {
     setLoading(false);
     if (res?.error) {
       setError('Invalid email or password. Please try again.');
-    } else {
-      router.replace('/login/2fa');
     }
+    // Success case is handled by the useEffect above
   };
 
   return (
@@ -131,6 +132,11 @@ export default function LoginPage({ searchParams }) {
                 autoComplete="current-password"
                 style={{ width: '100%', padding: '12px 14px', border: '1.5px solid #E5E7EB', borderRadius: 10, fontSize: '0.95rem', outline: 'none', background: '#FAFAFA', boxSizing: 'border-box' }}
               />
+              <div style={{ textAlign: 'right', marginTop: 8 }}>
+                <Link href="/forgot-password" style={{ color: 'var(--primary, #10B981)', fontSize: '0.78rem', fontWeight: 600, textDecoration: 'none' }}>
+                  Forgot Password?
+                </Link>
+              </div>
             </div>
             <button
               id="login-submit"
@@ -148,6 +154,15 @@ export default function LoginPage({ searchParams }) {
               {loading ? 'Signing in…' : 'Sign In'}
             </button>
           </form>
+        )}
+        
+        {status !== 'authenticated' && (
+          <div style={{ marginTop: 24, textAlign: 'center', fontSize: '0.85rem' }}>
+            <span style={{ color: 'var(--text-muted, #666)' }}>Don't have an account? </span>
+            <Link href="/signup" style={{ color: 'var(--primary, #10B981)', fontWeight: 600, textDecoration: 'none' }}>
+              Sign Up
+            </Link>
+          </div>
         )}
       </div>
     </main>

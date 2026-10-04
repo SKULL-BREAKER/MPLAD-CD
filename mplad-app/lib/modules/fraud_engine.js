@@ -11,18 +11,24 @@ export async function runFraudEngine(options = {}) {
   // Load risk entries (already ordered, small set)
   const risks = await db.workRisk.findMany({
     orderBy: { risk_score: 'desc' },
-    include: {
-      work: {
-        select: {
-          id: true, title: true, category: true, status: true,
-          sanctioned_amount: true, expenditure: true,
-          district_id: true, village: true, fy: true,
-        },
-      },
-    },
   });
 
   const riskWorkIds = risks.map(r => r.work_id);
+
+  // Load the works manually since there is no Prisma relation defined
+  const works = await db.work.findMany({
+    where: { id: { in: riskWorkIds } },
+    select: {
+      id: true, title: true, category: true, status: true,
+      sanctioned_amount: true, expenditure: true,
+      district_id: true, village: true, fy: true,
+    },
+  });
+
+  const worksMap = {};
+  for (const w of works) {
+    worksMap[w.id] = w;
+  }
 
   // Load only detection results for the works we already have
   const detectionResults = await db.detectionResult.findMany({
@@ -68,7 +74,7 @@ export async function runFraudEngine(options = {}) {
       flags,
       factors,
       timestamp: r.updated_at,
-      work_details: r.work || null,
+      work_details: worksMap[r.work_id] || null,
     };
   });
 

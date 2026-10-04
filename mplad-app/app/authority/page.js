@@ -72,21 +72,21 @@ export default async function AuthorityView() {
     redirect('/login');
   }
 
-  // Enforce 2FA layer
-  const cookieStore = await cookies();
-  const twoFactor = cookieStore.get('mplads_2fa_verified');
-  if (!twoFactor || twoFactor.value !== 'true') {
-    redirect('/login/2fa');
-  }
+  // Region-based access: filter by the district_id on the logged-in user
+  const districtId = session.user.district_id || null;
+  const districtFilter = districtId ? { district_id: districtId } : {};
 
   const allWorks = await db.work.findMany({ take: 100,
+    where: districtFilter,
     orderBy: { id: 'asc' },
   });
 
   const pendingProposals = allWorks.filter(w => w.status === 'PROPOSED');
   const activeWorks = allWorks.filter(w => w.status !== 'PROPOSED');
 
-  const entitlements = await db.fundFlow.findMany();
+  const entitlements = await db.fundFlow.findMany(
+    districtId ? { where: { district_id: districtId } } : {}
+  );
 
   const totalEntitlement = entitlements.reduce((s, e) => s + (e.entitlement || 0), 0);
   const totalSanctioned = activeWorks.reduce((s, w) => s + (w.sanctioned_amount || 0), 0);
@@ -123,6 +123,11 @@ export default async function AuthorityView() {
     <main className="main-content">
       <header style={{ marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
+          {districtId && (
+            <div style={{ fontSize: '0.75rem', background: 'rgba(16,185,129,0.1)', color: '#10B981', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 8, padding: '4px 10px', marginBottom: 8, display: 'inline-block' }}>
+              📍 Region: {districtId}
+            </div>
+          )}
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '6px' }}> Authority Scrutiny Board</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '800px' }}>
             Scrutinise proposals for eligibility, duplication & cost-reasonableness. Sanction or reject with canonical reason.

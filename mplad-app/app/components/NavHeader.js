@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const NAV_LINKS = [
   { href: '/',           label: 'Home',            icon: '' },
@@ -35,6 +36,7 @@ function NavContent({ pathname, open, onClose }) {
 }
 
 function NotificationsDropdown() {
+  const { status } = useSession();
   const [alerts, setAlerts] = useState([]);
   const [open, setOpen] = useState(false);
   const [viewedIds, setViewedIds] = useState(new Set());
@@ -53,10 +55,12 @@ function NotificationsDropdown() {
       console.error(e);
     }
 
-    fetch('/api/alerts').then(r => r.json()).then(d => {
-      if(d.ok) setAlerts(d.alerts || []);
-    }).catch(e => console.error('Failed to fetch alerts:', e));
-  }, []);
+    if (status === 'authenticated') {
+      fetch('/api/alerts').then(r => r.json()).then(d => {
+        if(d.ok) setAlerts(d.alerts || []);
+      }).catch(e => console.error('Failed to fetch alerts:', e));
+    }
+  }, [status]);
 
   const handleOpen = () => {
     const newOpen = !open;

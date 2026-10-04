@@ -1,5 +1,7 @@
 'use client';
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // ── Default thresholds (mirrors server defaults) ──────────────────────────────
 const THRESHOLD_DEFAULTS = {
@@ -389,6 +391,13 @@ function ForecastCards({ alerts }) {
 // MAIN DASHBOARD
 // ─────────────────────────────────────────────────────────────────────────────
 export default function MonitorPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/login');
+    },
+  });
   const [data,        setData]        = useState(null);
   const [loading,     setLoading]     = useState(true);
   const [error,       setError]       = useState(null);
@@ -426,7 +435,9 @@ export default function MonitorPage() {
     scan(t);
   }, [scan]);
 
-  useEffect(() => { scan(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (status === 'authenticated') scan();
+  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const iv = setInterval(() => setCountdown(c => { if (c <= 1) { scan(); return REFRESH_SEC; } return c - 1; }), 1000);
@@ -450,6 +461,17 @@ export default function MonitorPage() {
     { key: 'PAST',    label: ' Past',     count: pastAlerts.length,    color: '#A78BFA' },
     { key: 'ALL',     label: ' All',      count: alerts.length,        color: '#94A3B8' },
   ];
+
+  if (status === 'loading' || status === 'unauthenticated') {
+    return (
+      <main className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <div style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+          <div style={{ fontSize: '2.5rem', animation: 'spin 1.5s linear infinite', display: 'inline-block', marginBottom: '14px' }}>⟳</div>
+          <p style={{ fontSize: '0.88rem' }}>Authenticating...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <>

@@ -183,7 +183,10 @@ export default async function OfficerView() {
             Surveillance & Execution Dashboard for District: {officer.district_id}
           </p>
         </div>
-        <a href="/login" className="clay-btn" style={{ color: '#C55A5A', textDecoration: 'none', padding: '8px 16px', fontSize: '0.85rem' }}>Logout</a>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <Link href="/officer/investigator" className="clay-btn" style={{ color: '#10B981', textDecoration: 'none', padding: '8px 16px', fontSize: '0.85rem', background: 'rgba(16, 185, 129, 0.1)' }}>Fraud Investigator</Link>
+          <a href="/login" className="clay-btn" style={{ color: '#C55A5A', textDecoration: 'none', padding: '8px 16px', fontSize: '0.85rem' }}>Logout</a>
+        </div>
       </header>
 
       {/* Pipeline Stats */}

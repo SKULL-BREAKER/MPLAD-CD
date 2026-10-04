@@ -261,7 +261,7 @@ export default function CostJustificationPage({ params }) {
     return (
       <main className="main-content" style={{ maxWidth: 1100, margin: '0 auto', padding: 24 }}>
         <div className="alert alert-danger">Error: {error}</div>
-        <Link href="/investigator" style={{ color: 'var(--accent)' }}>← Back to Investigator</Link>
+        <Link href="/officer/investigator" style={{ color: 'var(--accent)' }}>← Back to Investigator</Link>
       </main>
     );
   }
@@ -276,7 +276,7 @@ export default function CostJustificationPage({ params }) {
     <main className="main-content" style={{ maxWidth: 1100, margin: '0 auto', padding: 24 }}>
       {/* Header */}
       <div style={{ marginBottom: 24 }}>
-        <Link href="/investigator" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
+        <Link href="/officer/investigator" style={{ color: 'var(--text-muted)', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
           ← Back to Investigator Queue
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>

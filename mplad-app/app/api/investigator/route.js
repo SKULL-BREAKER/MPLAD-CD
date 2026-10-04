@@ -6,9 +6,7 @@ export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/investigator
- * Returns top 50 works by risk score with their flags.
- * Requires officer JWT.
- * Uses a DB join instead of O(n²) JS loops.
+ * Returns top 50 works by risk score for the officer's own district, with their flags.
  */
 export async function GET(request) {
   const payload = await verifyRequest(request);
@@ -17,22 +15,34 @@ export async function GET(request) {
   }
 
   try {
-    // Single DB query: join work_risk with works, ordered by score
+    const districtId = payload.district_id || null;
+
+    // Get all risk entries, filter by district after manual join
     const risks = await db.workRisk.findMany({
-      take: 50,
       orderBy: { risk_score: 'desc' },
-      include: {
-        work: {
-          select: {
-            id: true, title: true, category: true, status: true,
-            sanctioned_amount: true, expenditure: true,
-            district_id: true, village: true, fy: true,
-          },
-        },
-      },
     });
 
-    const queue = risks.map(r => {
+    const riskWorkIds = risks.map(r => r.work_id);
+
+    // Fetch works for those IDs, scoped to the officer's district
+    const worksQuery = {
+      where: {
+        id: { in: riskWorkIds },
+        ...(districtId ? { district_id: districtId } : {}),
+      },
+      select: {
+        id: true, title: true, category: true, status: true,
+        sanctioned_amount: true, expenditure: true,
+        district_id: true, village: true, fy: true, area_type: true,
+      },
+    };
+    const works = await db.work.findMany(worksQuery);
+    const worksMap = Object.fromEntries(works.map(w => [w.id, w]));
+
+    // Only include risk entries that have a matching (in-district) work
+    const filteredRisks = risks.filter(r => worksMap[r.work_id]);
+
+    const queue = filteredRisks.slice(0, 50).map(r => {
       let factors = [];
       try {
         if (r.contributions_json) {
@@ -44,8 +54,9 @@ export async function GET(request) {
         }
       } catch (_) {}
 
+      const work = worksMap[r.work_id];
       return {
-        ...r.work,
+        ...work,
         work_id: r.work_id,
         aiAnalysis: {
           score: r.risk_score || 0,
@@ -61,3 +72,4 @@ export async function GET(request) {
     return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
   }
 }
+

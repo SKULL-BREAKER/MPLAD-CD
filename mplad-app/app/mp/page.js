@@ -77,22 +77,17 @@ export default async function MPView() {
     redirect('/login');
   }
 
-  // Enforce 2FA layer
-  const cookieStore = await cookies();
-  const twoFactor = cookieStore.get('mplads_2fa_verified');
-  if (!twoFactor || twoFactor.value !== 'true') {
-    redirect('/login/2fa');
-  }
-
-  const member_id      = session.user.mp_id || 'MP-001';
-  const year_val       = '2024-25';
-  const constituency_id = 'DIST-001';
+  const member_id = session.user.id || 'MP-001';
+  const year_val = '2024-25';
+  // Region-based access: use district_id from session
+  const districtId = session.user.district_id || null;
+  const districtFilter = districtId ? { district_id: districtId } : {};
 
   const [balanceData, scst, proposals] = await Promise.all([
     getEntitlementBalance(member_id, year_val),
     getSCSTUtilisation(member_id, year_val),
     db.work.findMany({ take: 100,
-      where: { mp_id: member_id, fy: year_val, status: 'PROPOSED' },
+      where: { ...districtFilter, status: 'PROPOSED' },
       orderBy: { id: 'asc' },
     }),
   ]);
@@ -108,8 +103,13 @@ export default async function MPView() {
           <div>
             <h2 style={{ fontSize: '1.6rem', fontWeight: 800 }}> MP Workspace</h2>
             <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '4px' }}>
-              Member: {member_id} · Constituency: {constituency_id} · Year: {year_val}
+              Member: {session.user.name} · {districtId ? `Region: ${districtId}` : 'All Regions'} · Year: {year_val}
             </div>
+            {districtId && (
+              <div style={{ fontSize: '0.75rem', background: 'rgba(16,185,129,0.1)', color: '#10B981', border: '1px solid rgba(16,185,129,0.3)', borderRadius: 8, padding: '4px 10px', marginTop: 6, display: 'inline-block' }}>
+                📍 Viewing data for district: {districtId}
+              </div>
+            )}
           </div>
           <LogoutButton />
         </div>

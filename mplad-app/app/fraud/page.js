@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Constants & Helpers
@@ -414,6 +416,14 @@ function KpiCard({ label, value, sub, color = 'var(--text-main)', icon }) {
 // Main Page
 // ─────────────────────────────────────────────────────────────────────────────
 export default function FraudInvestigatorPage() {
+  const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push('/login');
+    },
+  });
+
   const [loading, setLoading]           = useState(true);
   const [scanning, setScanning]         = useState(false);
   const [error, setError]               = useState(null);
@@ -448,7 +458,11 @@ export default function FraudInvestigatorPage() {
     }
   }, [selectedWork]);
 
-  useEffect(() => { runScan(); }, []);
+  useEffect(() => {
+    if (status === 'authenticated') {
+      runScan();
+    }
+  }, [status]);
 
   const handleFeedback = useCallback(async (workId, verdict) => {
     try {
@@ -492,6 +506,15 @@ export default function FraudInvestigatorPage() {
   // Replaced with globals.css classes
 
   // ── Loading / Error states ────────────────────────────────────────────────
+  if (status === 'loading' || status === 'unauthenticated') return (
+    <main className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '2.5rem', animation: 'spin 1.5s linear infinite', display: 'inline-block', marginBottom: '14px', color: 'var(--text-muted)' }}>⟳</div>
+        <div style={{ color: '#A78BFA', fontSize: '1.1rem', fontWeight: 600 }}>Authenticating…</div>
+      </div>
+    </main>
+  );
+
   if (loading) return (
     <main className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
       <div style={{ textAlign: 'center' }}>
