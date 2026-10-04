@@ -10,6 +10,8 @@ services:
     envVars:
       - key: PORT
         value: 3000
+      - key: HOSTNAME
+        value: "0.0.0.0"
       - key: NEXTAUTH_URL
         value: https://prahari-demo-lcem.onrender.com
       - key: NEXTAUTH_SECRET
