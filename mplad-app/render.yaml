@@ -5,7 +5,7 @@ services:
     plan: free
     region: singapore
     rootDir: mplad-app
-    buildCommand: "npm install && npx prisma generate && npm run build"
+    buildCommand: "npm install --include=dev && npx prisma generate && npm run build"
     startCommand: "npm run start"
     envVars:
       - key: PORT
@@ -14,5 +14,9 @@ services:
         value: https://prahari-demo-lcem.onrender.com
       - key: NEXTAUTH_SECRET
         value: mplads-prahari-portal-2026-secret-key-secure
+      - key: JWT_SECRET
+        value: mplads-prahari-portal-2026-secret-key-secure
       - key: NODE_ENV
         value: production
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build",
-    "start": "next start",
+    "postbuild": "node -e \"const fs=require('fs'),path=require('path');const src='demo.db',dst='.next/standalone/demo.db';if(fs.existsSync(src)&&!fs.existsSync(dst)){fs.copyFileSync(src,dst);console.log('Copied demo.db to standalone')}\"",
+    "start": "node .next/standalone/server.js",
+    "start:next": "next start",
     "seed": "node ../mplad_ai/synthetic_data_generator.js --seed 42 --out ../data",
     "seed-tuning": "node ../mplad_ai/synthetic_data_generator.js --seed 43 --out ../data_tuning",
     "db-load": "node scripts/db_load.js --csv ../data",
