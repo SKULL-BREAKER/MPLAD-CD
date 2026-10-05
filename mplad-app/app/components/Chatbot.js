@@ -123,6 +123,24 @@ export default function Chatbot({ role }) {
         .ludo-input:focus { border-color: ${accentColor} !important; box-shadow: 0 0 0 3px ${accentColor}22 !important; }
         .ludo-send:hover:not(:disabled) { opacity: 0.88; transform: scale(1.03); }
         .ludo-send { transition: all 0.15s; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: none; } }
+        .chatbot-window {
+          position: fixed;
+          bottom: 100px;
+          right: 24px;
+          width: 380px;
+          max-width: calc(100vw - 48px);
+          height: 600px;
+          max-height: calc(100vh - 120px);
+          background: white;
+          border-radius: 20px;
+          box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          z-index: 10000;
+          border: 1px solid rgba(0,0,0,0.1);
+        }
       `}</style>
 
       {/* FAB */}
