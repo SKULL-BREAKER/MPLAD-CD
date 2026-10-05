@@ -28,23 +28,32 @@ const pct = (a, b) => b > 0 ? `${((a/b)*100).toFixed(1)}%` : '0%';
 
 // ── Live DB helpers ───────────────────────────────────────────────────────────
 async function liveStats() {
-  const [tot, comp, prop, agg, alerts, risks] = await Promise.all([
-    db.work.count(),
-    db.work.count({ where: { status: 'COMPLETED' } }),
-    db.work.count({ where: { status: { not: 'COMPLETED' } } }),
-    db.work.aggregate({ _sum: { sanctioned_amount: true, expenditure: true } }),
-    db.alert.count({ where: { status: { not: 'RESOLVED' } } }).catch(() => REAL.alerts),
-    db.workRisk.count({ where: { tier: { in: ['HIGH', 'CRITICAL'] } } }).catch(() => 0),
-  ]);
-  return {
-    total: tot || REAL.total,
-    completed: comp || REAL.completed,
-    proposed: prop || REAL.proposed,
-    budget: agg._sum.sanctioned_amount || REAL.budgetCr * 1e7,
-    spent: agg._sum.expenditure || REAL.spentCr * 1e7,
-    openAlerts: alerts,
-    highRisk: risks,
-  };
+  try {
+    const [tot, comp, prop, agg, alerts, risks] = await Promise.all([
+      db.work.count().catch(() => null),
+      db.work.count({ where: { status: 'COMPLETED' } }).catch(() => null),
+      db.work.count({ where: { status: { not: 'COMPLETED' } } }).catch(() => null),
+      db.work.aggregate({ _sum: { sanctioned_amount: true, expenditure: true } }).catch(() => ({ _sum: {} })),
+      db.alert.count({ where: { status: { not: 'RESOLVED' } } }).catch(() => REAL.alerts),
+      db.workRisk.count({ where: { tier: { in: ['HIGH', 'CRITICAL'] } } }).catch(() => 0),
+    ]);
+    return {
+      total: tot ?? REAL.total,
+      completed: comp ?? REAL.completed,
+      proposed: prop ?? REAL.proposed,
+      budget: agg._sum.sanctioned_amount ?? (REAL.budgetCr * 1e7),
+      spent: agg._sum.expenditure ?? (REAL.spentCr * 1e7),
+      openAlerts: alerts,
+      highRisk: risks,
+    };
+  } catch {
+    // Full fallback to snapshot constants if DB is unavailable
+    return {
+      total: REAL.total, completed: REAL.completed, proposed: REAL.proposed,
+      budget: REAL.budgetCr * 1e7, spent: REAL.spentCr * 1e7,
+      openAlerts: REAL.alerts, highRisk: 0,
+    };
+  }
 }
 
 async function districtSummary() {
@@ -288,7 +297,7 @@ export async function POST(request) {
 
     // ── Live DB intents ────────────────────────────────────────────────────
     if (it === 'stats') {
-      const s = await liveStats();
+      const s = await liveStats().catch(() => ({ total: REAL.total, completed: REAL.completed, proposed: REAL.proposed, budget: REAL.budgetCr*1e7, spent: REAL.spentCr*1e7, openAlerts: REAL.alerts, highRisk: 0 }));
       return NextResponse.json({ reply:
         `📊 **Live Scheme Dashboard — Real Official Data**\n\n| Metric | Value |\n|--------|-------|\n| Total Works | **${s.total.toLocaleString()}** |\n| ✅ Completed | **${s.completed.toLocaleString()}** (${pct(s.completed, s.total)}) |\n| 📋 Proposed | **${s.proposed.toLocaleString()}** |\n| 💰 Total Budget | **${cr(s.budget)}** |\n| 💸 Expenditure | **${cr(s.spent)}** (${pct(s.spent, s.budget)}) |\n| 👤 MPs | **${REAL.mps}** |\n| 🗺️ Districts | **${REAL.districts}** |`
         + (isOfficer ? `\n| ⚠️ Open Alerts | **${s.openAlerts.toLocaleString()}** |\n| 🔴 High-Risk Works | **${s.highRisk}** |` : '')
@@ -296,7 +305,7 @@ export async function POST(request) {
     }
 
     if (it === 'utilisation') {
-      const s = await liveStats();
+      const s = await liveStats().catch(() => ({ budget: REAL.budgetCr*1e7, spent: REAL.spentCr*1e7 }));
       const u = pct(s.spent, s.budget);
       return NextResponse.json({ reply:
         `💰 **Fund Utilisation Report**\n\n| Item | Value |\n|------|-------|\n| Sanctioned Budget | **${cr(s.budget)}** |\n| Amount Spent | **${cr(s.spent)}** |\n| Utilisation Rate | **${u}** |\n| Balance Remaining | **${cr(s.budget - s.spent)}** |\n\n_Note: The MPLADS portal shows ${REAL.utilPct} overall utilisation across ${REAL.mps} MPs for the 2026 snapshot. Funds are non-lapsable and carry forward to the next financial year._`
@@ -310,8 +319,8 @@ export async function POST(request) {
     }
 
     if (it === 'state') {
-      const rows = await stateSummary();
-      if (!rows.length) return NextResponse.json({ reply: 'State data unavailable.' });
+      const rows = await stateSummary().catch(() => []);
+      if (!rows.length) return NextResponse.json({ reply: `🗺️ **Top States by Works (Snapshot Data)**\n\n${REAL.topStates.map((s,i) => `${i+1}. ${s}`).join('\n')}` });
       const table = rows.map(r =>
         `| ${r.state} | ${Number(r.total).toLocaleString()} | ${Number(r.completed).toLocaleString()} | ${cr(Number(r.budget))} |`
       ).join('\n');
@@ -321,8 +330,8 @@ export async function POST(request) {
     }
 
     if (it === 'district') {
-      const rows = await districtSummary();
-      if (!rows.length) return NextResponse.json({ reply: 'District data unavailable.' });
+      const rows = await districtSummary().catch(() => []);
+      if (!rows.length) return NextResponse.json({ reply: `🗺️ **Top Districts by Works (Snapshot Data)**\n\n${REAL.topDistricts.map((d,i) => `${i+1}. ${d}`).join('\n')}` });
       const table = rows.map(r =>
         `| ${r.district_id} | ${Number(r.total)} | ${Number(r.completed)} | ${cr(Number(r.budget))} | ${pct(Number(r.spent), Number(r.budget))} |`
       ).join('\n');
@@ -359,7 +368,8 @@ export async function POST(request) {
     }
 
     if (it === 'top') {
-      const works = await topWorks('sanctioned_amount', 5);
+      const works = await topWorks('sanctioned_amount', 5).catch(() => []);
+      if (!works.length) return NextResponse.json({ reply: `🏆 **Top MPs by Works (Snapshot)**\n\n${REAL.topMPs.map((m,i) => `${i+1}. ${m}`).join('\n')}` });
       return NextResponse.json({ reply:
         `🏆 **Top 5 Works by Sanctioned Amount**\n\n` +
         tbl(works, w => `**${w.title||w.id}** (${w.id})\n   ${cr(w.sanctioned_amount)} | ${w.status} | ${w.district_id||'—'}`)
