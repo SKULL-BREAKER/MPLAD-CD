@@ -45,6 +45,6 @@ export async function POST(req) {
     return NextResponse.json({ success: true, user: { id: newUser.id, email: newUser.email, name: newUser.name } });
   } catch (error) {
     console.error('Signup error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: `Server error: ${error?.message || error?.code || 'unknown'}` }, { status: 500 });
   }
 }
