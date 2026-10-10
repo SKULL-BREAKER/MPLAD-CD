@@ -6,7 +6,7 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "postbuild": "node scripts/postbuild.js",
-    "start": "node .next/standalone/server.js",
+    "start": "next start",
     "start:next": "next start",
     "seed": "node ../mplad_ai/synthetic_data_generator.js --seed 42 --out ../data",
     "seed-tuning": "node ../mplad_ai/synthetic_data_generator.js --seed 43 --out ../data_tuning",
