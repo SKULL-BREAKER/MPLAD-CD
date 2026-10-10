@@ -36,7 +36,13 @@ export default function LoginPage({ searchParams }) {
     });
     setLoading(false);
     if (res?.error) {
-      setError('Invalid email or password. Please try again.');
+      const msgs = {
+        USER_NOT_FOUND: 'No account found with this email. Please sign up first.',
+        WRONG_PASSWORD: 'Incorrect password. Please try again.',
+        NO_PASSWORD: 'This account has no password set. Please reset your password.',
+        MISSING_FIELDS: 'Please enter your email and password.',
+      };
+      setError(msgs[res.error] || 'Login failed. Check your email and password.');
     }
     // Success case is handled by the useEffect above
   };

@@ -11,21 +11,21 @@ export const authOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials?.email || !credentials?.password)
+          throw new Error('MISSING_FIELDS');
 
         const email = credentials.email.toLowerCase().trim();
 
-        // 1. Check hardcoded admin emails (no password needed — they set one via seed)
         const user = await db.user.findFirst({
           where: { email },
           select: { id: true, name: true, role: true, district_id: true, password_hash: true, email: true },
         }).catch(() => null);
 
-        if (!user) return null;
-        if (!user.password_hash) return null; // account exists but no password set yet
+        if (!user) throw new Error('USER_NOT_FOUND');
+        if (!user.password_hash) throw new Error('NO_PASSWORD');
 
         const valid = await bcrypt.compare(credentials.password, user.password_hash);
-        if (!valid) return null;
+        if (!valid) throw new Error('WRONG_PASSWORD');
 
         return {
           id:          user.id,
