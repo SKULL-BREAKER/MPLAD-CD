@@ -15,6 +15,7 @@ export default function SignupPage() {
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
   const [success, setSuccess]   = useState(false);
+  const [alreadyExists, setAlreadyExists] = useState(false);
 
   // Auto-redirect if already logged in
   useEffect(() => {
@@ -30,6 +31,7 @@ export default function SignupPage() {
     e.preventDefault();
     setError('');
     setSuccess(false);
+    setAlreadyExists(false);
     setLoading(true);
 
     try {
@@ -43,7 +45,11 @@ export default function SignupPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Failed to sign up');
+        if (res.status === 409) {
+          setAlreadyExists(true);
+        } else {
+          setError(data.error || 'Failed to sign up');
+        }
       } else {
         setSuccess(true);
         setTimeout(() => {
@@ -96,6 +102,19 @@ export default function SignupPage() {
         <p style={{ color: 'var(--text-muted, #666)', fontSize: '0.85rem', margin: '0 0 32px', lineHeight: 1.5, textAlign: 'center' }}>
           Register to access the MPLADS Portal
         </p>
+
+        {/* Already exists notice */}
+        {alreadyExists && (
+          <div style={{
+            background: '#EFF6FF', border: '1px solid #BFDBFE', color: '#1E40AF',
+            borderRadius: 10, padding: '14px', marginBottom: 20, fontSize: '0.85rem', textAlign: 'center', lineHeight: 1.6,
+          }}>
+            📧 This email is already registered.<br />
+            <Link href="/login" style={{ color: '#1D4ED8', fontWeight: 700, textDecoration: 'underline' }}>
+              Sign in to your existing account →
+            </Link>
+          </div>
+        )}
 
         {/* Error */}
         {error && (
